@@ -5,6 +5,8 @@
 
 namespace NS
 {
+	class Graphics;
+
 	class AppBase
 	{
 	public:
@@ -21,6 +23,7 @@ namespace NS
 
 	protected:
 		Window window;
+		Graphics* m_pGraphics;
 		int m_screenWidth;
 		int m_screenHeight;
 	};

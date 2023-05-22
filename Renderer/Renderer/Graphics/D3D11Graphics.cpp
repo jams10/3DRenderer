@@ -26,6 +26,9 @@ namespace NS
 	{
 		const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
 
+		m_screenWidth = screenWidth;
+		m_screenHeight = screenHeight;
+
 		UINT createDeviceFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG; // 디버그 모드에서 디버깅 플래그 켜주기.
@@ -75,8 +78,8 @@ namespace NS
 #pragma region Create Swapchain & Backbuffer
 		DXGI_SWAP_CHAIN_DESC sd;
 		ZeroMemory(&sd, sizeof(sd));
-		sd.BufferDesc.Width = m_screenWidth;               // set the back buffer width
-		sd.BufferDesc.Height = m_screenHeight;             // set the back buffer height
+		sd.BufferDesc.Width = screenWidth;                 // set the back buffer width
+		sd.BufferDesc.Height = screenHeight;               // set the back buffer height
 		sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // use 32-bit color
 		sd.BufferCount = 2;                                // Double-buffering
 		sd.BufferDesc.RefreshRate.Numerator = 60;
@@ -155,11 +158,14 @@ namespace NS
 
 	void D3D11Graphics::SetViewport(int screenWidth, int screenHeight)
 	{
+		if (m_screenWidth != screenWidth) m_screenWidth = screenWidth;
+		if (m_screenHeight != screenHeight) m_screenHeight = screenHeight;
+
 		ZeroMemory(&m_screenViewport, sizeof(D3D11_VIEWPORT));
 		m_screenViewport.TopLeftX = 0;
 		m_screenViewport.TopLeftY = 0;
-		m_screenViewport.Width = float(m_screenWidth);
-		m_screenViewport.Height = float(m_screenHeight);
+		m_screenViewport.Width = float(screenWidth);
+		m_screenViewport.Height = float(screenHeight);
 		m_screenViewport.MinDepth = 0.0f;
 		m_screenViewport.MaxDepth = 1.0f; // Note: important for depth buffering
 
@@ -168,9 +174,12 @@ namespace NS
 
 	bool D3D11Graphics::CreateDepthBuffer(int screenWidth, int screenHeight)
 	{
+		if (m_screenWidth != screenWidth) m_screenWidth = screenWidth;
+		if (m_screenHeight != screenHeight) m_screenHeight = screenHeight;
+
 		D3D11_TEXTURE2D_DESC depthStencilBufferDesc;
-		depthStencilBufferDesc.Width = m_screenWidth;
-		depthStencilBufferDesc.Height = m_screenHeight;
+		depthStencilBufferDesc.Width = screenWidth;
+		depthStencilBufferDesc.Height = screenHeight;
 		depthStencilBufferDesc.MipLevels = 1;
 		depthStencilBufferDesc.ArraySize = 1;
 		depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -205,7 +214,7 @@ namespace NS
 		// PS: Pixel Shader
 		// IA: Input-Assembler stage
 
-		SetViewport(m_screenWidth, m_screenHeight); // 그려줄 영역인 뷰포트 설정.
+		SetViewport(m_screenHeight, m_screenHeight); // 그려줄 영역인 뷰포트 설정.
 
 		// RTV와 DSV 초기화. 화면을 지정 색상으로 날려주고, 깊이 버퍼도 초기화 해줌.
 		float clearColor[4] = { red, green, blue, alpha };

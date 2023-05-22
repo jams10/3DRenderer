@@ -132,6 +132,7 @@
     <ClInclude Include="Application\AppBase.h" />
     <ClInclude Include="Application\RenderApp.h" />
     <ClInclude Include="Graphics\D3D11Graphics.h" />
+    <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Utility\CustomMacros.h" />
     <ClInclude Include="Utility\StringEncode.h" />
     <ClInclude Include="Windows\Window.h" />
@@ -141,6 +142,7 @@
     <ClCompile Include="Application\AppBase.cpp" />
     <ClCompile Include="Application\RenderApp.cpp" />
     <ClCompile Include="Graphics\D3D11Graphics.cpp" />
+    <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Windows\Window.cpp" />
   </ItemGroup>

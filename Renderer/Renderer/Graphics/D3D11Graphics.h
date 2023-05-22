@@ -7,6 +7,10 @@
 #include <exception>
 #include <wrl.h>
 
+/*
+ *	Direct3D11 라이브러리를 이용, 그래픽스 관련 작업을 수행하는 클래스. Graphics 클래스를 통해서만 접근.
+ */
+
 namespace NS
 {
 	using Microsoft::WRL::ComPtr;
@@ -23,6 +27,8 @@ namespace NS
 
 	class D3D11Graphics
 	{
+		friend class Graphics;
+
 	public:
 		D3D11Graphics();
 		D3D11Graphics(const D3D11Graphics&) = delete;

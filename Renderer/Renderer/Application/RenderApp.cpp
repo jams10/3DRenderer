@@ -1,10 +1,13 @@
+
 #include "RenderApp.h"
 
 namespace NS
 {
 	RenderApp::RenderApp(int screenWidth, int screenHeight)
 		: AppBase(screenWidth, screenHeight)
-	{}
+	{
+		m_pGraphics = nullptr;
+	}
 
 	bool RenderApp::Initialize()
 	{
