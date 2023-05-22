@@ -131,13 +131,16 @@
   <ItemGroup>
     <ClInclude Include="Application\AppBase.h" />
     <ClInclude Include="Application\RenderApp.h" />
+    <ClInclude Include="Graphics\D3D11Graphics.h" />
     <ClInclude Include="Utility\CustomMacros.h" />
+    <ClInclude Include="Utility\StringEncode.h" />
     <ClInclude Include="Windows\Window.h" />
     <ClInclude Include="Windows\WindowsHeaders.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\AppBase.cpp" />
     <ClCompile Include="Application\RenderApp.cpp" />
+    <ClCompile Include="Graphics\D3D11Graphics.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Windows\Window.cpp" />
   </ItemGroup>

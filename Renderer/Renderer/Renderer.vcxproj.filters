@@ -30,6 +30,12 @@
     <ClInclude Include="Application\RenderApp.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\D3D11Graphics.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\StringEncode.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\AppBase.cpp">
@@ -42,6 +48,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Application\RenderApp.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\D3D11Graphics.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
