@@ -4,6 +4,8 @@
 
 namespace NS
 {
+    class SceneBase;
+
     class RenderApp : public AppBase
     {
     public:
@@ -15,6 +17,8 @@ namespace NS
         virtual void Update(float dt) override;
         virtual void Render() override;
 
+    private:
+        SceneBase* m_pScene;
     };
 }
 

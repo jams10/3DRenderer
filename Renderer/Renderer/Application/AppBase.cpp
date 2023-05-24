@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Graphics/Graphics.h"
+#include "Graphics/D3D11Graphics.h"
 
 namespace NS
 {
@@ -12,7 +13,8 @@ namespace NS
 		:
 		m_screenWidth(screenWidth),
 		m_screenHeight(screenHeight),
-		window()
+		window(),
+		m_pGraphics(nullptr)
 	{}
 
 	AppBase::~AppBase()
@@ -42,16 +44,31 @@ namespace NS
 		return true;
 	}
 
+	void AppBase::Update(float dt)
+	{
+		if (window.bShouldResizeScreen)
+		{
+			m_pGraphics->GetD3D11()->ResizeScreen(m_screenWidth, m_screenHeight);
+			window.bShouldResizeScreen = false;
+		}
+	}
+
 	int AppBase::Run()
 	{
+		m_gameTimer.Tick();
+
 		while (true)
 		{
 			if (window.ProcessMessages() == 0) // ProcessMessages에서 WM_QUIT 메시지를 받으면 0을 리턴함.
 				return 0;
 
-			m_pGraphics->BeginFrame(0.0f, 0.0f, 0.0f, 1.0f);
+			Update(m_gameTimer.GetDeltaTime());
 
-			m_pGraphics->EndFrame();
+			m_pGraphics->GetD3D11()->BeginFrame(0.0f, 0.0f, 0.0f, 1.0f);
+
+			Render();
+
+			m_pGraphics->GetD3D11()->EndFrame();
 		}
 	}
 }

@@ -67,12 +67,8 @@ namespace NS
 
 	bool Window::Initialize(const wchar_t* name, int width, int height)
 	{
-		// 원하는 client 영역 크기에 맞춰서 winodw의 크기를 계산해줌.
-		RECT wr;
-		wr.left = 100;
-		wr.right = width + wr.left;
-		wr.top = 100;
-		wr.bottom = height + wr.top;
+		// 우리가 원하는 그림이 그려질 부분의 해상도
+		RECT wr = { 0, 0, width, height };
 
 		// 윈도우 사이즈 조절.
 		if (!AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE))
@@ -86,7 +82,7 @@ namespace NS
 		m_hWnd = CreateWindow(
 			WindowClass::GetName(), name,
 			WS_OVERLAPPEDWINDOW,
-			CW_USEDEFAULT, CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
+			100, 100, wr.right - wr.left, wr.bottom - wr.top,
 			nullptr, nullptr, WindowClass::GetInstance(), this
 		);
 
@@ -181,6 +177,9 @@ namespace NS
 		{
 		case WM_SIZE:
 			// TODO : 그래픽스 관련 화면 크기도 바꿔 주어야 함.
+			m_screenWidth = int(LOWORD(lParam));
+			m_screenHeight = int(HIWORD(lParam));
+			bShouldResizeScreen = true;
 
 			return 0;
 

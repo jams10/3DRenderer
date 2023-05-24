@@ -30,16 +30,4 @@ namespace NS
 
 		return true;
 	}
-
-	bool Graphics::BeginFrame(float red, float green, float blue, float alpha)
-	{
-		m_pD3D->BeginFrame(red, green, blue, alpha);
-		return true;
-	}
-
-	bool Graphics::EndFrame()
-	{
-		m_pD3D->EndFrame();
-		return true;
-	}
 }

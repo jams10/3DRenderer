@@ -20,8 +20,8 @@ namespace NS
 		~Graphics();
 
 		bool Initialize(int screenWidth, int screenHeight, HWND hWnd);
-		bool BeginFrame(float red, float green, float blue, float alpha);
-		bool EndFrame();
+
+		inline D3D11Graphics* GetD3D11() { return m_pD3D; }
 
 	private:
 		D3D11Graphics* m_pD3D;
