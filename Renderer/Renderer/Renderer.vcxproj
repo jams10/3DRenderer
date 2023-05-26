@@ -138,6 +138,7 @@
     <ClInclude Include="Model\MeshForGPU.h" />
     <ClInclude Include="Model\Vertex.h" />
     <ClInclude Include="Scene\SceneBase.h" />
+    <ClInclude Include="UI\ImGuiManager.h" />
     <ClInclude Include="Utility\CustomMacros.h" />
     <ClInclude Include="Utility\GameTimer.h" />
     <ClInclude Include="Utility\StringEncode.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Scene\SceneBase.cpp" />
+    <ClCompile Include="UI\ImGuiManager.cpp" />
     <ClCompile Include="Utility\GameTimer.cpp" />
     <ClCompile Include="Windows\Window.cpp" />
   </ItemGroup>

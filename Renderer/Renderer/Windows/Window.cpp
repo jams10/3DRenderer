@@ -1,6 +1,14 @@
 #include "Window.h"
 
 #include <iostream>
+#include <imgui_impl_win32.h>
+
+// imgui_impl_win32.cpp에 정의된 메시지 처리 함수에 대한 전방 선언
+// VCPKG를 통해 IMGUI를 사용할 경우 빨간줄로 경고가 뜰 수 있음
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
+	UINT msg,
+	WPARAM wParam,
+	LPARAM lParam);
 
 namespace NS
 {
@@ -65,6 +73,12 @@ namespace NS
 		DestroyWindow(m_hWnd);
 	}
 
+	void Window::ShutDownImGui()
+	{
+		cout << "Shutdown Imgui Win32." << '\n';
+		ImGui_ImplWin32_Shutdown();
+	}
+
 	bool Window::Initialize(const wchar_t* name, int width, int height)
 	{
 		// 우리가 원하는 그림이 그려질 부분의 해상도
@@ -92,6 +106,14 @@ namespace NS
 			cout << "Failed : CreateWindow" << '\n';
 			__ERRORLINE__
 			return false;
+		}
+
+		// Imgui Win32 구현 초기화.
+		if (ImGui_ImplWin32_Init(m_hWnd) == false)
+		{
+			cout << "Failed : ImGui_ImplWin32_Init()" << '\n';
+			__ERRORLINE__
+				return false;
 		}
 
 		// 윈도우 화면에 띄우기.
@@ -173,6 +195,10 @@ namespace NS
 	// 실제 윈도우 메시지를 처리해 줄 함수.
 	LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
+		// ImGui에 대한 입력인 경우 ImGui가 consume.
+		if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+			return true;
+
 		switch (msg)
 		{
 		case WM_SIZE:

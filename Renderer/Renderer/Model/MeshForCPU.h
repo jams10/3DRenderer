@@ -9,8 +9,8 @@ namespace NS
 {
 	struct MeshForCPU
 	{
-		std::vector<Vertex> m_vertices;
-		std::vector<uint16_t> m_indices;
-		UINT m_indexCount;
+		std::vector<Vertex> vertices;
+		std::vector<uint16_t> indices;
+		UINT indexCount;
 	};
 }

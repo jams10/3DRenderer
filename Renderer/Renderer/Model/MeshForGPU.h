@@ -13,12 +13,12 @@ namespace NS
 
 	struct MeshForGPU
 	{
-        ComPtr<ID3D11VertexShader> m_pVertexShader;
-        ComPtr<ID3D11PixelShader> m_pPixelShader;
-        ComPtr<ID3D11InputLayout> m_pInputLayout;
+        ComPtr<ID3D11VertexShader> pVertexShader;
+        ComPtr<ID3D11PixelShader> pPixelShader;
+        ComPtr<ID3D11InputLayout> pInputLayout;
 
-        ComPtr<ID3D11Buffer> m_pVertexBuffer;
-        ComPtr<ID3D11Buffer> m_pIndexBuffer;
-        ComPtr<ID3D11Buffer> m_pConstantBuffer;
+        ComPtr<ID3D11Buffer> pVertexBuffer;
+        ComPtr<ID3D11Buffer> pIndexBuffer;
+        ComPtr<ID3D11Buffer> pConstantBuffer;
 	};
 }

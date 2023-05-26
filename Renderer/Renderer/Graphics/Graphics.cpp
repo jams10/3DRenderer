@@ -15,7 +15,14 @@ namespace NS
 
 	Graphics::~Graphics()
 	{
+		if (m_pD3D != nullptr)
+			Shutdown();
+	}
 
+	void Graphics::Shutdown()
+	{
+		m_pD3D->ShutDownImGui();
+		SAFE_RELEASE(m_pD3D)
 	}
 
 	bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hWnd)

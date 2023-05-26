@@ -23,6 +23,11 @@ namespace NS
 		return true;
 	}
 
+	void RenderApp::UpdateGUI()
+	{
+		m_pScene->UpdateGUI();
+	}
+
 	void RenderApp::Update(float dt)
 	{
 		AppBase::Update(dt);

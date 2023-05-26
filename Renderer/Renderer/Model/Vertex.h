@@ -10,7 +10,7 @@ namespace NS
 
 	struct Vertex
 	{
-		Vector3 positions;
-		Vector3 colors;
+		Vector3 position;
+		Vector3 color;
 	};
 }

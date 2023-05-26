@@ -20,6 +20,7 @@ namespace NS
 		~Graphics();
 
 		bool Initialize(int screenWidth, int screenHeight, HWND hWnd);
+		void Shutdown();
 
 		inline D3D11Graphics* GetD3D11() { return m_pD3D; }
 

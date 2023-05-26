@@ -14,6 +14,7 @@ namespace NS
         RenderApp& operator=(const RenderApp&) = delete;
 
         virtual bool Initialize() override;
+        virtual void UpdateGUI() override;
         virtual void Update(float dt) override;
         virtual void Render() override;
 

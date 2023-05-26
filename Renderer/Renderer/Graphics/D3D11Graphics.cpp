@@ -3,6 +3,7 @@
 #include <d3dcompiler.h>
 #include <iostream>
 #include <string>
+#include <imgui_impl_dx11.h>
 
 #pragma comment(lib,"d3d11.lib")        // Direct3D 함수들이 정의된 라이브러리를 링크해줌.
 #pragma comment(lib, "D3DCompiler.lib") // 셰이더를 런타임에 컴파일 해줄 때 사용할 수 있지만, 우리는 셰이더를 불러오는 함수를 사용하기 위해 연결해줬음. 
@@ -20,7 +21,15 @@ namespace NS
 	}
 
 	D3D11Graphics::~D3D11Graphics()
-	{}
+	{
+		cout << "Destroy D3DGraphics." << '\n';
+	}
+
+	void D3D11Graphics::ShutDownImGui()
+	{
+		cout << "Shutdown Imgui DX11." << '\n';
+		ImGui_ImplDX11_Shutdown();
+	}
 
 	bool D3D11Graphics::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hWnd, float screenDepth, float screenNear)
 	{
@@ -133,6 +142,15 @@ namespace NS
 
 		m_pDevice->CreateRasterizerState(&rastDesc, &m_pSolidRasterizerSate);
 
+		// imgui dx11 구현 초기화.
+		if (ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get()) == false)
+		{
+			cout << "Failed : ImGui_ImplDX11_Init()\n";
+			__ERRORLINE__
+				return false;
+		}
+
+		cout << "Success : D3D has initialized!\n";
 		return true;
 	}
 
@@ -163,20 +181,20 @@ namespace NS
 	void D3D11Graphics::Render(const MeshForCPU& meshForCPU, const MeshForGPU& meshForGPU)
 	{
 		// 정점 쉐이더 파이프라인에 바인딩.
-		m_pContext->VSSetShader(meshForGPU.m_pVertexShader.Get(), 0, 0);
+		m_pContext->VSSetShader(meshForGPU.pVertexShader.Get(), 0, 0);
 		// 상수 버퍼 파이프라인에 바인딩.
-		m_pContext->VSSetConstantBuffers(0, 1, meshForGPU.m_pConstantBuffer.GetAddressOf());
+		m_pContext->VSSetConstantBuffers(0, 1, meshForGPU.pConstantBuffer.GetAddressOf());
 		// 픽셀 쉐이더 파이프라인에 바인딩.
-		m_pContext->PSSetShader(meshForGPU.m_pPixelShader.Get(), 0, 0);
+		m_pContext->PSSetShader(meshForGPU.pPixelShader.Get(), 0, 0);
 
 		// 정점, 인덱스 버퍼 설정하고 그리기 명령 호출.
 		UINT stride = sizeof(Vertex);
 		UINT offset = 0;
-		m_pContext->IASetInputLayout(meshForGPU.m_pInputLayout.Get());
-		m_pContext->IASetVertexBuffers(0, 1, meshForGPU.m_pVertexBuffer.GetAddressOf(), &stride, &offset);
-		m_pContext->IASetIndexBuffer(meshForGPU.m_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+		m_pContext->IASetInputLayout(meshForGPU.pInputLayout.Get());
+		m_pContext->IASetVertexBuffers(0, 1, meshForGPU.pVertexBuffer.GetAddressOf(), &stride, &offset);
+		m_pContext->IASetIndexBuffer(meshForGPU.pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 		m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		m_pContext->DrawIndexed(meshForCPU.m_indexCount, 0, 0);
+		m_pContext->DrawIndexed(meshForCPU.indexCount, 0, 0);
 	}
 
 	void D3D11Graphics::EndFrame()

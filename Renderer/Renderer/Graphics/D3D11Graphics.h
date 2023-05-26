@@ -50,6 +50,7 @@ namespace NS
 
 		float GetAspectRatio();
 		void ResizeScreen(float screenWidth, float screenHeight);
+		void ShutDownImGui();
 
 	private:
 		// 기본 렌더링 필요 자원.
