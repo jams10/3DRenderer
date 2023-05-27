@@ -46,6 +46,7 @@ namespace NS
 
 		void BeginFrame(float red, float green, float blue, float alpha);
 		void Render(const MeshForCPUWithColorVertex& meshForCPU, const MeshForGPU& meshForGPU);
+		void Render(const MeshForCPUWithBasicVertex& meshForCPU, const MeshForGPU& meshForGPU);
 		void EndFrame();
 
 		float GetAspectRatio();
@@ -59,6 +60,10 @@ namespace NS
 		ComPtr<ID3D11RenderTargetView> m_pBackBufferRTV;
 		ComPtr<IDXGISwapChain> m_pSwapChain;
 		ComPtr<ID3D11RasterizerState> m_pSolidRasterizerSate;
+		ComPtr<ID3D11RasterizerState> m_pWireRasterizerSate;
+		bool m_drawAsWireFrame = false;
+
+		ComPtr<ID3D11SamplerState> m_pSamplerState;
 
 		// Depth buffer ฐüทร
 		ComPtr<ID3D11Texture2D> m_pDepthStencilBuffer;
@@ -132,6 +137,7 @@ namespace NS
 		bool CreateRenderTargetView();
 		void SetViewport(int screenWidth, int screenHeight);
 		bool CreateDepthBuffer(int screenWidth, int screenHeight);
+		void CreateTexture(const std::string filename, ComPtr<ID3D11Texture2D>& texture, ComPtr<ID3D11ShaderResourceView>& textureResourceView);
 #pragma endregion Pipeline Functions
 	};
 }

@@ -5,6 +5,9 @@
 #include <string>
 #include <imgui_impl_dx11.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #pragma comment(lib,"d3d11.lib")        // Direct3D 함수들이 정의된 라이브러리를 링크해줌.
 #pragma comment(lib, "D3DCompiler.lib") // 셰이더를 런타임에 컴파일 해줄 때 사용할 수 있지만, 우리는 셰이더를 불러오는 함수를 사용하기 위해 연결해줬음. 
 
@@ -141,6 +144,21 @@ namespace NS
 		rastDesc.FrontCounterClockwise = false;
 
 		m_pDevice->CreateRasterizerState(&rastDesc, &m_pSolidRasterizerSate);
+		
+		rastDesc.FillMode = D3D11_FILL_WIREFRAME;
+		m_pDevice->CreateRasterizerState(&rastDesc, &m_pWireRasterizerSate); // 와이어 프레임 모드 래스터라이저.
+
+		// 쉐이더에서 텍스쳐 샘플링 시 사용할 샘플러 생성.
+		D3D11_SAMPLER_DESC sampDesc;
+		ZeroMemory(&sampDesc, sizeof(sampDesc));
+		sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		sampDesc.MinLOD = 0;
+		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		m_pDevice->CreateSamplerState(&sampDesc, m_pSamplerState.GetAddressOf());
 
 		// imgui dx11 구현 초기화.
 		if (ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get()) == false)
@@ -175,7 +193,11 @@ namespace NS
 		m_pContext->OMSetDepthStencilState(m_pDepthStencilState.Get(), 0);
 
 		// 어떻게 래스터화 할 지 Rasterizer State도 설정.
-		m_pContext->RSSetState(m_pSolidRasterizerSate.Get());
+		if (m_drawAsWireFrame)
+		{
+			m_pContext->RSSetState(m_pWireRasterizerSate.Get());
+		}
+		else m_pContext->RSSetState(m_pSolidRasterizerSate.Get());
 	}
 
 	void D3D11Graphics::Render(const MeshForCPUWithColorVertex& meshForCPU, const MeshForGPU& meshForGPU)
@@ -189,6 +211,31 @@ namespace NS
 
 		// 정점, 인덱스 버퍼 설정하고 그리기 명령 호출.
 		UINT stride = sizeof(ColorVertex);
+		UINT offset = 0;
+		m_pContext->IASetInputLayout(meshForGPU.pInputLayout.Get());
+		m_pContext->IASetVertexBuffers(0, 1, meshForGPU.pVertexBuffer.GetAddressOf(), &stride, &offset);
+		m_pContext->IASetIndexBuffer(meshForGPU.pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+		m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		m_pContext->DrawIndexed(meshForCPU.indexCount, 0, 0);
+	}
+
+	void D3D11Graphics::Render(const MeshForCPUWithBasicVertex& meshForCPU, const MeshForGPU& meshForGPU)
+	{
+		// 정점 쉐이더 파이프라인에 바인딩.
+		m_pContext->VSSetShader(meshForGPU.pVertexShader.Get(), 0, 0);
+		// 상수 버퍼 파이프라인에 바인딩.
+		m_pContext->VSSetConstantBuffers(0, 1, meshForGPU.pConstantBuffer.GetAddressOf());
+		// 픽셀 쉐이더 파이프라인에 바인딩.
+		m_pContext->PSSetShader(meshForGPU.pPixelShader.Get(), 0, 0);
+
+		// 사용할 쉐이더 리소스(텍스쳐) 바인딩.
+		ID3D11ShaderResourceView* pixelResources[1] = { meshForGPU.pDiffuseMapSRV.Get() };
+		m_pContext->PSSetShaderResources(0, 1, pixelResources);
+		// 샘플러 파이프라인에 바인딩.
+		m_pContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
+
+		// 정점, 인덱스 버퍼 설정하고 그리기 명령 호출.
+		UINT stride = sizeof(BasicVertex);
 		UINT offset = 0;
 		m_pContext->IASetInputLayout(meshForGPU.pInputLayout.Get());
 		m_pContext->IASetVertexBuffers(0, 1, meshForGPU.pVertexBuffer.GetAddressOf(), &stride, &offset);
@@ -366,6 +413,50 @@ namespace NS
 		THROWFAILED(m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer.Get(), 0, &m_pDepthStencilView));
 
 		return true;
+	}
+
+	void D3D11Graphics::CreateTexture(
+		const std::string filename,
+		ComPtr<ID3D11Texture2D>& texture,
+		ComPtr<ID3D11ShaderResourceView>& textureResourceView) 
+	{
+		int width, height, channels;
+
+		unsigned char* img = stbi_load(filename.c_str(), &width, &height, &channels, 0);
+
+		//assert(channels == 4);
+
+		// 4채널로 만들어서 복사
+		std::vector<uint8_t> image;
+		image.resize(width * height * 4);
+		for (size_t i = 0; i < width * height; i++) 
+		{
+			for (size_t c = 0; c < 3; c++) 
+			{
+				image[4 * i + c] = img[i * channels + c];
+			}
+			image[4 * i + 3] = 255;
+		}
+
+		// Create texture.
+		D3D11_TEXTURE2D_DESC txtDesc = {};
+		txtDesc.Width = width;
+		txtDesc.Height = height;
+		txtDesc.MipLevels = txtDesc.ArraySize = 1;
+		txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		txtDesc.SampleDesc.Count = 1;
+		txtDesc.Usage = D3D11_USAGE_IMMUTABLE;
+		txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+		// Fill in the subresource data.
+		D3D11_SUBRESOURCE_DATA initData;
+		initData.pSysMem = image.data();
+		initData.SysMemPitch = txtDesc.Width * sizeof(uint8_t) * 4;
+		// initData.SysMemSlicePitch = 0;
+
+		m_pDevice->CreateTexture2D(&txtDesc, &initData, texture.GetAddressOf());
+		m_pDevice->CreateShaderResourceView(texture.Get(), nullptr,
+			textureResourceView.GetAddressOf());
 	}
 
 #pragma endregion Pipeline Functions

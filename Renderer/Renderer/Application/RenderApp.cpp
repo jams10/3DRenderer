@@ -2,6 +2,7 @@
 #include "RenderApp.h"
 
 #include "Scene/SCDrawTriangle.h"
+#include "Scene/SCDrawTexturedCube.h"
 
 namespace NS
 {
@@ -17,7 +18,7 @@ namespace NS
 		if (AppBase::Initialize() == false)
 			return false;
 
-		m_pScene = new SCDrawTriangle();
+		m_pScene = new SCDrawTexturedCube();
 		m_pScene->Initialize(m_pGraphics);
 
 		return true;

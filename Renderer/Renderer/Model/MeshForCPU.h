@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 #include "Utility/CustomMacros.h"
 #include "Vertex.h"
@@ -19,5 +20,6 @@ namespace NS
 		std::vector<BasicVertex> vertices;
 		std::vector<uint16_t> indices;
 		UINT indexCount;
+		std::string textureFilePath;
 	};
 }
