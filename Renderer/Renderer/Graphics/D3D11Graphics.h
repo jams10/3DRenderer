@@ -53,6 +53,8 @@ namespace NS
 		void ResizeScreen(float screenWidth, float screenHeight);
 		void ShutDownImGui();
 
+		bool m_drawAsWireFrame = false;
+
 	private:
 		// 기본 렌더링 필요 자원.
 		ComPtr<ID3D11Device> m_pDevice;
@@ -61,7 +63,6 @@ namespace NS
 		ComPtr<IDXGISwapChain> m_pSwapChain;
 		ComPtr<ID3D11RasterizerState> m_pSolidRasterizerSate;
 		ComPtr<ID3D11RasterizerState> m_pWireRasterizerSate;
-		bool m_drawAsWireFrame = false;
 
 		ComPtr<ID3D11SamplerState> m_pSamplerState;
 

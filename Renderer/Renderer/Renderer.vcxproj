@@ -140,6 +140,7 @@
     <ClInclude Include="Scene\SCDrawTexturedCube.h" />
     <ClInclude Include="Scene\SCDrawTriangle.h" />
     <ClInclude Include="Scene\SceneBase.h" />
+    <ClInclude Include="Scene\Scenes.h" />
     <ClInclude Include="UI\ImGuiManager.h" />
     <ClInclude Include="Utility\CustomMacros.h" />
     <ClInclude Include="Utility\GameTimer.h" />

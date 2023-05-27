@@ -20,6 +20,14 @@ namespace NS
 
     private:
         SceneBase* m_pScene;
+        int m_sceneIndex;
+        bool m_openSystemInfoWindow;
+        bool m_openSceneSelectWindow;
+
+    private:
+        void ShowTitleMenuWindow();
+        void ShowSystemInfoWindow();
+        void ShowSceneSelectWindow();
     };
 }
 

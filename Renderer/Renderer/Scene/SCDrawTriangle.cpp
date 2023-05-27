@@ -72,6 +72,8 @@ namespace NS
 		m_constantData.projection = DirectX::XMMatrixPerspectiveFovLH(fovAngleY, aspect, 0.01f, 100.0f);
 		m_constantData.projection = m_constantData.projection.Transpose();
 
+		m_pGraphics->GetD3D11()->m_drawAsWireFrame = false;
+
 		// 업데이트 한 변환 행렬을 CPU에서 GPU로 보내 업데이트.
 		m_pGraphics->GetD3D11()->UpdateBuffer(m_constantData, m_meshForGPU.pConstantBuffer);
 	}

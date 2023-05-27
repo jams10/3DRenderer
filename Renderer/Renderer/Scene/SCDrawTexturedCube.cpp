@@ -56,6 +56,8 @@ namespace NS
 		ImGui::SliderFloat3("m_modelTranslation", &m_translation.x, -5.0f, 5.0f);
 		ImGui::SliderFloat3("m_modelRotation(Rad)", &m_rotation.x, -3.14f, 3.14f);
 		ImGui::SliderFloat3("m_modelScaling", &m_scale.x, 0.1f, 2.0f);
+        ImGui::Checkbox("Use Perspective", &m_bUsePerspectiveProjection);
+        ImGui::Checkbox("Use Wireframe", &m_bUseWireFrame);
 
 		ImGui::End();
 	}
@@ -81,9 +83,20 @@ namespace NS
 
 		// 투영 변환 행렬.
 		const float aspect = m_pGraphics->GetD3D11()->GetAspectRatio();
-		const float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
-		m_constantData.projection = DirectX::XMMatrixPerspectiveFovLH(fovAngleY, aspect, 0.01f, 100.0f);
-		m_constantData.projection = m_constantData.projection.Transpose();
+        if (m_bUsePerspectiveProjection) 
+        {
+            const float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
+            m_constantData.projection =
+                DirectX::XMMatrixPerspectiveFovLH(fovAngleY, aspect, 0.01f, 100.0f);
+        }
+        else 
+        {
+            m_constantData.projection =
+                DirectX::XMMatrixOrthographicOffCenterLH(-aspect, aspect, -1.0f, 1.0f, 0.1f, 10.0f);
+        }
+        m_constantData.projection = m_constantData.projection.Transpose();
+
+        m_pGraphics->GetD3D11()->m_drawAsWireFrame = m_bUseWireFrame; // 와이어 프레임 그리기 여부.
 
 		// 업데이트 한 변환 행렬을 CPU에서 GPU로 보내 업데이트.
 		m_pGraphics->GetD3D11()->UpdateBuffer(m_constantData, m_meshForGPU.pConstantBuffer);
