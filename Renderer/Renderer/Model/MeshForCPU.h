@@ -7,9 +7,16 @@
 
 namespace NS
 {
-	struct MeshForCPU
+	struct MeshForCPUWithColorVertex
 	{
-		std::vector<Vertex> vertices;
+		std::vector<ColorVertex> vertices;
+		std::vector<uint16_t> indices;
+		UINT indexCount;
+	};
+
+	struct MeshForCPUWithBasicVertex
+	{
+		std::vector<BasicVertex> vertices;
 		std::vector<uint16_t> indices;
 		UINT indexCount;
 	};

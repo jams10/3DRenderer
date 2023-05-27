@@ -15,9 +15,9 @@ namespace NS
 	private:
 		void MakeTriangle();
 
-		MeshForCPU m_cubeMeshForCPU;
-		MeshForGPU m_cubeMeshForGPU;
-		ConstantData_MVP m_cubeConstantData;
+		MeshForCPUWithColorVertex m_meshForCPU;
+		MeshForGPU m_meshForGPU;
+		ConstantDataMVP m_constantData;
 
 		Vector3 m_translation = Vector3{ 0.0f, 0.0f, 2.0f };
 		Vector3 m_rotation;

@@ -178,7 +178,7 @@ namespace NS
 		m_pContext->RSSetState(m_pSolidRasterizerSate.Get());
 	}
 
-	void D3D11Graphics::Render(const MeshForCPU& meshForCPU, const MeshForGPU& meshForGPU)
+	void D3D11Graphics::Render(const MeshForCPUWithColorVertex& meshForCPU, const MeshForGPU& meshForGPU)
 	{
 		// 정점 쉐이더 파이프라인에 바인딩.
 		m_pContext->VSSetShader(meshForGPU.pVertexShader.Get(), 0, 0);
@@ -188,7 +188,7 @@ namespace NS
 		m_pContext->PSSetShader(meshForGPU.pPixelShader.Get(), 0, 0);
 
 		// 정점, 인덱스 버퍼 설정하고 그리기 명령 호출.
-		UINT stride = sizeof(Vertex);
+		UINT stride = sizeof(ColorVertex);
 		UINT offset = 0;
 		m_pContext->IASetInputLayout(meshForGPU.pInputLayout.Get());
 		m_pContext->IASetVertexBuffers(0, 1, meshForGPU.pVertexBuffer.GetAddressOf(), &stride, &offset);

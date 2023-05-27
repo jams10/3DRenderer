@@ -7,10 +7,18 @@
 namespace NS
 {
 	using DirectX::SimpleMath::Vector3;
+	using DirectX::SimpleMath::Vector2;
 
-	struct Vertex
+	struct ColorVertex
 	{
 		Vector3 position;
 		Vector3 color;
+	};
+
+	struct BasicVertex
+	{
+		Vector3 position;
+		Vector3 normal;
+		Vector2 texcoord;
 	};
 }

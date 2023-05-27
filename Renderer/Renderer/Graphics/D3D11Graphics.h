@@ -45,7 +45,7 @@ namespace NS
 		bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hWnd, float screenDepth, float screenNear);
 
 		void BeginFrame(float red, float green, float blue, float alpha);
-		void Render(const MeshForCPU& meshForCPU, const MeshForGPU& meshForGPU);
+		void Render(const MeshForCPUWithColorVertex& meshForCPU, const MeshForGPU& meshForGPU);
 		void EndFrame();
 
 		float GetAspectRatio();

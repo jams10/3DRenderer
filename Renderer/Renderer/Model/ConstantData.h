@@ -8,7 +8,7 @@ namespace NS
 {
     using DirectX::SimpleMath::Matrix;
 
-    struct ConstantData_MVP
+    struct ConstantDataMVP
     {
         Matrix model;
         Matrix view;
