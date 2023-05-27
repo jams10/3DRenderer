@@ -17,23 +17,12 @@ namespace NS
 	{
 	public:
 		virtual void Initialize(Graphics* pGraphics);
-		virtual void UpdateGUI();
-		virtual void Update(float dt);
-		virtual void Render();
+		virtual void UpdateGUI() = 0;
+		virtual void Update(float dt) = 0;
+		virtual void Render() = 0;
 
-		void MakeTriangle();
-		void MakeCube();
-
-	private:
-		MeshForCPU m_cubeMeshForCPU;
-		MeshForGPU m_cubeMeshForGPU;
-		ConstantData_MVP m_cubeConstantData;
+	protected:
 		Graphics* m_pGraphics;
-
-		bool bUsePerspective = true;
-		Vector3 m_translation = Vector3{ 0.0f, 0.0f, 1.0f };
-		Vector3 m_rotation;
-		Vector3 m_scale = Vector3{ 1.0f, 1.0f, 1.0f };
 	};
 }
 

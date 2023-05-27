@@ -1,7 +1,7 @@
 
 #include "RenderApp.h"
 
-#include "Scene/SceneBase.h"
+#include "Scene/SCDrawTriangle.h"
 
 namespace NS
 {
@@ -17,7 +17,7 @@ namespace NS
 		if (AppBase::Initialize() == false)
 			return false;
 
-		m_pScene = new SceneBase();
+		m_pScene = new SCDrawTriangle();
 		m_pScene->Initialize(m_pGraphics);
 
 		return true;
