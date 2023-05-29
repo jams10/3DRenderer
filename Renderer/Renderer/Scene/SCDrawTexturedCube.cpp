@@ -23,11 +23,10 @@ namespace NS
 		m_pGraphics->GetD3D11()->CreateIndexBuffer(m_meshForCPU.indices, m_meshForGPU.pIndexBuffer);
 
 		// 상수 버퍼 생성.
-		m_constantData.model = Matrix{};
-		m_constantData.invTranspose = Matrix{};
+		m_constantData.world = Matrix{};
 		m_constantData.view = Matrix{};
 		m_constantData.projection = Matrix{};
-		m_pGraphics->GetD3D11()->CreateConstantBuffer(m_constantData, m_meshForGPU.pConstantBuffer);
+		m_pGraphics->GetD3D11()->CreateConstantBuffer(m_constantData, m_meshForGPU.pVertexConstantBuffer);
 
 		// 정점 레이아웃, 쉐이더 생성. 레이아웃은 반드시 정점 구조와 맞춰 주어야 함.
 		vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
@@ -65,16 +64,12 @@ namespace NS
 	void SCDrawTexturedCube::Update(float dt)
 	{
 		// 월드 변환 행렬. SRT 순서.
-		m_constantData.model = Matrix::CreateScale(m_scale) *
+		m_constantData.world = Matrix::CreateScale(m_scale) *
 			Matrix::CreateRotationY(m_rotation.y) *
 			Matrix::CreateRotationX(m_rotation.x) *
 			Matrix::CreateRotationZ(m_rotation.z) *
 			Matrix::CreateTranslation(m_translation);
-		m_constantData.model = m_constantData.model.Transpose(); // GPU로 넘겨주기 전에 colum major로 바꿔주기.
-
-        m_constantData.invTranspose = m_constantData.model;
-        m_constantData.invTranspose.Translation(Vector3(0.0f));
-        m_constantData.invTranspose = m_constantData.invTranspose.Invert().Transpose();
+		m_constantData.world = m_constantData.world.Transpose(); // GPU로 넘겨주기 전에 colum major로 바꿔주기.
 
 		// 뷰 변환 행렬.
 		m_constantData.view =
@@ -99,7 +94,7 @@ namespace NS
         m_pGraphics->GetD3D11()->m_drawAsWireFrame = m_bUseWireFrame; // 와이어 프레임 그리기 여부.
 
 		// 업데이트 한 변환 행렬을 CPU에서 GPU로 보내 업데이트.
-		m_pGraphics->GetD3D11()->UpdateBuffer(m_constantData, m_meshForGPU.pConstantBuffer);
+		m_pGraphics->GetD3D11()->UpdateBuffer(m_constantData, m_meshForGPU.pVertexConstantBuffer);
 	}
 
 	void SCDrawTexturedCube::Render()

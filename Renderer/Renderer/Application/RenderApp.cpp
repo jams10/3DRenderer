@@ -103,7 +103,11 @@ namespace NS
 
 		if (selected)
 		{
-			if (m_pScene != nullptr) delete m_pScene;
+			if (m_pScene != nullptr)
+			{
+				delete m_pScene;
+				m_pScene = nullptr;
+			}
 			m_openSceneSelectWindow = false;
 
 			SceneType type = (SceneType)(m_sceneIndex);

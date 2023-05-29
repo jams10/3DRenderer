@@ -23,7 +23,8 @@ namespace NS
 
         ComPtr<ID3D11Buffer> pVertexBuffer;
         ComPtr<ID3D11Buffer> pIndexBuffer;
-        ComPtr<ID3D11Buffer> pConstantBuffer;
+        ComPtr<ID3D11Buffer> pVertexConstantBuffer;
+        ComPtr<ID3D11Buffer> pPixelConstantBuffer;
 
         ComPtr<ID3D11Texture2D> pDiffuseTexture;
         ComPtr<ID3D11ShaderResourceView> pDiffuseMapSRV;

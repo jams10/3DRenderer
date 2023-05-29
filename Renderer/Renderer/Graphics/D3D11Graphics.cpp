@@ -205,7 +205,7 @@ namespace NS
 		// 정점 쉐이더 파이프라인에 바인딩.
 		m_pContext->VSSetShader(meshForGPU.pVertexShader.Get(), 0, 0);
 		// 상수 버퍼 파이프라인에 바인딩.
-		m_pContext->VSSetConstantBuffers(0, 1, meshForGPU.pConstantBuffer.GetAddressOf());
+		m_pContext->VSSetConstantBuffers(0, 1, meshForGPU.pVertexConstantBuffer.GetAddressOf());
 		// 픽셀 쉐이더 파이프라인에 바인딩.
 		m_pContext->PSSetShader(meshForGPU.pPixelShader.Get(), 0, 0);
 
@@ -224,7 +224,7 @@ namespace NS
 		// 정점 쉐이더 파이프라인에 바인딩.
 		m_pContext->VSSetShader(meshForGPU.pVertexShader.Get(), 0, 0);
 		// 상수 버퍼 파이프라인에 바인딩.
-		m_pContext->VSSetConstantBuffers(0, 1, meshForGPU.pConstantBuffer.GetAddressOf());
+		m_pContext->VSSetConstantBuffers(0, 1, meshForGPU.pVertexConstantBuffer.GetAddressOf());
 		// 픽셀 쉐이더 파이프라인에 바인딩.
 		m_pContext->PSSetShader(meshForGPU.pPixelShader.Get(), 0, 0);
 

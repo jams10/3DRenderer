@@ -5,8 +5,7 @@
 
 cbuffer MVPMatrix : register(b0)
 {
-    matrix model;
-    matrix invTranspose; // normal º¤ÅÍ Æ®·£½ºÆû º¯È¯ ¿ëµµ.
+    matrix world;
     matrix view;
     matrix projection;
 };
@@ -29,7 +28,7 @@ PixelShaderInput main(VertexShaderInput input)
 {
     PixelShaderInput output;
     float4 pos = float4(input.posModel, 1.0f); // ¾ÆÇÉ °ø°£.
-    pos = mul(pos, model);
+    pos = mul(pos, world);
     pos = mul(pos, view);
     pos = mul(pos, projection);
 
