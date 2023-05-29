@@ -4,6 +4,9 @@
 
 #include <directxtk/SimpleMath.h>
 
+/*
+*   상수 버퍼에 들어갈 데이터들을 묶어 개별 구조체들로 정의함.
+*/
 namespace NS
 {
     using DirectX::SimpleMath::Matrix;

@@ -12,10 +12,10 @@
 #include "Model/MeshForCPU.h"
 #include "Model/MeshForGPU.h"
 
-/*
+ /*
+ *	<D3D11Graphics>
  *	Direct3D11 라이브러리를 이용, 그래픽스 관련 작업을 수행하는 클래스. Graphics 클래스를 통해서만 접근.
  */
-
 namespace NS
 {
 	using Microsoft::WRL::ComPtr;

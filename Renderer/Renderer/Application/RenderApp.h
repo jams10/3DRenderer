@@ -2,6 +2,11 @@
 
 #include "AppBase.h"
 
+/*
+*	<RenderApp>
+*	기본 Application 클래스인 AppBase 클래스를 상속 받음.
+*	메인 메뉴 UI를 생성하며, 씬을 선택할 경우 해당 씬을 생성하고 Render() 함수를 호출, 씬에 대한 렌더링 작업을 담당함.
+*/
 namespace NS
 {
     class SceneBase;

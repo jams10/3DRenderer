@@ -1,4 +1,8 @@
 
+/*
+*   위치와 색상만 가지는 정점을 트랜스폼하는 간단한 정점 쉐이더.
+*/
+
 cbuffer MVPMatrix : register(b0)
 {
     matrix model;

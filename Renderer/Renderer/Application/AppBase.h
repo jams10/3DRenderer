@@ -5,6 +5,12 @@
 #include "Windows/Window.h"
 #include "UI/ImGuiManager.h"
 
+/*
+*	<AppBase>
+*	기본 Application 클래스.
+*	윈도우 창 생성을 위한 Window, 렌더링을 위한 Graphics, ImGui 초기화를 위한 ImGui 매니저 인스턴스를 생성, 초기화를 담당함.
+*/
+
 namespace NS
 {
 	class Graphics;

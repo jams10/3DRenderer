@@ -4,6 +4,9 @@
 
 #include "CustomMacros.h"
 
+/*
+*   타이머 클래스.
+*/
 namespace NS
 {
 	class GameTimer

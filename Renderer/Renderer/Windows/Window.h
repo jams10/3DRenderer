@@ -5,6 +5,9 @@
 
 #include <string>
 
+/*
+*   윈도우 생성, 메시지 처리를 담당하는 클래스.
+*/
 namespace NS
 {
 	using std::wstring;
