@@ -13,7 +13,8 @@ namespace NS
 	{
 		m_pGraphics = nullptr;
 		m_pScene = nullptr;
-		m_sceneIndex = 0;
+		m_selectedSceneIndex = -1;
+		m_currentSceneIndex = -2;
 	}
 
 	bool RenderApp::Initialize()
@@ -89,12 +90,12 @@ namespace NS
 			{
 				if (ImGui::Button(WideToMultiU8(L"삼각형 그리기").c_str()))
 				{
-					m_sceneIndex = 0;
+					m_selectedSceneIndex = 0;
 					selected = true;
 				}
 				if (ImGui::Button(WideToMultiU8(L"텍스쳐 큐브 그리기").c_str()))
 				{
-					m_sceneIndex = 1;
+					m_selectedSceneIndex = 1;
 					selected = true;
 				}
 			}
@@ -103,14 +104,16 @@ namespace NS
 
 		if (selected)
 		{
+			if (m_currentSceneIndex == m_selectedSceneIndex) return;
 			if (m_pScene != nullptr)
 			{
 				delete m_pScene;
 				m_pScene = nullptr;
 			}
+			m_currentSceneIndex = m_selectedSceneIndex;
 			m_openSceneSelectWindow = false;
 
-			SceneType type = (SceneType)(m_sceneIndex);
+			SceneType type = (SceneType)(m_currentSceneIndex);
 			switch (type)
 			{
 			case SceneType::DRAW_TRIANGLE:

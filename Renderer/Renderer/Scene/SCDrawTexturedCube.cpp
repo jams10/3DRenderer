@@ -48,6 +48,11 @@ namespace NS
 		m_pGraphics->GetD3D11()->CreateTexture(m_meshForCPU.textureFilePath, m_meshForGPU.pDiffuseTexture, m_meshForGPU.pDiffuseMapSRV);
 	}
 
+    SCDrawTexturedCube::~SCDrawTexturedCube()
+    {
+        m_meshForGPU.Shutdown();
+    }
+
 	void SCDrawTexturedCube::UpdateGUI()
 	{
 		ImGui::Begin("Position");

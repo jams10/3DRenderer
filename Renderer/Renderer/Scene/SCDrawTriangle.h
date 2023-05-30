@@ -16,6 +16,7 @@ namespace NS
 		virtual void UpdateGUI() override;
 		virtual void Update(float dt) override;
 		virtual void Render() override;
+		virtual ~SCDrawTriangle();
 
 	private:
 		void MakeTriangle();

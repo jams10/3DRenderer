@@ -26,7 +26,22 @@ namespace NS
         ComPtr<ID3D11Buffer> pVertexConstantBuffer;
         ComPtr<ID3D11Buffer> pPixelConstantBuffer;
 
-        ComPtr<ID3D11Texture2D> pDiffuseTexture;
         ComPtr<ID3D11ShaderResourceView> pDiffuseMapSRV;
+        ComPtr<ID3D11Texture2D> pDiffuseTexture;
+
+        void Shutdown()
+        {
+            pVertexShader.Reset();
+            pPixelShader.Reset();
+            pInputLayout.Reset();
+
+            pVertexBuffer.Reset();
+            pIndexBuffer.Reset();
+            pVertexConstantBuffer.Reset();
+            pPixelConstantBuffer.Reset();
+
+            pDiffuseMapSRV.Reset();
+            pDiffuseTexture.Reset();
+        }
 	};
 }

@@ -40,6 +40,11 @@ namespace NS
 		m_pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\ColorPixelShader.hlsl", m_meshForGPU.pPixelShader);
 	}
 
+	SCDrawTriangle::~SCDrawTriangle()
+	{
+		m_meshForGPU.Shutdown();
+	}
+
 	void SCDrawTriangle::UpdateGUI()
 	{
 		ImGui::Begin("Position");

@@ -12,4 +12,8 @@ namespace NS
 	{
 		m_pGraphics = pGraphics;
 	};
+
+	SceneBase::~SceneBase()
+	{
+	}
 }

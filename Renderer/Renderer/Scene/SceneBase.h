@@ -4,6 +4,8 @@
 
 #include "Utility/CustomMacros.h"
 
+#include <memory>
+
 #include "Model/MeshForCPU.h"
 #include "Model/MeshForGPU.h"
 #include "Model/ConstantData.h"
@@ -25,6 +27,7 @@ namespace NS
 		virtual void UpdateGUI() = 0;
 		virtual void Update(float dt) = 0;
 		virtual void Render() = 0;
+		virtual ~SceneBase();
 
 	protected:
 		Graphics* m_pGraphics;

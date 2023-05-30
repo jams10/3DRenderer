@@ -25,7 +25,8 @@ namespace NS
 
     private:
         SceneBase* m_pScene;
-        int m_sceneIndex;
+        int m_selectedSceneIndex;
+        int m_currentSceneIndex;
         bool m_openSystemInfoWindow;
         bool m_openSceneSelectWindow;
 
