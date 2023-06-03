@@ -75,9 +75,9 @@ namespace NS
 		}
 
 		// 생성한 device, device context COM 인터페이스를 가져와 캐싱.
-		THROWFAILED(device.As(&m_pDevice));
+		THROWFAILED(device.As(&m_device));
 
-		THROWFAILED(context.As(&m_pContext));
+		THROWFAILED(context.As(&m_context));
 #pragma endregion Create Device & Context
 
 		// 4X MSAA 지원하는지 확인
@@ -116,8 +116,8 @@ namespace NS
 					driverType,
 					0, // No software device
 					createDeviceFlags, featureLevels, 1, D3D11_SDK_VERSION,
-					&sd, &m_pSwapChain, &m_pDevice, &featureLevel,
-					&m_pContext));
+					&sd, &m_swapChain, &m_device, &featureLevel,
+					&m_context));
 #pragma endregion Create Swapchain & Backbuffer
 
 		if (CreateRenderTargetView() == false) return false;
@@ -127,41 +127,10 @@ namespace NS
 #pragma region Depth Buffer
 		CreateDepthBuffer(m_screenWidth, m_screenHeight);
 
-		// Depth Stencil State(깊이 값을 어떻게 비교할 것인가를 결정)를 생성.
-		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-		ZeroMemory(&depthStencilDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
-		depthStencilDesc.DepthEnable = true; // false
-		depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
-		depthStencilDesc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
-		THROWFAILED(m_pDevice->CreateDepthStencilState(&depthStencilDesc, m_pDepthStencilState.GetAddressOf()));
 #pragma endregion Depth Buffer
 
-		// Rastersizer State(어떤 방식으로 래스터화 할 것인가를 결정) 생성.
-		D3D11_RASTERIZER_DESC rastDesc;
-		ZeroMemory(&rastDesc, sizeof(D3D11_RASTERIZER_DESC)); // 서술자 초기화.
-		rastDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
-		rastDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
-		rastDesc.FrontCounterClockwise = false;
-
-		m_pDevice->CreateRasterizerState(&rastDesc, &m_pSolidRasterizerSate);
-		
-		rastDesc.FillMode = D3D11_FILL_WIREFRAME;
-		m_pDevice->CreateRasterizerState(&rastDesc, &m_pWireRasterizerSate); // 와이어 프레임 모드 래스터라이저.
-
-		// 쉐이더에서 텍스쳐 샘플링 시 사용할 샘플러 생성.
-		D3D11_SAMPLER_DESC sampDesc;
-		ZeroMemory(&sampDesc, sizeof(sampDesc));
-		sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-		sampDesc.MinLOD = 0;
-		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-		m_pDevice->CreateSamplerState(&sampDesc, m_pSamplerState.GetAddressOf());
-
 		// imgui dx11 구현 초기화.
-		if (ImGui_ImplDX11_Init(m_pDevice.Get(), m_pContext.Get()) == false)
+		if (ImGui_ImplDX11_Init(m_device.Get(), m_context.Get()) == false)
 		{
 			cout << "Failed : ImGui_ImplDX11_Init()\n";
 			__ERRORLINE__
@@ -174,80 +143,70 @@ namespace NS
 
 	void D3D11Graphics::BeginFrame(float red, float green, float blue, float alpha)
 	{
-		//RS: Rasterizer stage
-		// OM: Output-Merger stage
-		// VS: Vertex Shader
-		// PS: Pixel Shader
-		// IA: Input-Assembler stage
-
 		SetViewport(m_screenWidth, m_screenHeight); // 그려줄 영역인 뷰포트 설정.
 
 		// RTV와 DSV 초기화. 화면을 지정 색상으로 날려주고, 깊이 버퍼도 초기화 해줌.
 		float clearColor[4] = { red, green, blue, alpha };
-		m_pContext->ClearRenderTargetView(m_pBackBufferRTV.Get(), clearColor);
-		m_pContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		m_context->ClearRenderTargetView(m_backBufferRTV.Get(), clearColor);
+		m_context->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		// 씬을 렌더링 할 렌더 타겟 설정, 깊이 값 기록시 어떻게 기록할 지 DepthStencil State도 설정.
-		ID3D11RenderTargetView* targets[] = { m_pBackBufferRTV.Get() };
-		m_pContext->OMSetRenderTargets(1, targets, m_pDepthStencilView.Get());
-		m_pContext->OMSetDepthStencilState(m_pDepthStencilState.Get(), 0);
+		ID3D11RenderTargetView* targets[] = { m_backBufferRTV.Get() };
+		m_context->OMSetRenderTargets(1, targets, m_depthStencilView.Get());
 
-		// 어떻게 래스터화 할 지 Rasterizer State도 설정.
-		if (m_drawAsWireFrame)
-		{
-			m_pContext->RSSetState(m_pWireRasterizerSate.Get());
-		}
-		else m_pContext->RSSetState(m_pSolidRasterizerSate.Get());
+		// 이제 파이프라인 상태 설정은 GraphicsPSO, GraphicsProcessor 클래스의 SetPipelineState를 통해 설정함.
 	}
 
-	void D3D11Graphics::Render(const MeshForCPUWithColorVertex& meshForCPU, const MeshForGPU& meshForGPU)
+	void D3D11Graphics::Render(const MeshForGPU& meshForGPU)
 	{
-		// 정점 쉐이더 파이프라인에 바인딩.
-		m_pContext->VSSetShader(meshForGPU.pVertexShader.Get(), 0, 0);
-		// 상수 버퍼 파이프라인에 바인딩.
-		m_pContext->VSSetConstantBuffers(0, 1, meshForGPU.pVertexConstantBuffer.GetAddressOf());
-		// 픽셀 쉐이더 파이프라인에 바인딩.
-		m_pContext->PSSetShader(meshForGPU.pPixelShader.Get(), 0, 0);
+		// 정점 쉐이더 상수 버퍼(모델별로 가지고 있을) 파이프라인에 바인딩.
+		m_context->VSSetConstantBuffers(0, 1, meshForGPU.vertexConstantBuffer.GetAddressOf());
 
-		// 정점, 인덱스 버퍼 설정하고 그리기 명령 호출.
-		UINT stride = sizeof(ColorVertex);
-		UINT offset = 0;
-		m_pContext->IASetInputLayout(meshForGPU.pInputLayout.Get());
-		m_pContext->IASetVertexBuffers(0, 1, meshForGPU.pVertexBuffer.GetAddressOf(), &stride, &offset);
-		m_pContext->IASetIndexBuffer(meshForGPU.pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
-		m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		m_pContext->DrawIndexed(meshForCPU.indexCount, 0, 0);
-	}
-
-	void D3D11Graphics::Render(const MeshForCPUWithBasicVertex& meshForCPU, const MeshForGPU& meshForGPU)
-	{
-		// 정점 쉐이더 파이프라인에 바인딩.
-		m_pContext->VSSetShader(meshForGPU.pVertexShader.Get(), 0, 0);
-		// 상수 버퍼 파이프라인에 바인딩.
-		m_pContext->VSSetConstantBuffers(0, 1, meshForGPU.pVertexConstantBuffer.GetAddressOf());
-		// 픽셀 쉐이더 파이프라인에 바인딩.
-		m_pContext->PSSetShader(meshForGPU.pPixelShader.Get(), 0, 0);
+		// TODO : 픽셀 쉐이더 상수 버퍼 파이프라인에 바인딩.
 
 		// 사용할 쉐이더 리소스(텍스쳐) 바인딩.
-		ID3D11ShaderResourceView* pixelResources[1] = { meshForGPU.pDiffuseMapSRV.Get() };
-		m_pContext->PSSetShaderResources(0, 1, pixelResources);
-		// 샘플러 파이프라인에 바인딩.
-		m_pContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
+		// TODO : 여러 텍스쳐 맵 SRV 추가.
+		ID3D11ShaderResourceView* pixelResources[1] = { meshForGPU.albedoSRV.Get() };
+		m_context->PSSetShaderResources(0, 1, pixelResources);
 
 		// 정점, 인덱스 버퍼 설정하고 그리기 명령 호출.
-		UINT stride = sizeof(BasicVertex);
+		UINT stride = sizeof(Vertex);
 		UINT offset = 0;
-		m_pContext->IASetInputLayout(meshForGPU.pInputLayout.Get());
-		m_pContext->IASetVertexBuffers(0, 1, meshForGPU.pVertexBuffer.GetAddressOf(), &stride, &offset);
-		m_pContext->IASetIndexBuffer(meshForGPU.pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
-		m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		m_pContext->DrawIndexed(meshForCPU.indexCount, 0, 0);
+		m_context->IASetVertexBuffers(0, 1, meshForGPU.vertexBuffer.GetAddressOf(), &stride, &offset);
+		m_context->IASetIndexBuffer(meshForGPU.indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+		m_context->DrawIndexed(meshForGPU.indexCount, 0, 0);
 	}
 
 	void D3D11Graphics::EndFrame()
 	{
 		// Backbuffer에 그려진 화면을 모니터에 출력.
-		m_pSwapChain->Present(0u, 0u);
+		m_swapChain->Present(1, 0);
+	}
+
+	void D3D11Graphics::CreateGlobalConstantBuffer(const GlobalConstants& gloablConstantBufferData)
+	{
+		if (m_globalConstantBuffer == nullptr)
+		{
+			CreateConstantBuffer(gloablConstantBufferData, m_globalConstantBuffer);
+		}
+		else
+		{
+			m_globalConstantBuffer.Get()->Release();
+			CreateConstantBuffer(gloablConstantBufferData, m_globalConstantBuffer);
+		}
+	}
+
+	void D3D11Graphics::SetGlobalConstantBufferData()
+	{
+		// 전역 상수 버퍼 파이프라인에 바인딩.
+		// Common.hlsli에 정의해 준 것처럼 항상 register(b1)에 들어가도록 함.
+		m_context->VSSetConstantBuffers(1, 1, m_globalConstantBuffer.GetAddressOf());
+		m_context->PSSetConstantBuffers(1, 1, m_globalConstantBuffer.GetAddressOf());
+		m_context->GSSetConstantBuffers(1, 1, m_globalConstantBuffer.GetAddressOf());
+	}
+
+	void D3D11Graphics::UpdateGlobalConstantBuffer(const GlobalConstants& gloablConstantBufferData)
+	{
+		UpdateBuffer(gloablConstantBufferData, m_globalConstantBuffer);
 	}
 
 	float D3D11Graphics::GetAspectRatio()
@@ -255,15 +214,15 @@ namespace NS
 		return float(m_screenWidth) / m_screenHeight;
 	}
 
-	void D3D11Graphics::ResizeScreen(float screenWidth, float screenHeight)
+	void D3D11Graphics::ResizeScreen(int screenWidth, int screenHeight)
 	{
-		if (m_pSwapChain == nullptr) return;
+		if (m_swapChain == nullptr) return;
 
 		m_screenWidth = screenWidth;
 		m_screenHeight = screenHeight;
 
-		m_pBackBufferRTV.Reset();
-		m_pSwapChain->ResizeBuffers(0, // 현재 개수 유지
+		m_backBufferRTV.Reset();
+		m_swapChain->ResizeBuffers(0, // 현재 개수 유지
 			m_screenWidth, // 해상도 변경
 			m_screenHeight,
 			DXGI_FORMAT_UNKNOWN, // 현재 포맷 유지
@@ -284,13 +243,13 @@ namespace NS
 			// 쉐이더 파일이 없을 경우
 			if ((hr & D3D11_ERROR_FILE_NOT_FOUND) != 0) 
 			{
-				cout << "File not found.\n";
+				cout << "Shader Compile Error! : Shader file not found.\n";
 			}
 
 			// 에러 메시지가 있으면 출력
 			if (errorBlob) 
 			{
-				cout << "Shader compile error\n" << (char*)errorBlob->GetBufferPointer() << '\n';
+				cout << "Shader Compile Error! : Shader compile error\n" << (char*)errorBlob->GetBufferPointer() << '\n';
 			}
 		}
 	}
@@ -304,14 +263,23 @@ namespace NS
 		ComPtr<ID3DBlob> shaderBlob;
 		ComPtr<ID3DBlob> errorBlob;
 
-		// 쉐이더 시작 점을 이름이 main 함수로 지정.
-		HRESULT hr = D3DCompileFromFile(filename.c_str(), 0, 0, "main", "vs_5_0", 0, 0, &shaderBlob, &errorBlob);
+		UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+		compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+		// 쉐이더의 시작점의 이름이 "main"인 함수로 지정
+		// D3D_COMPILE_STANDARD_FILE_INCLUDE 추가: 쉐이더에서 include 사용 가능하도록 하여 Common.hlsli 포함.
+		// 쉐이더에서 헤더 파일 사용 시 플래그를 아래와 같이 지정해주지 않으면 shader file not found 에러가 발생 했음.
+		HRESULT hr = D3DCompileFromFile(
+			filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+			"vs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
 
 		CheckResult(hr, errorBlob.Get());
 
-		m_pDevice->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &vertexShader);
+		m_device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &vertexShader);
 
-		m_pDevice->CreateInputLayout(inputElements.data(), UINT(inputElements.size()),
+		m_device->CreateInputLayout(inputElements.data(), UINT(inputElements.size()),
 			shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 			&inputLayout);
 	}
@@ -321,11 +289,18 @@ namespace NS
 		ComPtr<ID3DBlob> shaderBlob;
 		ComPtr<ID3DBlob> errorBlob;
 
-		HRESULT hr = D3DCompileFromFile(filename.c_str(), 0, 0, "main", "ps_5_0", 0, 0, &shaderBlob, &errorBlob);
+		UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+		compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+		HRESULT hr = D3DCompileFromFile(
+			filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+			"ps_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
 
 		CheckResult(hr, errorBlob.Get());
 
-		m_pDevice->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &pixelShader);
+		m_device->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &pixelShader);
 	}
 
 	void D3D11Graphics::CreateIndexBuffer(const vector<uint16_t>& indices, ComPtr<ID3D11Buffer>& m_indexBuffer)
@@ -342,17 +317,17 @@ namespace NS
 		indexBufferData.SysMemPitch = 0;
 		indexBufferData.SysMemSlicePitch = 0;
 
-		m_pDevice->CreateBuffer(&bufferDesc, &indexBufferData, m_indexBuffer.GetAddressOf());
+		m_device->CreateBuffer(&bufferDesc, &indexBufferData, m_indexBuffer.GetAddressOf());
 	}
 
 	bool D3D11Graphics::CreateRenderTargetView()
 	{
 		// 스왑 체인에 들어 있는 Backbuffer를 얻어와 이를 렌더 타겟으로 설정함.
 		ID3D11Texture2D* pBackBuffer;
-		m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
+		m_swapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
 		if (pBackBuffer)
 		{
-			m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pBackBufferRTV);
+			m_device->CreateRenderTargetView(pBackBuffer, NULL, &m_backBufferRTV);
 			pBackBuffer->Release(); // 임시로 Backbuffer를 얻어와 저장한 텍스쳐 자원 해제.
 		}
 		else
@@ -378,7 +353,7 @@ namespace NS
 		m_screenViewport.MinDepth = 0.0f;
 		m_screenViewport.MaxDepth = 1.0f; // Note: important for depth buffering
 
-		m_pContext->RSSetViewports(1, &m_screenViewport);
+		m_context->RSSetViewports(1, &m_screenViewport);
 	}
 
 	bool D3D11Graphics::CreateDepthBuffer(int screenWidth, int screenHeight)
@@ -408,9 +383,9 @@ namespace NS
 		depthStencilBufferDesc.MiscFlags = 0;
 
 		// 깊이 값을 저장할 버퍼 용도의 텍스쳐 자원을 생성.
-		THROWFAILED(m_pDevice->CreateTexture2D(&depthStencilBufferDesc, 0, m_pDepthStencilBuffer.GetAddressOf()));
+		THROWFAILED(m_device->CreateTexture2D(&depthStencilBufferDesc, 0, m_depthStencilBuffer.GetAddressOf()));
 		// 버퍼 용도로 만들어준 텍스쳐 자원을 DepthStencil 값을 쓸 목적임을 알려주기 위해 해당 버퍼 텍스쳐를 DepthStencilView에 연결.
-		THROWFAILED(m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer.Get(), 0, &m_pDepthStencilView));
+		THROWFAILED(m_device->CreateDepthStencilView(m_depthStencilBuffer.Get(), 0, &m_depthStencilView));
 
 		return true;
 	}
@@ -454,8 +429,8 @@ namespace NS
 		initData.SysMemPitch = txtDesc.Width * sizeof(uint8_t) * 4;
 		// initData.SysMemSlicePitch = 0;
 
-		m_pDevice->CreateTexture2D(&txtDesc, &initData, texture.GetAddressOf());
-		m_pDevice->CreateShaderResourceView(texture.Get(), nullptr,
+		m_device->CreateTexture2D(&txtDesc, &initData, texture.GetAddressOf());
+		m_device->CreateShaderResourceView(texture.Get(), nullptr,
 			textureResourceView.GetAddressOf());
 	}
 

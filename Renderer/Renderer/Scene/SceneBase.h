@@ -6,10 +6,6 @@
 
 #include <memory>
 
-#include "Model/MeshForCPU.h"
-#include "Model/MeshForGPU.h"
-#include "Model/ConstantData.h"
-
 /*
 *	<SceneBase>
 *	모든 Scene들의 부모 클래스.
@@ -17,20 +13,20 @@
 */
 namespace NS
 {
-	class Graphics;
+	class GraphicsProcessor;
 	using std::vector;
 
 	class SceneBase
 	{
 	public:
-		virtual void Initialize(Graphics* pGraphics);
+		virtual void Initialize(GraphicsProcessor* pGraphics);
 		virtual void UpdateGUI() = 0;
 		virtual void Update(float dt) = 0;
 		virtual void Render() = 0;
 		virtual ~SceneBase();
 
 	protected:
-		Graphics* m_pGraphics;
+		GraphicsProcessor* m_pGraphics;
 	};
 }
 

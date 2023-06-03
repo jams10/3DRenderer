@@ -132,10 +132,13 @@
     <ClInclude Include="Application\AppBase.h" />
     <ClInclude Include="Application\RenderApp.h" />
     <ClInclude Include="Graphics\D3D11Graphics.h" />
-    <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\GraphicsProcessor.h" />
+    <ClInclude Include="Graphics\GraphicsCommon.h" />
+    <ClInclude Include="Graphics\GraphicsPSO.h" />
     <ClInclude Include="Model\ConstantData.h" />
     <ClInclude Include="Model\MeshForCPU.h" />
     <ClInclude Include="Model\MeshForGPU.h" />
+    <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Model\Vertex.h" />
     <ClInclude Include="Scene\SCDrawTexturedCube.h" />
     <ClInclude Include="Scene\SCDrawTriangle.h" />
@@ -152,8 +155,11 @@
     <ClCompile Include="Application\AppBase.cpp" />
     <ClCompile Include="Application\RenderApp.cpp" />
     <ClCompile Include="Graphics\D3D11Graphics.cpp" />
-    <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Graphics\GraphicsProcessor.cpp" />
+    <ClCompile Include="Graphics\GraphicsCommon.cpp" />
+    <ClCompile Include="Graphics\GraphicsPSO.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Model\Model.cpp" />
     <ClCompile Include="Scene\SCDrawTexturedCube.cpp" />
     <ClCompile Include="Scene\SCDrawTriangle.cpp" />
     <ClCompile Include="Scene\SceneBase.cpp" />
@@ -178,7 +184,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Renderer\Shaders\Outputs\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="Shaders\TexturePixelShader.hlsl">
+    <FxCompile Include="Shaders\TextureMappingPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -186,7 +192,7 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Renderer\Shaders\Outputs\%(Filename).cso</ObjectFileOutput>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shaders\TextureVertexShader.hlsl">
+    <FxCompile Include="Shaders\TextureMappingVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -194,6 +200,9 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Renderer\Shaders\Outputs\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Common.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

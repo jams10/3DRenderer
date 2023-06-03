@@ -36,7 +36,7 @@
     <ClInclude Include="Utility\StringEncode.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Graphics.h">
+    <ClInclude Include="Graphics\GraphicsProcessor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Scene\SceneBase.h">
@@ -69,6 +69,15 @@
     <ClInclude Include="Scene\Scenes.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Model.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GraphicsPSO.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GraphicsCommon.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\AppBase.cpp">
@@ -86,7 +95,7 @@
     <ClCompile Include="Graphics\D3D11Graphics.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Graphics.cpp">
+    <ClCompile Include="Graphics\GraphicsProcessor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Scene\SceneBase.cpp">
@@ -104,11 +113,23 @@
     <ClCompile Include="Scene\SCDrawTexturedCube.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Model.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GraphicsPSO.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GraphicsCommon.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\ColorVertexShader.hlsl" />
     <FxCompile Include="Shaders\ColorPixelShader.hlsl" />
-    <FxCompile Include="Shaders\TextureVertexShader.hlsl" />
-    <FxCompile Include="Shaders\TexturePixelShader.hlsl" />
+    <FxCompile Include="Shaders\TextureMappingVertexShader.hlsl" />
+    <FxCompile Include="Shaders\TextureMappingPixelShader.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\Common.hlsli" />
   </ItemGroup>
 </Project>

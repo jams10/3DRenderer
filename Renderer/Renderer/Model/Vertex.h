@@ -13,16 +13,12 @@ namespace NS
 	using DirectX::SimpleMath::Vector3;
 	using DirectX::SimpleMath::Vector2;
 
-	struct ColorVertex
+	struct Vertex
 	{
 		Vector3 position;
-		Vector3 color;
-	};
-
-	struct BasicVertex
-	{
-		Vector3 position;
-		Vector3 normal;
+		Vector3 normalModel;
 		Vector2 texcoord;
+		Vector3 tangentModel;
+		Vector3 color;
 	};
 }

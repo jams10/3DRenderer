@@ -1,13 +1,9 @@
 
+#include "Common.hlsli"
+
 /*
 *   간단히 보간되어 들어온 정점의 색상을 출력하는 픽셀 쉐이더.
 */
-
-struct PixelShaderInput
-{
-    float4 pos : SV_POSITION;
-    float3 color : COLOR;
-};
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {

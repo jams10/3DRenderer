@@ -17,31 +17,28 @@ namespace NS
 
 	struct MeshForGPU
 	{
-        ComPtr<ID3D11VertexShader> pVertexShader;
-        ComPtr<ID3D11PixelShader> pPixelShader;
-        ComPtr<ID3D11InputLayout> pInputLayout;
+        ComPtr<ID3D11Buffer> vertexBuffer;
+        ComPtr<ID3D11Buffer> indexBuffer;
+        ComPtr<ID3D11Buffer> vertexConstantBuffer;
+        ComPtr<ID3D11Buffer> pixelConstantBuffer;
 
-        ComPtr<ID3D11Buffer> pVertexBuffer;
-        ComPtr<ID3D11Buffer> pIndexBuffer;
-        ComPtr<ID3D11Buffer> pVertexConstantBuffer;
-        ComPtr<ID3D11Buffer> pPixelConstantBuffer;
+        ComPtr<ID3D11Texture2D> albedoTexture;
+        ComPtr<ID3D11ShaderResourceView> albedoSRV;
 
-        ComPtr<ID3D11ShaderResourceView> pDiffuseMapSRV;
-        ComPtr<ID3D11Texture2D> pDiffuseTexture;
+        UINT indexCount = 0; // Number of indiecs = 3 * number of triangles
+        UINT vertexCount = 0;
+        UINT stride = 0;
+        UINT offset = 0;
 
         void Shutdown()
         {
-            pVertexShader.Reset();
-            pPixelShader.Reset();
-            pInputLayout.Reset();
+            vertexBuffer.Reset();
+            indexBuffer.Reset();
+            vertexConstantBuffer.Reset();
+            pixelConstantBuffer.Reset();
 
-            pVertexBuffer.Reset();
-            pIndexBuffer.Reset();
-            pVertexConstantBuffer.Reset();
-            pPixelConstantBuffer.Reset();
-
-            pDiffuseMapSRV.Reset();
-            pDiffuseTexture.Reset();
+            albedoSRV.Reset();
+            albedoTexture.Reset();
         }
 	};
 }

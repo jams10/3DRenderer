@@ -2,6 +2,9 @@
 
 #include "Utility/CustomMacros.h"
 #include "Windows/WindowsHeaders.h"
+#include "GraphicsPSO.h"
+
+#include "Model/ConstantData.h"
 
 /*
 *	<Graphics>
@@ -16,16 +19,18 @@ namespace NS
 
 	class D3D11Graphics;
 
-	class Graphics
+	class GraphicsProcessor
 	{
 	public:
-		Graphics();
-		Graphics(const Graphics&) = delete;
-		Graphics& operator=(const Graphics&) = delete;
-		~Graphics();
+		GraphicsProcessor();
+		GraphicsProcessor(const GraphicsProcessor&) = delete;
+		GraphicsProcessor& operator=(const GraphicsProcessor&) = delete;
+		~GraphicsProcessor();
 
 		bool Initialize(int screenWidth, int screenHeight, HWND hWnd);
 		void Shutdown();
+
+		void SetPipelineState(const GraphicsPSO& pso);
 
 		inline D3D11Graphics* GetD3D11() { return m_pD3D; }
 

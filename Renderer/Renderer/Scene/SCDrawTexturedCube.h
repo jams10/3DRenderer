@@ -9,7 +9,7 @@
 */
 namespace NS
 {
-	class SCDrawTexturedCube : public SceneBase
+	/*class SCDrawTexturedCube : public SceneBase
 	{
 	public:
 		virtual void Initialize(Graphics* pGraphics) override;
@@ -31,7 +31,7 @@ namespace NS
 
 		bool m_bUsePerspectiveProjection = true;
 		bool m_bUseWireFrame = false;
-	};
+	};*/
 
 }
 

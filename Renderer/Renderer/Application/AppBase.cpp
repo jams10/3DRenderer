@@ -4,8 +4,9 @@
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 
-#include "Graphics/Graphics.h"
+#include "Graphics/GraphicsProcessor.h"
 #include "Graphics/D3D11Graphics.h"
+#include "Graphics/GraphicsCommon.h"
 
 namespace NS
 {
@@ -41,13 +42,16 @@ namespace NS
 		}
 
 		// 그래픽스 초기화.
-		m_pGraphics = new Graphics();
+		m_pGraphics = new GraphicsProcessor();
 		if (m_pGraphics->Initialize(m_screenWidth, m_screenHeight, window.GetWindowHandle()) == false)
 		{
 			cout << "Failed to Initialize Graphics\n";
 			__ERRORLINE__
 			return false;
 		}
+
+		// PSO 생성 및 초기화.
+		Graphics::InitCommonStates(m_pGraphics);
 
 		return true;
 	}

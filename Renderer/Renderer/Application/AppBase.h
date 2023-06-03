@@ -13,7 +13,7 @@
 
 namespace NS
 {
-	class Graphics;
+	class GraphicsProcessor;
 
 	class AppBase
 	{
@@ -32,7 +32,7 @@ namespace NS
 
 	protected:
 		Window window;
-		Graphics* m_pGraphics;
+		GraphicsProcessor* m_pGraphics;
 		ImGuiManager m_imGuiManager;
 		GameTimer m_gameTimer;
 		int m_screenWidth;

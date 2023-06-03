@@ -1,27 +1,14 @@
 
+#include "Common.hlsli"
+
 /*
 *   위치, 노말, 텍스쳐 좌표를 가지는 정점을 트랜스폼하는 간단한 정점 쉐이더.
 */
 
-cbuffer MVPMatrix : register(b0)
+cbuffer MeshConstants : register(b0)
 {
     matrix world;
-    matrix view;
-    matrix projection;
-};
-
-struct VertexShaderInput
-{
-    float3 posModel : POSITION;
-    float3 normalModel : NORMAL;
-    float2 texcoord : TEXCOORD0;
-};
-
-struct PixelShaderInput
-{
-    float4 posProj : SV_POSITION;
-    float3 normalWorld : COLOR;
-    float2 texcoord : TEXCOORD;
+    matrix worldInvTranspose;
 };
 
 PixelShaderInput main(VertexShaderInput input)
@@ -30,11 +17,12 @@ PixelShaderInput main(VertexShaderInput input)
     float4 pos = float4(input.posModel, 1.0f); // 아핀 공간.
     pos = mul(pos, world);
     pos = mul(pos, view);
-    pos = mul(pos, projection);
+    pos = mul(pos, proj);
 
     output.posProj = pos;
     output.normalWorld = input.normalModel;
     output.texcoord = input.texcoord;
+    output.color = input.color;
     
     return output;
 }

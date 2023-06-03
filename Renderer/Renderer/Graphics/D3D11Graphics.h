@@ -11,6 +11,7 @@
 
 #include "Model/MeshForCPU.h"
 #include "Model/MeshForGPU.h"
+#include "Model/ConstantData.h"
 
  /*
  *	<D3D11Graphics>
@@ -34,7 +35,7 @@ namespace NS
 
 	class D3D11Graphics
 	{
-		friend class Graphics;
+		friend class GraphicsProcessor;
 
 	public:
 		D3D11Graphics();
@@ -45,31 +46,33 @@ namespace NS
 		bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hWnd, float screenDepth, float screenNear);
 
 		void BeginFrame(float red, float green, float blue, float alpha);
-		void Render(const MeshForCPUWithColorVertex& meshForCPU, const MeshForGPU& meshForGPU);
-		void Render(const MeshForCPUWithBasicVertex& meshForCPU, const MeshForGPU& meshForGPU);
+		void Render(const MeshForGPU& meshForGPU);
 		void EndFrame();
 
+		void CreateGlobalConstantBuffer(const GlobalConstants& gloablConstantBufferData);
+		void SetGlobalConstantBufferData();
+		void UpdateGlobalConstantBuffer(const GlobalConstants& gloablConstantBufferData);
+
 		float GetAspectRatio();
-		void ResizeScreen(float screenWidth, float screenHeight);
+		void ResizeScreen(int screenWidth, int screenHeight);
 		void ShutDownImGui();
 
-		bool m_drawAsWireFrame = false;
+		ComPtr<ID3D11Device> GetDevice() { return m_device; }
+		ComPtr<ID3D11DeviceContext> GetContext() { return m_context; }
 
 	private:
 		// 기본 렌더링 필요 자원.
-		ComPtr<ID3D11Device> m_pDevice;
-		ComPtr<ID3D11DeviceContext> m_pContext;
-		ComPtr<ID3D11RenderTargetView> m_pBackBufferRTV;
-		ComPtr<IDXGISwapChain> m_pSwapChain;
-		ComPtr<ID3D11RasterizerState> m_pSolidRasterizerSate;
-		ComPtr<ID3D11RasterizerState> m_pWireRasterizerSate;
-
-		ComPtr<ID3D11SamplerState> m_pSamplerState;
+		ComPtr<ID3D11Device> m_device;
+		ComPtr<ID3D11DeviceContext> m_context;
+		ComPtr<ID3D11RenderTargetView> m_backBufferRTV;
+		ComPtr<IDXGISwapChain> m_swapChain;
 
 		// Depth buffer 관련
-		ComPtr<ID3D11Texture2D> m_pDepthStencilBuffer;
-		ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;
-		ComPtr<ID3D11DepthStencilState> m_pDepthStencilState;
+		ComPtr<ID3D11Texture2D> m_depthStencilBuffer;
+		ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+
+		// 전역 상수 버퍼.
+		ComPtr<ID3D11Buffer> m_globalConstantBuffer = nullptr;
 
 		D3D11_VIEWPORT m_screenViewport;
 		UINT m_numQualityLevels;
@@ -104,7 +107,7 @@ namespace NS
 			vertexBufferData.SysMemPitch = 0;
 			vertexBufferData.SysMemSlicePitch = 0;
 
-			THROWFAILED(m_pDevice->CreateBuffer(&bufferDesc, &vertexBufferData, vertexBuffer.GetAddressOf()));
+			THROWFAILED(m_device->CreateBuffer(&bufferDesc, &vertexBufferData, vertexBuffer.GetAddressOf()));
 		}
 
 		template <typename T_CONSTANT>
@@ -123,16 +126,16 @@ namespace NS
 			InitData.SysMemPitch = 0;
 			InitData.SysMemSlicePitch = 0;
 
-			THROWFAILED(m_pDevice->CreateBuffer(&cbDesc, &InitData, constantBuffer.GetAddressOf()));
+			THROWFAILED(m_device->CreateBuffer(&cbDesc, &InitData, constantBuffer.GetAddressOf()));
 		}
 
 		template <typename T_DATA>
 		void UpdateBuffer(const T_DATA& bufferData, ComPtr<ID3D11Buffer>& buffer) 
 		{
 			D3D11_MAPPED_SUBRESOURCE ms;
-			m_pContext->Map(buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+			m_context->Map(buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
 			memcpy(ms.pData, &bufferData, sizeof(bufferData));
-			m_pContext->Unmap(buffer.Get(), NULL);
+			m_context->Unmap(buffer.Get(), NULL);
 		}
 
 		bool CreateRenderTargetView();

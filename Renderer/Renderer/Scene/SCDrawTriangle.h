@@ -2,6 +2,8 @@
 
 #include "SceneBase.h"
 
+#include "Model/Model.h"
+
 /*
 *	<SCDrawTriangle>
 *	기본적인 삼각형을 그리는 씬.
@@ -12,18 +14,18 @@ namespace NS
 	class SCDrawTriangle : public SceneBase
 	{
 	public:
-		virtual void Initialize(Graphics* pGraphics) override;
+		virtual void Initialize(GraphicsProcessor* pGraphics) override;
 		virtual void UpdateGUI() override;
 		virtual void Update(float dt) override;
 		virtual void Render() override;
 		virtual ~SCDrawTriangle();
 
 	private:
-		void MakeTriangle();
+		MeshForCPU MakeTriangle();
 
-		MeshForCPUWithColorVertex m_meshForCPU;
-		MeshForGPU m_meshForGPU;
-		ConstantDataMVP m_constantData;
+		Model m_triangleModel;
+
+		GlobalConstants m_globalConstantBufferData;
 
 		Vector3 m_translation = Vector3{ 0.0f, 0.0f, 2.0f };
 		Vector3 m_rotation;
