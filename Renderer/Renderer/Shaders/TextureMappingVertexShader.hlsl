@@ -20,7 +20,9 @@ PixelShaderInput main(VertexShaderInput input)
     pos = mul(pos, proj);
 
     output.posProj = pos;
-    output.normalWorld = input.normalModel;
+    float4 normal = float4(input.normalModel, 0.0f);
+    output.normalWorld = mul(normal, worldInvTranspose).xyz;
+    output.normalWorld = normalize(output.normalWorld);
     output.texcoord = input.texcoord;
     output.color = input.color;
     

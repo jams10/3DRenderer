@@ -121,8 +121,8 @@ namespace NS
 				m_pScene->Initialize(m_pGraphics);
 				break;
 			case SceneType::DRAW_TEXTUREDCUBE:
-				//m_pScene = new SCDrawTexturedCube;
-				//m_pScene->Initialize(m_pGraphics);
+				m_pScene = new SCDrawTexturedCube;
+				m_pScene->Initialize(m_pGraphics);
 				break;
 			}
 		}

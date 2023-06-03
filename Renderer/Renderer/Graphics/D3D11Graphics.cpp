@@ -168,10 +168,8 @@ namespace NS
 		ID3D11ShaderResourceView* pixelResources[1] = { meshForGPU.albedoSRV.Get() };
 		m_context->PSSetShaderResources(0, 1, pixelResources);
 
-		// 정점, 인덱스 버퍼 설정하고 그리기 명령 호출.
-		UINT stride = sizeof(Vertex);
-		UINT offset = 0;
-		m_context->IASetVertexBuffers(0, 1, meshForGPU.vertexBuffer.GetAddressOf(), &stride, &offset);
+		// 정점, 인덱스 버퍼 설정하고 그리기 명령 호출.s
+		m_context->IASetVertexBuffers(0, 1, meshForGPU.vertexBuffer.GetAddressOf(), &meshForGPU.stride, &meshForGPU.offset);
 		m_context->IASetIndexBuffer(meshForGPU.indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 		m_context->DrawIndexed(meshForGPU.indexCount, 0, 0);
 	}

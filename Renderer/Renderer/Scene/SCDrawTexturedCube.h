@@ -2,6 +2,8 @@
 
 #include "SceneBase.h"
 
+#include "Model/Model.h"
+
 /*
 *	<SCDrawTexturedCube>
 *	기본적인 정육면체를 그리는 씬.
@@ -9,21 +11,21 @@
 */
 namespace NS
 {
-	/*class SCDrawTexturedCube : public SceneBase
+	class SCDrawTexturedCube : public SceneBase
 	{
 	public:
-		virtual void Initialize(Graphics* pGraphics) override;
+		virtual void Initialize(GraphicsProcessor* pGraphics) override;
 		virtual void UpdateGUI() override;
 		virtual void Update(float dt) override;
 		virtual void Render() override;
 		virtual ~SCDrawTexturedCube();
 
 	private:
-		void MakeCube(float scale);
+		MeshForCPU MakeCube(float scale);
 
-		MeshForCPUWithBasicVertex m_meshForCPU;
-		MeshForGPU m_meshForGPU;
-		ConstantDataMVP m_constantData;
+		Model m_cubeModel;
+
+		GlobalConstants m_globalConstantBufferData;
 
 		Vector3 m_translation = Vector3{ 0.0f, 0.0f, 2.0f };
 		Vector3 m_rotation;
@@ -31,7 +33,7 @@ namespace NS
 
 		bool m_bUsePerspectiveProjection = true;
 		bool m_bUseWireFrame = false;
-	};*/
+	};
 
 }
 
