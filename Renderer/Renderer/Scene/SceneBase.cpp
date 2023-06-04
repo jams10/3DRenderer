@@ -17,9 +17,31 @@ namespace NS
 			return;
 		}
 		m_pGraphics = pGraphics;
+
+		m_camera.SetAspectRatio(pGraphics->GetD3D11()->GetAspectRatio());
 	};
 
 	SceneBase::~SceneBase()
 	{
+	}
+
+	void SceneBase::UpdateGlobalConstantData(const Vector3& eyeWorld, const Matrix& viewRow, const Matrix& projRow)
+	{
+		m_globalConstantBufferData.eyeWorld = eyeWorld;
+		m_globalConstantBufferData.view = viewRow.Transpose();
+		m_globalConstantBufferData.proj = projRow.Transpose();
+		m_globalConstantBufferData.invProj = projRow.Invert().Transpose();
+		m_globalConstantBufferData.viewProj = (viewRow * projRow).Transpose();
+	}
+
+	void SceneBase::UpdateGUI()
+	{
+		m_camera.UpdateGUI();
+	}
+
+	void SceneBase::Update(float dt)
+	{
+		m_camera.SetAspectRatio(m_pGraphics->GetD3D11()->GetAspectRatio());
+		m_camera.UpdateViewDirection();
 	}
 }

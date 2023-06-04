@@ -6,6 +6,9 @@
 
 #include <memory>
 
+#include "Object/Camera.h"
+#include "Model/ConstantData.h"
+
 /*
 *	<SceneBase>
 *	모든 Scene들의 부모 클래스.
@@ -20,13 +23,17 @@ namespace NS
 	{
 	public:
 		virtual void Initialize(GraphicsProcessor* pGraphics);
-		virtual void UpdateGUI() = 0;
-		virtual void Update(float dt) = 0;
+		virtual void UpdateGUI();
+		virtual void Update(float dt);
 		virtual void Render() = 0;
 		virtual ~SceneBase();
 
+		void UpdateGlobalConstantData(const Vector3& eyeWorld, const Matrix& viewRow, const Matrix& projRow);
+
 	protected:
 		GraphicsProcessor* m_pGraphics;
+		Camera m_camera;
+		GlobalConstants m_globalConstantBufferData;
 	};
 }
 

@@ -140,6 +140,7 @@
     <ClInclude Include="Model\MeshForGPU.h" />
     <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Model\Vertex.h" />
+    <ClInclude Include="Object\Camera.h" />
     <ClInclude Include="Scene\SCDrawTexturedCube.h" />
     <ClInclude Include="Scene\SCDrawTriangle.h" />
     <ClInclude Include="Scene\SceneBase.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Graphics\GraphicsPSO.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model\Model.cpp" />
+    <ClCompile Include="Object\Camera.cpp" />
     <ClCompile Include="Scene\SCDrawTexturedCube.cpp" />
     <ClCompile Include="Scene\SCDrawTriangle.cpp" />
     <ClCompile Include="Scene\SceneBase.cpp" />

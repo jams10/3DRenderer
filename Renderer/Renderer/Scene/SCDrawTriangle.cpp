@@ -27,17 +27,21 @@ namespace NS
 
 	void SCDrawTriangle::UpdateGUI()
 	{
+		SceneBase::UpdateGUI();
+
 		ImGui::Begin("Position");
 
-		ImGui::SliderFloat3("m_modelTranslation", &m_translation.x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("m_modelRotation(Rad)", &m_rotation.x, -3.14f, 3.14f);
-		ImGui::SliderFloat3("m_modelScaling", &m_scale.x, 0.1f, 2.0f);
+		ImGui::SliderFloat3("Translation", &m_translation.x, -5.0f, 5.0f);
+		ImGui::SliderFloat3("Rotation(Rad)", &m_rotation.x, -3.14f, 3.14f);
+		ImGui::SliderFloat3("Scaling", &m_scale.x, 0.1f, 2.0f);
 
 		ImGui::End();
 	}
 
 	void SCDrawTriangle::Update(float dt)
 	{
+		SceneBase::Update(dt);
+
 		/* 글로벌 상수 버퍼랑 모델 별 상수 버퍼 나눠서 쉐이더에 정의하고 cpu쪽에서 생성, 바인딩 해주어야 함.*/
 
 		// 월드 변환 행렬. SRT 순서.
@@ -49,18 +53,14 @@ namespace NS
 		// 모델 트랜스폼 상수 버퍼 업데이트.
 		m_triangleModel.UpdateModelTransformConstantBuffer(m_pGraphics);
 
-		// 뷰 변환 행렬.
-		m_globalConstantBufferData.view =
-			DirectX::XMMatrixLookAtLH({ 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f });
-		m_globalConstantBufferData.view = m_globalConstantBufferData.view.Transpose();
+		// 글로벌 상수 버퍼 데이터 업데이트.(CPU)
+		UpdateGlobalConstantData(
+			m_camera.GetCameraPosition(), 
+			m_camera.GetViewMatrixRow(), 
+			m_camera.GetProjectionMatrixRow()
+		);
 
-		// 투영 변환 행렬.
-		const float aspect = m_pGraphics->GetD3D11()->GetAspectRatio();
-		const float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
-		m_globalConstantBufferData.proj = DirectX::XMMatrixPerspectiveFovLH(fovAngleY, aspect, 0.01f, 100.0f);
-		m_globalConstantBufferData.proj = m_globalConstantBufferData.proj.Transpose();
-
-		// 글로벌 상수 버퍼 업데이트.
+		// 글로벌 상수 버퍼 업데이트.(GPU)
 		m_pGraphics->GetD3D11()->UpdateGlobalConstantBuffer(m_globalConstantBufferData);
 	}
 

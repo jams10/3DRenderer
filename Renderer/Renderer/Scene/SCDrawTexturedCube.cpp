@@ -29,12 +29,13 @@ namespace NS
 
 	void SCDrawTexturedCube::UpdateGUI()
 	{
+        SceneBase::UpdateGUI();
+
 		ImGui::Begin("Position");
 
-		ImGui::SliderFloat3("m_modelTranslation", &m_translation.x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("m_modelRotation(Rad)", &m_rotation.x, -3.14f, 3.14f);
-		ImGui::SliderFloat3("m_modelScaling", &m_scale.x, 0.1f, 2.0f);
-        ImGui::Checkbox("Use Perspective", &m_bUsePerspectiveProjection);
+		ImGui::SliderFloat3("Translation", &m_translation.x, -5.0f, 5.0f);
+		ImGui::SliderFloat3("Rotation(Rad)", &m_rotation.x, -3.14f, 3.14f);
+		ImGui::SliderFloat3("Scaling", &m_scale.x, 0.1f, 2.0f);
         ImGui::Checkbox("Use Wireframe", &m_bUseWireFrame);
 
 		ImGui::End();
@@ -42,6 +43,8 @@ namespace NS
 
 	void SCDrawTexturedCube::Update(float dt)
 	{
+        SceneBase::Update(dt);
+
         // 월드 변환 행렬. SRT 순서.
         m_cubeModel.m_meshWorldTransformData.world = Matrix::CreateScale(m_scale) *
             Matrix::CreateRotationY(m_rotation.y) *
@@ -51,27 +54,14 @@ namespace NS
         // 모델 트랜스폼 상수 버퍼 업데이트.
         m_cubeModel.UpdateModelTransformConstantBuffer(m_pGraphics);
 
-		// 뷰 변환 행렬.
-        m_globalConstantBufferData.view =
-			DirectX::XMMatrixLookAtLH({ 0.0f, 0.0f, -1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f, 0.0f });
-        m_globalConstantBufferData.view = m_globalConstantBufferData.view.Transpose();
+        // 글로벌 상수 버퍼 데이터 업데이트.(CPU)
+        UpdateGlobalConstantData(
+            m_camera.GetCameraPosition(),
+            m_camera.GetViewMatrixRow(),
+            m_camera.GetProjectionMatrixRow()
+        );
 
-		// 투영 변환 행렬.
-		const float aspect = m_pGraphics->GetD3D11()->GetAspectRatio();
-        if (m_bUsePerspectiveProjection) 
-        {
-            const float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
-            m_globalConstantBufferData.proj =
-                DirectX::XMMatrixPerspectiveFovLH(fovAngleY, aspect, 0.01f, 100.0f);
-        }
-        else 
-        {
-            m_globalConstantBufferData.proj =
-                DirectX::XMMatrixOrthographicOffCenterLH(-aspect, aspect, -1.0f, 1.0f, 0.1f, 10.0f);
-        }
-        m_globalConstantBufferData.proj = m_globalConstantBufferData.proj.Transpose();
-
-        // 글로벌 상수 버퍼 업데이트.
+        // 글로벌 상수 버퍼 업데이트.(GPU)
         m_pGraphics->GetD3D11()->UpdateGlobalConstantBuffer(m_globalConstantBufferData);
 	}
 
