@@ -27,7 +27,6 @@ namespace NS
 		if (AppBase::Initialize() == false)
 			return false;
 
-		m_keyboard.EnableAutorepeat();
 		m_Camera.SetAspectRatio(m_pGraphics->GetD3D11()->GetAspectRatio());
 
 		return true;
@@ -55,15 +54,7 @@ namespace NS
 
 		m_Camera.SetAspectRatio(m_pGraphics->GetD3D11()->GetAspectRatio());
 
-		while (const auto evt = m_keyboard.ReadKey())
-		{
-			if (!evt->IsPress()) // 키를 누르지 않았다면 패스.
-			{
-				continue;
-			}
-
-			MoveCamera(dt);
-		}
+		MoveCamera(dt);
 	}
 
 	void RenderApp::Render()
@@ -74,29 +65,29 @@ namespace NS
 
 	void RenderApp::MoveCamera(float dt)
 	{
-		if (m_keyboard.KeyIsPressed('W'))
+		if (m_keyboard.m_keyPressed['W'])
 		{
-			m_Camera.Translate(0.0f, 0.0f, 1.0f, dt);
+			m_Camera.MoveForward(dt);
 		}
-		if (m_keyboard.KeyIsPressed('A'))
+		if (m_keyboard.m_keyPressed['A'])
 		{
-			m_Camera.Translate(-1.0f, 0.0f, 0.0f, dt);
+			m_Camera.MoveRight(-dt);
 		}
-		if (m_keyboard.KeyIsPressed('S'))
+		if (m_keyboard.m_keyPressed['S'])
 		{
-			m_Camera.Translate(0.0f, 0.0f, -1.0f, dt);
+			m_Camera.MoveForward(-dt);
 		}
-		if (m_keyboard.KeyIsPressed('D'))
+		if (m_keyboard.m_keyPressed['D'])
 		{
-			m_Camera.Translate(1.0f, 0.0f, 0.0f, dt);
+			m_Camera.MoveRight(dt);
 		}
-		if (m_keyboard.KeyIsPressed('R'))
+		if (m_keyboard.m_keyPressed['R'])
 		{
-			m_Camera.Translate(0.0f, 1.0f, 0.0f, dt);
+			m_Camera.MoveUpward(dt);
 		}
-		if (m_keyboard.KeyIsPressed('F'))
+		if (m_keyboard.m_keyPressed['F'])
 		{
-			m_Camera.Translate(0.0f, -1.0f, 0.0f, dt);
+			m_Camera.MoveUpward(-dt);
 		}
 
 		m_Camera.UpdateViewDirection();

@@ -20,7 +20,9 @@ namespace NS
 
 		void SetAspectRatio(float aspectRatio);
 		void UpdateViewDirection();
-		void Translate(float x, float y, float z, float dt);
+		void MoveForward(float dt);
+		void MoveRight(float dt);
+		void MoveUpward(float dt);
 		void UpdateGUI();
 
 	private:

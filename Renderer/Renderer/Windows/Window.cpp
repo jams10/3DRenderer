@@ -216,23 +216,14 @@ namespace NS
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
-		case WM_KILLFOCUS:    // 윈도우에 대한 포커스를 잃어버리면 키 입력 상태를 모두 초기화 해줌.
-			m_pKeyboard->ClearState();
-			break;
 #pragma region KeyboardMSG
 		case WM_KEYDOWN:
 		case WM_SYSKEYDOWN: // alt 같은 시스템 키도 받아오도록 함.
-			if (!(lParam & 0x40000000) || m_pKeyboard->AutorepeatIsEnabled()) // 이전과 같은 키를 누르지 않았거나, AutoRepeat 옵션이 켜지지 않은 경우.
-			{
-				m_pKeyboard->OnKeyPressed(static_cast<unsigned char>(wParam));
-			}
+			m_pKeyboard->m_keyPressed[wParam] = true;
 			break;
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
-			m_pKeyboard->OnKeyReleased(static_cast<unsigned char>(wParam));
-			break;
-		case WM_CHAR:
-			m_pKeyboard->OnChar(static_cast<unsigned char>(wParam));
+			m_pKeyboard->m_keyPressed[wParam] = false;
 			break;
 #pragma endregion
 		}

@@ -49,9 +49,19 @@ namespace NS
 		m_rightDir = m_upDir.Cross(m_viewDir);
 	}
 
-	void Camera::Translate(float x, float y, float z, float dt)
+	void Camera::MoveForward(float dt)
 	{
-		m_position += Vector3(x * m_speed * dt, y * m_speed * dt, z * m_speed * dt);
+		m_position += m_viewDir * m_speed * dt;
+	}
+
+	void Camera::MoveRight(float dt)
+	{
+		m_position += m_rightDir * m_speed * dt;
+	}
+
+	void Camera::MoveUpward(float dt)
+	{
+		m_position += m_upDir * m_speed * dt;
 	}
 
 	void Camera::UpdateGUI()
