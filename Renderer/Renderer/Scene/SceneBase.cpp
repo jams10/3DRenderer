@@ -6,10 +6,11 @@
 #include "Graphics/GraphicsProcessor.h"
 #include "Graphics/D3D11Graphics.h"
 #include "Utility/StringEncode.h"
+#include "Object/Camera.h"
 
 namespace NS
 {
-	void SceneBase::Initialize(GraphicsProcessor* pGraphics)
+	void SceneBase::Initialize(GraphicsProcessor* pGraphics, Camera* pCamera)
 	{
 		if (pGraphics == nullptr)
 		{
@@ -17,8 +18,7 @@ namespace NS
 			return;
 		}
 		m_pGraphics = pGraphics;
-
-		m_camera.SetAspectRatio(pGraphics->GetD3D11()->GetAspectRatio());
+		m_pCamera = pCamera;
 	};
 
 	SceneBase::~SceneBase()
@@ -36,12 +36,9 @@ namespace NS
 
 	void SceneBase::UpdateGUI()
 	{
-		m_camera.UpdateGUI();
 	}
 
 	void SceneBase::Update(float dt)
 	{
-		m_camera.SetAspectRatio(m_pGraphics->GetD3D11()->GetAspectRatio());
-		m_camera.UpdateViewDirection();
 	}
 }

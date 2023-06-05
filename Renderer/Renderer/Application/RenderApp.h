@@ -2,6 +2,8 @@
 
 #include "AppBase.h"
 
+#include "Object/Camera.h"
+
 /*
 *	<RenderApp>
 *	기본 Application 클래스인 AppBase 클래스를 상속 받음.
@@ -23,8 +25,11 @@ namespace NS
         virtual void Update(float dt) override;
         virtual void Render() override;
 
+        void MoveCamera(float dt);
+
     private:
         SceneBase* m_pScene;
+        Camera m_Camera;
         int m_selectedSceneIndex;
         int m_currentSceneIndex;
         bool m_openSystemInfoWindow;

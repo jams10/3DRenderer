@@ -14,7 +14,7 @@ namespace NS
 	class SCDrawTriangle : public SceneBase
 	{
 	public:
-		virtual void Initialize(GraphicsProcessor* pGraphics) override;
+		virtual void Initialize(GraphicsProcessor* pGraphics, Camera* pCamera) override;
 		virtual void UpdateGUI() override;
 		virtual void Update(float dt) override;
 		virtual void Render() override;

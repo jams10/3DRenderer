@@ -7,12 +7,13 @@
 #include "Graphics/D3D11Graphics.h"
 #include "Graphics/GraphicsCommon.h"
 #include "Utility/StringEncode.h"
+#include "Object/Camera.h"
 
 namespace NS
 {
-	void SCDrawTriangle::Initialize(GraphicsProcessor* pGraphics)
+	void SCDrawTriangle::Initialize(GraphicsProcessor* pGraphics, Camera* pCamera)
 	{
-		SceneBase::Initialize(pGraphics);
+		SceneBase::Initialize(pGraphics, pCamera);
 
 		m_triangleModel.Initialize(pGraphics, std::vector<MeshForCPU>{MakeTriangle()});
 
@@ -55,9 +56,9 @@ namespace NS
 
 		// 글로벌 상수 버퍼 데이터 업데이트.(CPU)
 		UpdateGlobalConstantData(
-			m_camera.GetCameraPosition(), 
-			m_camera.GetViewMatrixRow(), 
-			m_camera.GetProjectionMatrixRow()
+			m_pCamera->GetCameraPosition(), 
+			m_pCamera->GetViewMatrixRow(), 
+			m_pCamera->GetProjectionMatrixRow()
 		);
 
 		// 글로벌 상수 버퍼 업데이트.(GPU)

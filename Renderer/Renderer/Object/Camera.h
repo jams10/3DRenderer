@@ -20,6 +20,7 @@ namespace NS
 
 		void SetAspectRatio(float aspectRatio);
 		void UpdateViewDirection();
+		void Translate(float x, float y, float z, float dt);
 		void UpdateGUI();
 
 	private:
@@ -38,7 +39,7 @@ namespace NS
 		float m_aspectRatio = 16.f / 9.f;
 		bool m_usePerspectiveProjection = true;
 
-		//float m_speed = 1.0f;
+		float m_speed = 3.0f;
 	};
 
 }

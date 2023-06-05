@@ -3,6 +3,8 @@
 #include <iostream>
 #include <imgui_impl_win32.h>
 
+#include "Input/Keyboard.h"
+
 // imgui_impl_win32.cpp에 정의된 메시지 처리 함수에 대한 전방 선언
 // VCPKG를 통해 IMGUI를 사용할 경우 빨간줄로 경고가 뜰 수 있음
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd,
@@ -18,7 +20,7 @@ namespace NS
 	// 윈도우 클래스
 	Window::WindowClass Window::WindowClass::wndClass; // static 멤버 변수 정의
 	// WindowClass 생성자. 윈도우 클래스 생성을 담당.
-	Window::WindowClass::WindowClass() noexcept
+	Window::WindowClass::WindowClass() 
 		:
 		hInst(GetModuleHandle(nullptr)) // exe 파일에서는 이 함수로 얻어오는 인스턴스 핸들이나 WinMain()의 매개변수인 hInstance의 값이 다르지 않다. 
 		// 그러나, DLL 안에 윈도우들을 생성할 경우 WinMain의 hInstance는 DLL의 hInstance를, GetModuleHandle은 여전히 DLL을 로드한 exe 파일의 HINSTANCE를 반환 한다.
@@ -45,12 +47,12 @@ namespace NS
 		UnregisterClass(wndClassName, GetInstance()); // 등록한 윈도우를 해제 해줌.
 	}
 	// 윈도우 클래스의 이름을 리턴해주는 함수.
-	const wchar_t* Window::WindowClass::GetName() noexcept
+	const wchar_t* Window::WindowClass::GetName() 
 	{
 		return wndClassName;
 	}
 	// 프로그램 인스턴스에 대한 핸들을 리턴해주는 함수.
-	HINSTANCE Window::WindowClass::GetInstance() noexcept
+	HINSTANCE Window::WindowClass::GetInstance() 
 	{
 		return wndClass.hInst;
 	}
@@ -79,8 +81,10 @@ namespace NS
 		ImGui_ImplWin32_Shutdown();
 	}
 
-	bool Window::Initialize(const wchar_t* name, int width, int height)
+	bool Window::Initialize(const wchar_t* name, int width, int height, Keyboard* pKeyboard)
 	{
+		m_pKeyboard = pKeyboard;
+
 		// 우리가 원하는 그림이 그려질 부분의 해상도
 		RECT wr = { 0, 0, width, height };
 
@@ -140,7 +144,7 @@ namespace NS
 	}
 
 	// 윈도우 메시지 루프. 윈도우 메시지를 프로시져로 보내주는 함수.
-	int Window::ProcessMessages() noexcept
+	int Window::ProcessMessages() 
 	{
 		MSG msg{ 0 };
 
@@ -159,7 +163,7 @@ namespace NS
 	}
 
 	// 직접 만들어준 멤버 함수를 윈도우 프로시져로 사용하기 위한 기본 설정을 담당하는 함수.
-	LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+	LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 	{
 		// CreateWindow()의 마지막 인자로 넘겨준 this 포인터를 이용해 윈도우 API 쪽에있는 윈도우 클래스 포인터를 저장함.
 		if (msg == WM_NCCREATE)
@@ -183,7 +187,7 @@ namespace NS
 	}
 
 	// 윈도우 메시지를 우리가 작성한 멤버 함수로 전달하기 위한 함수.
-	LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+	LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 	{
 		// window class에 대한 포인터를 얻어옴.
 		Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
@@ -193,7 +197,7 @@ namespace NS
 	}
 
 	// 실제 윈도우 메시지를 처리해 줄 함수.
-	LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+	LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 	{
 		// ImGui에 대한 입력인 경우 ImGui가 consume.
 		if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
@@ -212,6 +216,25 @@ namespace NS
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
+		case WM_KILLFOCUS:    // 윈도우에 대한 포커스를 잃어버리면 키 입력 상태를 모두 초기화 해줌.
+			m_pKeyboard->ClearState();
+			break;
+#pragma region KeyboardMSG
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN: // alt 같은 시스템 키도 받아오도록 함.
+			if (!(lParam & 0x40000000) || m_pKeyboard->AutorepeatIsEnabled()) // 이전과 같은 키를 누르지 않았거나, AutoRepeat 옵션이 켜지지 않은 경우.
+			{
+				m_pKeyboard->OnKeyPressed(static_cast<unsigned char>(wParam));
+			}
+			break;
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+			m_pKeyboard->OnKeyReleased(static_cast<unsigned char>(wParam));
+			break;
+		case WM_CHAR:
+			m_pKeyboard->OnChar(static_cast<unsigned char>(wParam));
+			break;
+#pragma endregion
 		}
 
 		return ::DefWindowProc(hWnd, msg, wParam, lParam);

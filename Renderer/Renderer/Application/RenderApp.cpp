@@ -2,9 +2,14 @@
 #include "RenderApp.h"
 
 #include <imgui.h>
+#include <iostream>
 
 #include "Scene/Scenes.h"
+#include "Graphics/GraphicsProcessor.h"
+#include "Graphics/D3D11Graphics.h"
 #include "Utility/StringEncode.h"
+
+#include "Input/Keyboard.h"
 
 namespace NS
 {
@@ -22,6 +27,9 @@ namespace NS
 		if (AppBase::Initialize() == false)
 			return false;
 
+		m_keyboard.EnableAutorepeat();
+		m_Camera.SetAspectRatio(m_pGraphics->GetD3D11()->GetAspectRatio());
+
 		return true;
 	}
 
@@ -31,8 +39,11 @@ namespace NS
 		ShowSystemInfoWindow();  // 시스템 정보 창.
 		ShowSceneSelectWindow(); // 씬 정보 창.
 		
+		m_Camera.UpdateGUI();
+
 		if(m_pScene)
 			m_pScene->UpdateGUI();   // 씬 UI 창.
+
 	}
 
 	void RenderApp::Update(float dt)
@@ -41,12 +52,54 @@ namespace NS
 
 		if (m_pScene)
 			m_pScene->Update(dt);
+
+		m_Camera.SetAspectRatio(m_pGraphics->GetD3D11()->GetAspectRatio());
+
+		while (const auto evt = m_keyboard.ReadKey())
+		{
+			if (!evt->IsPress()) // 키를 누르지 않았다면 패스.
+			{
+				continue;
+			}
+
+			MoveCamera(dt);
+		}
 	}
 
 	void RenderApp::Render()
 	{
 		if (m_pScene)
 			m_pScene->Render();
+	}
+
+	void RenderApp::MoveCamera(float dt)
+	{
+		if (m_keyboard.KeyIsPressed('W'))
+		{
+			m_Camera.Translate(0.0f, 0.0f, 1.0f, dt);
+		}
+		if (m_keyboard.KeyIsPressed('A'))
+		{
+			m_Camera.Translate(-1.0f, 0.0f, 0.0f, dt);
+		}
+		if (m_keyboard.KeyIsPressed('S'))
+		{
+			m_Camera.Translate(0.0f, 0.0f, -1.0f, dt);
+		}
+		if (m_keyboard.KeyIsPressed('D'))
+		{
+			m_Camera.Translate(1.0f, 0.0f, 0.0f, dt);
+		}
+		if (m_keyboard.KeyIsPressed('R'))
+		{
+			m_Camera.Translate(0.0f, 1.0f, 0.0f, dt);
+		}
+		if (m_keyboard.KeyIsPressed('F'))
+		{
+			m_Camera.Translate(0.0f, -1.0f, 0.0f, dt);
+		}
+
+		m_Camera.UpdateViewDirection();
 	}
 
 #pragma region UI
@@ -118,11 +171,11 @@ namespace NS
 			{
 			case SceneType::DRAW_TRIANGLE:
 				m_pScene = new SCDrawTriangle;
-				m_pScene->Initialize(m_pGraphics);
+				m_pScene->Initialize(m_pGraphics, &m_Camera);
 				break;
 			case SceneType::DRAW_TEXTUREDCUBE:
 				m_pScene = new SCDrawTexturedCube;
-				m_pScene->Initialize(m_pGraphics);
+				m_pScene->Initialize(m_pGraphics, &m_Camera);
 				break;
 			}
 		}

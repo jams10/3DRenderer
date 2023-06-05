@@ -49,10 +49,16 @@ namespace NS
 		m_rightDir = m_upDir.Cross(m_viewDir);
 	}
 
+	void Camera::Translate(float x, float y, float z, float dt)
+	{
+		m_position += Vector3(x * m_speed * dt, y * m_speed * dt, z * m_speed * dt);
+	}
+
 	void Camera::UpdateGUI()
 	{
 		ImGui::Begin("Camera");
 
+		ImGui::SliderFloat("Speed", &m_speed, 0.1f, 3.0f);
 		ImGui::SliderFloat3("Translation", &m_position.x, -100.0f, 100.0f);
 		// Pitch 값의 경우, -90, 90도로 회전해버리면 우리가 바라보는 방향 forward 벡터와 up 벡터의 방향이 일치되어 이상하게 회전됨.
 		// 이를 방지하기 위해 완전히 -90, 90도가 되지 않도록 1보다 약간 작은 값을 곱해줌.

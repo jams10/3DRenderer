@@ -6,7 +6,6 @@
 
 #include <memory>
 
-#include "Object/Camera.h"
 #include "Model/ConstantData.h"
 
 /*
@@ -17,12 +16,13 @@
 namespace NS
 {
 	class GraphicsProcessor;
+	class Camera;
 	using std::vector;
 
 	class SceneBase
 	{
 	public:
-		virtual void Initialize(GraphicsProcessor* pGraphics);
+		virtual void Initialize(GraphicsProcessor* pGraphics, Camera* pCamera);
 		virtual void UpdateGUI();
 		virtual void Update(float dt);
 		virtual void Render() = 0;
@@ -32,7 +32,7 @@ namespace NS
 
 	protected:
 		GraphicsProcessor* m_pGraphics;
-		Camera m_camera;
+		Camera* m_pCamera;
 		GlobalConstants m_globalConstantBufferData;
 	};
 }

@@ -6,6 +6,10 @@
 
 #include "GraphicsPSO.h"
 
+/*
+*	이 곳에서 원하는 렌더링 작업에 따라 각 PSO들을 미리 정의 해 놓음.
+*   여기서는 외부에서 사용하기 위해 extern으로 정의부가 외부에 있음을 알리고 실제로 cpp 파일에서 정의함.
+*/
 namespace NS
 {
 	class GraphicsProcessor;

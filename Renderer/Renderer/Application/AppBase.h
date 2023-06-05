@@ -4,6 +4,7 @@
 #include "Utility/GameTimer.h"
 #include "Windows/Window.h"
 #include "UI/ImGuiManager.h"
+#include "Input/Keyboard.h"
 
 /*
 *	<AppBase>
@@ -35,6 +36,7 @@ namespace NS
 		GraphicsProcessor* m_pGraphics;
 		ImGuiManager m_imGuiManager;
 		GameTimer m_gameTimer;
+		Keyboard m_keyboard;
 		int m_screenWidth;
 		int m_screenHeight;
 	};

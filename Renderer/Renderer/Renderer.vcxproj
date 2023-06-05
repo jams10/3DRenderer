@@ -135,6 +135,7 @@
     <ClInclude Include="Graphics\GraphicsProcessor.h" />
     <ClInclude Include="Graphics\GraphicsCommon.h" />
     <ClInclude Include="Graphics\GraphicsPSO.h" />
+    <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Model\ConstantData.h" />
     <ClInclude Include="Model\MeshForCPU.h" />
     <ClInclude Include="Model\MeshForGPU.h" />
@@ -159,6 +160,7 @@
     <ClCompile Include="Graphics\GraphicsProcessor.cpp" />
     <ClCompile Include="Graphics\GraphicsCommon.cpp" />
     <ClCompile Include="Graphics\GraphicsPSO.cpp" />
+    <ClCompile Include="Input\Keyboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model\Model.cpp" />
     <ClCompile Include="Object\Camera.cpp" />

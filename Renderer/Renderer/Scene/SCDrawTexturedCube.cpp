@@ -7,12 +7,13 @@
 #include "Graphics/D3D11Graphics.h"
 #include "Graphics/GraphicsCommon.h"
 #include "Utility/StringEncode.h"
+#include "Object/Camera.h"
 
 namespace NS
 {
-	void SCDrawTexturedCube::Initialize(GraphicsProcessor* pGraphics)
-	{
-		SceneBase::Initialize(pGraphics);
+    void SCDrawTexturedCube::Initialize(GraphicsProcessor* pGraphics, Camera* pCamera)
+    {
+        SceneBase::Initialize(pGraphics, pCamera);
 
         MeshForCPU cube = MakeCube(1.0f);
         cube.albedoTextureFilename = "..\\Resources\\Textures\\PaperBox.jpg";
@@ -56,9 +57,9 @@ namespace NS
 
         // 글로벌 상수 버퍼 데이터 업데이트.(CPU)
         UpdateGlobalConstantData(
-            m_camera.GetCameraPosition(),
-            m_camera.GetViewMatrixRow(),
-            m_camera.GetProjectionMatrixRow()
+            m_pCamera->GetCameraPosition(),
+            m_pCamera->GetViewMatrixRow(),
+            m_pCamera->GetProjectionMatrixRow()
         );
 
         // 글로벌 상수 버퍼 업데이트.(GPU)
