@@ -19,6 +19,10 @@ namespace NS
 		bool m_keyPressed[256] = {
 			false,
 		};
+		// 눌렀다 뗀 키를 체크함. 토글 작업을 위해 사용.
+		bool m_keyToggle[256] = {
+			false,
+		};
 	};
 }
 

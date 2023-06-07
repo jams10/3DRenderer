@@ -4,6 +4,7 @@
 #include <imgui_impl_win32.h>
 
 #include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 
 // imgui_impl_win32.cpp에 정의된 메시지 처리 함수에 대한 전방 선언
 // VCPKG를 통해 IMGUI를 사용할 경우 빨간줄로 경고가 뜰 수 있음
@@ -81,9 +82,10 @@ namespace NS
 		ImGui_ImplWin32_Shutdown();
 	}
 
-	bool Window::Initialize(const wchar_t* name, int width, int height, Keyboard* pKeyboard)
+	bool Window::Initialize(const wchar_t* name, int width, int height, Keyboard* pKeyboard, Mouse* pMouse)
 	{
 		m_pKeyboard = pKeyboard;
+		m_pMouse = pMouse;
 
 		// 우리가 원하는 그림이 그려질 부분의 해상도
 		RECT wr = { 0, 0, width, height };
@@ -212,7 +214,10 @@ namespace NS
 			bShouldResizeScreen = true;
 
 			return 0;
-
+		case WM_MOUSEMOVE:
+			// 마우스 이동.
+			m_pMouse->Move(wParam, LOWORD(lParam), HIWORD(lParam), m_screenWidth, m_screenHeight);
+			break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
@@ -223,6 +228,8 @@ namespace NS
 			break;
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
+			if (m_pKeyboard->m_keyPressed[wParam] == true)
+				m_pKeyboard->m_keyToggle[wParam] = true;
 			m_pKeyboard->m_keyPressed[wParam] = false;
 			break;
 #pragma endregion

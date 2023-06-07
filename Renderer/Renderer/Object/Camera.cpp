@@ -1,6 +1,7 @@
 #include "Camera.h"
 
 #include <imgui.h>
+#include <iostream>
 
 namespace NS
 {
@@ -40,11 +41,21 @@ namespace NS
 		m_aspectRatio = aspectRatio;
 	}
 
+	void Camera::RotateCameraWithMouse(float mouseNdcX, float mouseNdcY)
+	{
+		if (m_useFlyingCam == false) return;
+
+		m_yaw = mouseNdcX * DirectX::XM_2PI;     // 좌우 360도
+		m_pitch = mouseNdcY * DirectX::XM_PIDIV2; // 위 아래 90도
+	}
+
 	void Camera::UpdateViewDirection()
 	{
 		// 현재 사용하고 있는 좌표계는 z-forward 왼손 좌표계.
 		// 카메라 초기 방향은 z축 양의 방향을 바라 보도록 했기 때문에 yaw 회전에 따라 달라지는 카메라가 보는 방향을 다시 계산함.
-		m_viewDir = Vector3::Transform(Vector3(0.0f, 0.0f, 1.0f), Matrix::CreateRotationY(this->m_yaw));
+		// 카메라가 보는 방향으로 이동할 수 있도록 pitch 값 회전도 추가 했음.
+		m_viewDir = Vector3::Transform(Vector3(0.0f, 0.0f, 1.0f), Matrix::CreateRotationX(-this->m_pitch));
+		m_viewDir = Vector3::Transform(m_viewDir, Matrix::CreateRotationY(this->m_yaw));
 		// 카메라 시점 벡터와 up 벡터를 외적하여 오른쪽 방향 벡터를 얻어줌. view 변환 행렬 생성 시 필요.
 		m_rightDir = m_upDir.Cross(m_viewDir);
 	}
@@ -75,8 +86,14 @@ namespace NS
 		ImGui::SliderFloat("Pitch", &m_pitch, 0.995f * -90.0f, 0.995f * 90.0f);
 		ImGui::SliderFloat("Yaw", &m_yaw, -180.0f, 180.0f);
 		ImGui::Checkbox("Use Perspective", &m_usePerspectiveProjection);
+		ImGui::Checkbox("Use Flying Camera", &m_useFlyingCam);
 
 		ImGui::End();
+	}
+
+	void Camera::ToggleFlyingCam()
+	{
+		m_useFlyingCam = !m_useFlyingCam;
 	}
 
 }

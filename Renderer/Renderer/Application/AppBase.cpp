@@ -34,7 +34,7 @@ namespace NS
 	bool AppBase::Initialize()
 	{
 		// 윈도우 초기화.
-		if (window.Initialize(L"Renderer", m_screenWidth, m_screenHeight, &m_keyboard) == false)
+		if (window.Initialize(L"Renderer", m_screenWidth, m_screenHeight, &m_keyboard, &m_mouse) == false)
 		{
 			cout << "Failed to Initialize Window\n";
 			__ERRORLINE__

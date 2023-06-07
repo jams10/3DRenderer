@@ -5,6 +5,7 @@
 #include "Windows/Window.h"
 #include "UI/ImGuiManager.h"
 #include "Input/Keyboard.h"
+#include "Input/Mouse.h"
 
 /*
 *	<AppBase>
@@ -37,6 +38,7 @@ namespace NS
 		ImGuiManager m_imGuiManager;
 		GameTimer m_gameTimer;
 		Keyboard m_keyboard;
+		Mouse m_mouse;
 		int m_screenWidth;
 		int m_screenHeight;
 	};

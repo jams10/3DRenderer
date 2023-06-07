@@ -29,11 +29,13 @@ namespace NS
 
     private:
         SceneBase* m_pScene;
-        Camera m_Camera;
+        Camera m_camera;
         int m_selectedSceneIndex;
         int m_currentSceneIndex;
         bool m_openSystemInfoWindow;
         bool m_openSceneSelectWindow;
+
+        bool m_pressedFlyingCamToggle = false;
 
     private:
         void ShowTitleMenuWindow();

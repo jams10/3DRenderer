@@ -27,7 +27,7 @@ namespace NS
 		if (AppBase::Initialize() == false)
 			return false;
 
-		m_Camera.SetAspectRatio(m_pGraphics->GetD3D11()->GetAspectRatio());
+		m_camera.SetAspectRatio(m_pGraphics->GetD3D11()->GetAspectRatio());
 
 		return true;
 	}
@@ -38,11 +38,8 @@ namespace NS
 		ShowSystemInfoWindow();  // 시스템 정보 창.
 		ShowSceneSelectWindow(); // 씬 정보 창.
 		
-		m_Camera.UpdateGUI();
-
 		if(m_pScene)
 			m_pScene->UpdateGUI();   // 씬 UI 창.
-
 	}
 
 	void RenderApp::Update(float dt)
@@ -52,7 +49,7 @@ namespace NS
 		if (m_pScene)
 			m_pScene->Update(dt);
 
-		m_Camera.SetAspectRatio(m_pGraphics->GetD3D11()->GetAspectRatio());
+		m_camera.SetAspectRatio(m_pGraphics->GetD3D11()->GetAspectRatio());
 
 		MoveCamera(dt);
 	}
@@ -67,30 +64,37 @@ namespace NS
 	{
 		if (m_keyboard.m_keyPressed['W'])
 		{
-			m_Camera.MoveForward(dt);
+			m_camera.MoveForward(dt);
 		}
 		if (m_keyboard.m_keyPressed['A'])
 		{
-			m_Camera.MoveRight(-dt);
+			m_camera.MoveRight(-dt);
 		}
 		if (m_keyboard.m_keyPressed['S'])
 		{
-			m_Camera.MoveForward(-dt);
+			m_camera.MoveForward(-dt);
 		}
 		if (m_keyboard.m_keyPressed['D'])
 		{
-			m_Camera.MoveRight(dt);
+			m_camera.MoveRight(dt);
+		}
+		if (m_keyboard.m_keyPressed['T'])
+		{
+			m_camera.MoveUpward(dt);
 		}
 		if (m_keyboard.m_keyPressed['R'])
 		{
-			m_Camera.MoveUpward(dt);
-		}
-		if (m_keyboard.m_keyPressed['F'])
-		{
-			m_Camera.MoveUpward(-dt);
+			m_camera.MoveUpward(-dt);
 		}
 
-		m_Camera.UpdateViewDirection();
+		if (m_keyboard.m_keyToggle['F'])
+		{
+			m_camera.ToggleFlyingCam();
+			m_keyboard.m_keyToggle['F'] = false;
+		}
+
+		m_camera.RotateCameraWithMouse(m_mouse.GetPositionX(), m_mouse.GetPositionY());
+		m_camera.UpdateViewDirection();
 	}
 
 #pragma region UI
@@ -162,11 +166,11 @@ namespace NS
 			{
 			case SceneType::DRAW_TRIANGLE:
 				m_pScene = new SCDrawTriangle;
-				m_pScene->Initialize(m_pGraphics, &m_Camera);
+				m_pScene->Initialize(m_pGraphics, &m_camera);
 				break;
 			case SceneType::DRAW_TEXTUREDCUBE:
 				m_pScene = new SCDrawTexturedCube;
-				m_pScene->Initialize(m_pGraphics, &m_Camera);
+				m_pScene->Initialize(m_pGraphics, &m_camera);
 				break;
 			}
 		}

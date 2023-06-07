@@ -84,6 +84,9 @@
     <ClInclude Include="Input\Keyboard.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Input\Mouse.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\AppBase.cpp">
@@ -132,6 +135,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Input\Keyboard.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Mouse.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

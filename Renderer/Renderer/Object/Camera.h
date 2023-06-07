@@ -19,11 +19,14 @@ namespace NS
 		Vector3 GetCameraPosition() const;
 
 		void SetAspectRatio(float aspectRatio);
+		void RotateCameraWithMouse(float mouseNdcX, float mouseNdcY);
 		void UpdateViewDirection();
 		void MoveForward(float dt);
 		void MoveRight(float dt);
 		void MoveUpward(float dt);
 		void UpdateGUI();
+
+		void ToggleFlyingCam();
 
 	private:
 		// 카메라 트랜스폼.
@@ -40,8 +43,9 @@ namespace NS
 		float m_farZ = 100.0f;
 		float m_aspectRatio = 16.f / 9.f;
 		bool m_usePerspectiveProjection = true;
+		bool m_useFlyingCam = false;
 
-		float m_speed = 3.0f;
+		float m_speed = 1.0f;
 	};
 
 }

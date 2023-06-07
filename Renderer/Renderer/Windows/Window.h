@@ -12,6 +12,7 @@ namespace NS
 {
 	using std::wstring;
 	class Keyboard;
+	class Mouse;
 
 	class Window
 	{
@@ -40,7 +41,7 @@ namespace NS
 		~Window();
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
-		bool Initialize(const wchar_t* name, int width, int height, Keyboard* pKeyboard);
+		bool Initialize(const wchar_t* name, int width, int height, Keyboard* pKeyboard, Mouse* pMouse);
 		bool SetTitle(const wstring& title);
 		static int ProcessMessages() ; // 모든 윈도우에 대한 메시지를 처리해야 하므로 static으로 선언함.
 		HWND GetWindowHandle() { return m_hWnd; }
@@ -58,6 +59,7 @@ namespace NS
 	private:
 		HWND m_hWnd;
 		Keyboard* m_pKeyboard;
+		Mouse* m_pMouse;
 	};
 }
 

@@ -36,6 +36,7 @@ namespace NS
 
 	void SceneBase::UpdateGUI()
 	{
+		m_pCamera->UpdateGUI();
 	}
 
 	void SceneBase::Update(float dt)
