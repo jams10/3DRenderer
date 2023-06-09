@@ -2,6 +2,7 @@
 
 #include "SCDrawTriangle.h"
 #include "SCDrawTexturedCube.h"
+#include "SCPhongShading.h"
 #include "Utility/CustomMacros.h"
 
 /*
@@ -14,5 +15,6 @@ namespace NS
 	{
 		DRAW_TRIANGLE,
 		DRAW_TEXTUREDCUBE,
+		PHONG_SHADING,
 	};
 }

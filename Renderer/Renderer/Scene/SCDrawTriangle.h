@@ -24,10 +24,6 @@ namespace NS
 		MeshForCPU MakeTriangle();
 
 		Model m_triangleModel;
-
-		Vector3 m_translation = Vector3{ 0.0f, 0.0f, 2.0f };
-		Vector3 m_rotation;
-		Vector3 m_scale = Vector3{ 1.0f, 1.0f, 1.0f };
 	};
 
 }

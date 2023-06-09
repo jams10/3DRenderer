@@ -1,5 +1,5 @@
 
-#include "SCDrawTexturedCube.h"
+#include "SCPhongShading.h"
 
 #include <imgui.h>
 
@@ -11,7 +11,7 @@
 
 namespace NS
 {
-    void SCDrawTexturedCube::Initialize(GraphicsProcessor* pGraphics, Camera* pCamera)
+    void SCPhongShading::Initialize(GraphicsProcessor* pGraphics, Camera* pCamera)
     {
         SceneBase::Initialize(pGraphics, pCamera);
 
@@ -21,29 +21,38 @@ namespace NS
 
         // 전역 상수 버퍼 생성.
         pGraphics->GetD3D11()->CreateGlobalConstantBuffer(m_globalConstantBufferData);
-	}
+    }
 
-    SCDrawTexturedCube::~SCDrawTexturedCube()
+    SCPhongShading::~SCPhongShading()
     {
         m_cubeModel.m_meshes[0]->Shutdown();
     }
 
-	void SCDrawTexturedCube::UpdateGUI()
-	{
+    void SCPhongShading::UpdateGUI()
+    {
         SceneBase::UpdateGUI();
 
-		ImGui::Begin("Transform");
+        ImGui::Begin("Model");
 
-		ImGui::SliderFloat3("Position", &m_cubeModel.m_position.x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("Rotation(Rad)", &m_cubeModel.m_rotation.x, -3.14f, 3.14f);
-		ImGui::SliderFloat3("Scaling", &m_cubeModel.m_scale.x, 0.1f, 2.0f);
+        ImGui::Text("Transform");
+        ImGui::SliderFloat3("Translation", &m_cubeModel.m_position.x, -5.0f, 5.0f);
+        ImGui::SliderFloat3("Rotation(Rad)", &m_cubeModel.m_rotation.x, -3.14f, 3.14f);
+        ImGui::SliderFloat3("Scaling", &m_cubeModel.m_scale.x, 0.1f, 2.0f);
+
+        ImGui::Text("Material");
+        ImGui::ColorEdit3("Ambient color", &m_cubeModel.m_materialData.ambient.x);
+        ImGui::ColorEdit3("Diffuse color", &m_cubeModel.m_materialData.diffuse.x);
+        ImGui::ColorEdit3("Specular color", &m_cubeModel.m_materialData.specular.x);
+        ImGui::Checkbox("Use Texture", &m_cubeModel.m_bUseTexture);
+
+        ImGui::Text("Rendering Mode");
         ImGui::Checkbox("Use Wireframe", &m_bUseWireFrame);
 
-		ImGui::End();
-	}
+        ImGui::End();
+    }
 
-	void SCDrawTexturedCube::Update(float dt)
-	{
+    void SCPhongShading::Update(float dt)
+    {
         SceneBase::Update(dt);
 
         // 월드 변환 행렬. SRT 순서.
@@ -64,10 +73,13 @@ namespace NS
 
         // 글로벌 상수 버퍼 업데이트.(GPU)
         m_pGraphics->GetD3D11()->UpdateGlobalConstantBuffer(m_globalConstantBufferData);
-	}
 
-	void SCDrawTexturedCube::Render()
-	{
+        // 모델 material 상수 버퍼 업데이트.
+        m_cubeModel.UpdateModelMaterialConstantBuffer(m_pGraphics);
+    }
+
+    void SCPhongShading::Render()
+    {
         // 샘플러 바인딩.
         m_pGraphics->GetD3D11()->GetContext()->VSSetSamplers(0, UINT(Graphics::samplerStates.size()),
             Graphics::samplerStates.data());
@@ -80,17 +92,17 @@ namespace NS
         }
         else
         {
-            m_pGraphics->SetPipelineState(Graphics::textureMappingPSO);
+            m_pGraphics->SetPipelineState(Graphics::phongShadingPSO);
         }
 
         // 전역 상수 버퍼 파이프라인에 세팅.
         m_pGraphics->GetD3D11()->SetGlobalConstantBufferData();
 
         m_cubeModel.Render(m_pGraphics); // 모델 정점, 인덱스 버퍼, 상수 버퍼 바인딩.
-	}
+    }
 
-    MeshForCPU SCDrawTexturedCube::MakeCube(float scale)
-	{
+    MeshForCPU SCPhongShading::MakeCube(float scale)
+    {
         MeshForCPU meshForCPU;
         vector<Vector3> positions;
         vector<Vector3> normals;
@@ -180,7 +192,7 @@ namespace NS
         texcoords.push_back(Vector2(1.0f, 1.0f));
         texcoords.push_back(Vector2(0.0f, 1.0f));
 
-        for (size_t i = 0; i < positions.size(); i++) 
+        for (size_t i = 0; i < positions.size(); i++)
         {
             Vertex v;
             v.position = positions[i];

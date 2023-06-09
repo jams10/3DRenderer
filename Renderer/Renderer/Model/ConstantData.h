@@ -28,4 +28,14 @@ namespace NS
         Matrix invViewProj;  // 역 view-projection 행렬. world 공간으로 바꿀 때 사용.
         Vector3 eyeWorld;     // 시점(카메라) 월드 위치.
     };
+
+    struct MaterialConstants 
+    {
+        Vector3 ambient = Vector3(0.1f);  
+        float shininess = 1.0f;          
+        Vector3 diffuse = Vector3(0.5f);  
+        int bUseTexture = 0u;
+        Vector3 specular = Vector3(0.5f);
+        float dummy2;                     
+    };
 }

@@ -161,7 +161,8 @@ namespace NS
 		// 정점 쉐이더 상수 버퍼(모델별로 가지고 있을) 파이프라인에 바인딩.
 		m_context->VSSetConstantBuffers(0, 1, meshForGPU.vertexConstantBuffer.GetAddressOf());
 
-		// TODO : 픽셀 쉐이더 상수 버퍼 파이프라인에 바인딩.
+		// 픽셀 쉐이더 상수 버퍼 파이프라인에 바인딩.
+		m_context->PSSetConstantBuffers(0, 1, meshForGPU.pixelConstantBuffer.GetAddressOf());
 
 		// 사용할 쉐이더 리소스(텍스쳐) 바인딩.
 		// TODO : 여러 텍스쳐 맵 SRV 추가.

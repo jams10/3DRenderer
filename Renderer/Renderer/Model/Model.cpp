@@ -28,6 +28,7 @@ namespace NS
 
 		// 상수 버퍼 리소스 생성.
 		pGraphics->GetD3D11()->CreateConstantBuffer(m_meshWorldTransformData, m_meshVertexConstantBuffer);
+		pGraphics->GetD3D11()->CreateConstantBuffer(m_materialData, m_meshPixelConstantBuffer);
 
 		for (const MeshForCPU& meshForCPU : meshes)
 		{
@@ -43,27 +44,17 @@ namespace NS
 			// 텍스쳐 자원 생성.
 			if (!meshForCPU.albedoTextureFilename.empty())
 			{
+				// TODO : 텍스쳐 자원 불러오는것 따로 빼기.
 				pGraphics->GetD3D11()->CreateTexture(meshForCPU.albedoTextureFilename, newMeshForGPU->albedoTexture, newMeshForGPU->albedoSRV);
 			}
 
-			// 앞서 만들어준 상수 버퍼를 넣어줌. 모든 mesh들이 같은 상수 버퍼를 공용으로 사용함.
+			// 앞서 만들어준 상수 버퍼를 넣어줌.
 			newMeshForGPU->vertexConstantBuffer = m_meshVertexConstantBuffer;
+			newMeshForGPU->pixelConstantBuffer = m_meshPixelConstantBuffer;
 
 			m_meshes.push_back(newMeshForGPU);
 		}
 	}
-
-	//void Model::UpdatetTransform(GraphicsProcessor* const pGraphics, const Matrix& worldRowMatrix)
-	//{
-	//	m_meshWorldTransformData.world = worldRowMatrix.Transpose();
-
-	//	m_meshWorldTransformData.worldInvTranspose = worldRowMatrix;
-	//	m_meshWorldTransformData.worldInvTranspose.Translation(Vector3(0.0f));
-	//	m_meshWorldTransformData.worldInvTranspose = m_meshWorldTransformData.worldInvTranspose.Invert().Transpose();
-	//	m_meshWorldTransformData.worldInvTranspose = m_meshWorldTransformData.worldInvTranspose.Transpose();
-
-	//	UpdateConstantBuffers(pGraphics);
-	//}
 
 	void Model::UpdateModelTransformConstantBuffer(GraphicsProcessor* const pGraphics)
 	{
@@ -75,6 +66,17 @@ namespace NS
 
 		// 정점 상수 버퍼 업데이트.
 		pGraphics->GetD3D11()->UpdateBuffer(m_meshWorldTransformData, m_meshVertexConstantBuffer);
+	}
+
+	void Model::UpdateModelMaterialConstantBuffer(GraphicsProcessor* const pGraphics)
+	{
+		if (m_bUseTexture == true)
+			m_materialData.bUseTexture = 1u;
+		else
+			m_materialData.bUseTexture = 0u;
+
+		// 픽셀 상수 버퍼 업데이트
+		pGraphics->GetD3D11()->UpdateBuffer(m_materialData, m_meshPixelConstantBuffer);
 	}
 
 	void Model::Render(GraphicsProcessor* const pGraphics)

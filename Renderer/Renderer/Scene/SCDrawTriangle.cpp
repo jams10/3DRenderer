@@ -30,11 +30,11 @@ namespace NS
 	{
 		SceneBase::UpdateGUI();
 
-		ImGui::Begin("Position");
+		ImGui::Begin("Transform");
 
-		ImGui::SliderFloat3("Translation", &m_translation.x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("Rotation(Rad)", &m_rotation.x, -3.14f, 3.14f);
-		ImGui::SliderFloat3("Scaling", &m_scale.x, 0.1f, 2.0f);
+		ImGui::SliderFloat3("Position", &m_triangleModel.m_position.x, -5.0f, 5.0f);
+		ImGui::SliderFloat3("Rotation(Rad)", &m_triangleModel.m_rotation.x, -3.14f, 3.14f);
+		ImGui::SliderFloat3("Scaling", &m_triangleModel.m_scale.x, 0.1f, 2.0f);
 
 		ImGui::End();
 	}
@@ -46,11 +46,11 @@ namespace NS
 		/* 글로벌 상수 버퍼랑 모델 별 상수 버퍼 나눠서 쉐이더에 정의하고 cpu쪽에서 생성, 바인딩 해주어야 함.*/
 
 		// 월드 변환 행렬. SRT 순서.
-		m_triangleModel.m_meshWorldTransformData.world = Matrix::CreateScale(m_scale) *
-			Matrix::CreateRotationY(m_rotation.y) *
-			Matrix::CreateRotationX(m_rotation.x) *
-			Matrix::CreateRotationZ(m_rotation.z) *
-			Matrix::CreateTranslation(m_translation);
+		m_triangleModel.m_meshWorldTransformData.world = Matrix::CreateScale(m_triangleModel.m_scale) *
+			Matrix::CreateRotationY(m_triangleModel.m_rotation.y) *
+			Matrix::CreateRotationX(m_triangleModel.m_rotation.x) *
+			Matrix::CreateRotationZ(m_triangleModel.m_rotation.z) *
+			Matrix::CreateTranslation(m_triangleModel.m_position);
 		// 모델 트랜스폼 상수 버퍼 업데이트.
 		m_triangleModel.UpdateModelTransformConstantBuffer(m_pGraphics);
 

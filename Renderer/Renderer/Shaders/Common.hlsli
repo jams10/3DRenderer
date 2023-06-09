@@ -7,6 +7,16 @@
 SamplerState linearWrapSampler : register(s0);
 SamplerState linearClampSampler : register(s1);
 
+struct Material
+{
+    float3 ambient;
+    float shininess;
+    float3 diffuse;
+    uint bUseTexture;
+    float3 specular;
+    float dummy2;
+};
+
 cbuffer GlobalConstants : register(b1)
 {
     matrix view;

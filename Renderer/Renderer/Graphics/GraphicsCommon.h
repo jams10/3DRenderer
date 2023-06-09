@@ -31,8 +31,10 @@ namespace NS
 		// Shaders
 		extern ComPtr<ID3D11VertexShader> vertexShader_Color;
 		extern ComPtr<ID3D11VertexShader> vertexShader_TextureMapping;
+		extern ComPtr<ID3D11VertexShader> vertexShader_PhongShading;
 		extern ComPtr<ID3D11PixelShader> pixelShader_Color;
 		extern ComPtr<ID3D11PixelShader> pixelShader_TextureMapping;
+		extern ComPtr<ID3D11PixelShader> pixelShader_PhongShading;
 
 		// Input Layouts
 		extern ComPtr<ID3D11InputLayout> inputLayout_Default;
@@ -40,6 +42,7 @@ namespace NS
 		// Pipeline States
 		extern GraphicsPSO vertexColorPSO;
 		extern GraphicsPSO textureMappingPSO;
+		extern GraphicsPSO phongShadingPSO;
 		extern GraphicsPSO defaultWirePSO;
 
 		void InitCommonStates(GraphicsProcessor* pGraphics);

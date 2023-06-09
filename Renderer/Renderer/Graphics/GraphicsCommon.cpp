@@ -22,8 +22,10 @@ namespace NS
 		// Shaders
 		ComPtr<ID3D11VertexShader> vertexShader_Color;
 		ComPtr<ID3D11VertexShader> vertexShader_TextureMapping;
+		ComPtr<ID3D11VertexShader> vertexShader_PhongShading;
 		ComPtr<ID3D11PixelShader> pixelShader_Color;
 		ComPtr<ID3D11PixelShader> pixelShader_TextureMapping;
+		ComPtr<ID3D11PixelShader> pixelShader_PhongShading;
 
 		// Input Layouts
 		ComPtr<ID3D11InputLayout> inputLayout_Default;
@@ -31,6 +33,7 @@ namespace NS
 		// Pipeline States
 		GraphicsPSO vertexColorPSO;
 		GraphicsPSO textureMappingPSO;
+		GraphicsPSO phongShadingPSO;
 		GraphicsPSO defaultWirePSO;
 
 		void Graphics::InitCommonStates(GraphicsProcessor* pGraphics)
@@ -116,9 +119,12 @@ namespace NS
 				basicIEs, vertexShader_Color, inputLayout_Default);
 			pGraphics->GetD3D11()->CreateVertexShaderAndInputLayout(L"Shaders\\TextureMappingVertexShader.hlsl", 
 				basicIEs, vertexShader_TextureMapping, inputLayout_Default);
+			pGraphics->GetD3D11()->CreateVertexShaderAndInputLayout(L"Shaders\\PhongVertexShader.hlsl",
+				basicIEs, vertexShader_PhongShading, inputLayout_Default);
 
 			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\ColorPixelShader.hlsl", pixelShader_Color);
 			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\TextureMappingPixelShader.hlsl", pixelShader_TextureMapping);
+			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\PhongPixelShader.hlsl", pixelShader_PhongShading);
 		}
 
 		void InitPipelineStates()
@@ -133,6 +139,10 @@ namespace NS
 			textureMappingPSO = vertexColorPSO;
 			textureMappingPSO.m_vertexShader = vertexShader_TextureMapping;
 			textureMappingPSO.m_pixelShader = pixelShader_TextureMapping;
+
+			phongShadingPSO = textureMappingPSO;
+			phongShadingPSO.m_vertexShader = vertexShader_PhongShading;
+			phongShadingPSO.m_pixelShader = pixelShader_PhongShading;
 
 			defaultWirePSO = textureMappingPSO;
 			defaultWirePSO.m_rasterizerState = rasterizerState_WireCW;

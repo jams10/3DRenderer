@@ -87,6 +87,12 @@
     <ClInclude Include="Input\Mouse.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Object\Light.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SCPhongShading.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\AppBase.cpp">
@@ -140,12 +146,20 @@
     <ClCompile Include="Input\Mouse.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Object\Light.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SCPhongShading.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\ColorVertexShader.hlsl" />
     <FxCompile Include="Shaders\ColorPixelShader.hlsl" />
     <FxCompile Include="Shaders\TextureMappingVertexShader.hlsl" />
     <FxCompile Include="Shaders\TextureMappingPixelShader.hlsl" />
+    <FxCompile Include="Shaders\PhongVertexShader.hlsl" />
+    <FxCompile Include="Shaders\PhongPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Common.hlsli" />

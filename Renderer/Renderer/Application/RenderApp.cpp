@@ -146,6 +146,11 @@ namespace NS
 					m_selectedSceneIndex = 1;
 					selected = true;
 				}
+				if (ImGui::Button(WideToMultiU8(L"Æþ ½¦ÀÌµù").c_str()))
+				{
+					m_selectedSceneIndex = 2;
+					selected = true;
+				}
 			}
 			ImGui::End();
 		}
@@ -170,6 +175,10 @@ namespace NS
 				break;
 			case SceneType::DRAW_TEXTUREDCUBE:
 				m_pScene = new SCDrawTexturedCube;
+				m_pScene->Initialize(m_pGraphics, &m_camera);
+				break;
+			case SceneType::PHONG_SHADING:
+				m_pScene = new SCPhongShading;
 				m_pScene->Initialize(m_pGraphics, &m_camera);
 				break;
 			}

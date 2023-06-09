@@ -143,10 +143,12 @@
     <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Model\Vertex.h" />
     <ClInclude Include="Object\Camera.h" />
+    <ClInclude Include="Object\Light.h" />
     <ClInclude Include="Scene\SCDrawTexturedCube.h" />
     <ClInclude Include="Scene\SCDrawTriangle.h" />
     <ClInclude Include="Scene\SceneBase.h" />
     <ClInclude Include="Scene\Scenes.h" />
+    <ClInclude Include="Scene\SCPhongShading.h" />
     <ClInclude Include="UI\ImGuiManager.h" />
     <ClInclude Include="Utility\CustomMacros.h" />
     <ClInclude Include="Utility\GameTimer.h" />
@@ -166,9 +168,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model\Model.cpp" />
     <ClCompile Include="Object\Camera.cpp" />
+    <ClCompile Include="Object\Light.cpp" />
     <ClCompile Include="Scene\SCDrawTexturedCube.cpp" />
     <ClCompile Include="Scene\SCDrawTriangle.cpp" />
     <ClCompile Include="Scene\SceneBase.cpp" />
+    <ClCompile Include="Scene\SCPhongShading.cpp" />
     <ClCompile Include="UI\ImGuiManager.cpp" />
     <ClCompile Include="Utility\GameTimer.cpp" />
     <ClCompile Include="Windows\Window.cpp" />
@@ -189,6 +193,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Renderer\Shaders\Outputs\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Shaders\PhongPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\PhongVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Shaders\TextureMappingPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
