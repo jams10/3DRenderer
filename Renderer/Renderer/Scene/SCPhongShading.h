@@ -3,6 +3,7 @@
 #include "SceneBase.h"
 
 #include "Model/Model.h"
+#include "Object/Light.h"
 
 namespace NS
 {
@@ -19,8 +20,7 @@ namespace NS
 		MeshForCPU MakeCube(float scale);
 
 		Model m_cubeModel;
-
-		bool m_bUseWireFrame = false;
+		Light m_directionalLight;
 	};
 }
 

@@ -3,6 +3,8 @@
 #include "Graphics/GraphicsProcessor.h"
 #include "Graphics/D3D11Graphics.h"
 
+#include <imgui.h>
+
 namespace NS
 {
 	Model::Model(GraphicsProcessor* const pGraphics, const std::string& basePath, const std::string& filename)
@@ -56,6 +58,38 @@ namespace NS
 		}
 	}
 
+	void Model::Update(float dt, GraphicsProcessor* const pGraphics)
+	{
+		// 월드 변환 행렬. SRT 순서.
+		m_meshWorldTransformData.world = Matrix::CreateScale(m_scale) *
+			Matrix::CreateRotationY(m_rotation.y) *
+			Matrix::CreateRotationX(m_rotation.x) *
+			Matrix::CreateRotationZ(m_rotation.z) *
+			Matrix::CreateTranslation(m_position);
+		// 모델 트랜스폼 상수 버퍼 업데이트.
+		UpdateModelTransformConstantBuffer(pGraphics);
+		// 모델 머티리얼 상수 버퍼 업데이트
+		UpdateModelMaterialConstantBuffer(pGraphics);
+	}
+
+	void Model::UpdateGUI()
+	{
+		ImGui::Begin("Model");
+
+		ImGui::Text("Transform");
+		ImGui::SliderFloat3("Translation", &m_position.x, -5.0f, 5.0f);
+		ImGui::SliderFloat3("Rotation(Rad)", &m_rotation.x, -3.14f, 3.14f);
+		ImGui::SliderFloat3("Scaling", &m_scale.x, 0.1f, 2.0f);
+
+		ImGui::Text("Material");
+		ImGui::ColorEdit3("Ambient color", &m_materialData.ambient.x);
+		ImGui::ColorEdit3("Diffuse color", &m_materialData.diffuse.x);
+		ImGui::ColorEdit3("Specular color", &m_materialData.specular.x);
+		ImGui::Checkbox("Use Texture", &m_bUseTexture);
+
+		ImGui::End();
+	}
+
 	void Model::UpdateModelTransformConstantBuffer(GraphicsProcessor* const pGraphics)
 	{
 		m_meshWorldTransformData.world = m_meshWorldTransformData.world.Transpose(); // 쉐이더에 넘겨주기 전, colum major로 만들어줌.
@@ -84,6 +118,14 @@ namespace NS
 		for (const auto& meshForGPU : m_meshes)
 		{
 			pGraphics->GetD3D11()->Render(*meshForGPU.get());
+		}
+	}
+	void Model::Shutdown()
+	{
+		size_t size = m_meshes.size();
+		for (size_t i = 0; i < size; ++i)
+		{
+			m_meshes[i]->Shutdown();
 		}
 	}
 }

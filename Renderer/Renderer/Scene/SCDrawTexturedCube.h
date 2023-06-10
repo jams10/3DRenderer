@@ -24,8 +24,6 @@ namespace NS
 		MeshForCPU MakeCube(float scale);
 
 		Model m_cubeModel;
-
-		bool m_bUseWireFrame = false;
 	};
 
 }

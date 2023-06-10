@@ -41,6 +41,7 @@ namespace NS
 
 		// Pipeline States
 		extern GraphicsPSO vertexColorPSO;
+		extern GraphicsPSO vertexColorWirePSO;
 		extern GraphicsPSO textureMappingPSO;
 		extern GraphicsPSO phongShadingPSO;
 		extern GraphicsPSO defaultWirePSO;

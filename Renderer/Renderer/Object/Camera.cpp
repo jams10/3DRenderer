@@ -88,6 +88,9 @@ namespace NS
 		ImGui::Checkbox("Use Perspective", &m_usePerspectiveProjection);
 		ImGui::Checkbox("Use Flying Camera", &m_useFlyingCam);
 
+		ImGui::Text("Rendering Mode");
+		ImGui::Checkbox("Use Wireframe", &m_bUseWireFrameMode);
+
 		ImGui::End();
 	}
 

@@ -25,44 +25,22 @@ namespace NS
 
     SCPhongShading::~SCPhongShading()
     {
-        m_cubeModel.m_meshes[0]->Shutdown();
+        m_cubeModel.Shutdown();
     }
 
     void SCPhongShading::UpdateGUI()
     {
         SceneBase::UpdateGUI();
 
-        ImGui::Begin("Model");
-
-        ImGui::Text("Transform");
-        ImGui::SliderFloat3("Translation", &m_cubeModel.m_position.x, -5.0f, 5.0f);
-        ImGui::SliderFloat3("Rotation(Rad)", &m_cubeModel.m_rotation.x, -3.14f, 3.14f);
-        ImGui::SliderFloat3("Scaling", &m_cubeModel.m_scale.x, 0.1f, 2.0f);
-
-        ImGui::Text("Material");
-        ImGui::ColorEdit3("Ambient color", &m_cubeModel.m_materialData.ambient.x);
-        ImGui::ColorEdit3("Diffuse color", &m_cubeModel.m_materialData.diffuse.x);
-        ImGui::ColorEdit3("Specular color", &m_cubeModel.m_materialData.specular.x);
-        ImGui::Checkbox("Use Texture", &m_cubeModel.m_bUseTexture);
-
-        ImGui::Text("Rendering Mode");
-        ImGui::Checkbox("Use Wireframe", &m_bUseWireFrame);
-
-        ImGui::End();
+        m_cubeModel.UpdateGUI();
     }
 
     void SCPhongShading::Update(float dt)
     {
         SceneBase::Update(dt);
 
-        // 월드 변환 행렬. SRT 순서.
-        m_cubeModel.m_meshWorldTransformData.world = Matrix::CreateScale(m_cubeModel.m_scale) *
-            Matrix::CreateRotationY(m_cubeModel.m_rotation.y) *
-            Matrix::CreateRotationX(m_cubeModel.m_rotation.x) *
-            Matrix::CreateRotationZ(m_cubeModel.m_rotation.z) *
-            Matrix::CreateTranslation(m_cubeModel.m_position);
-        // 모델 트랜스폼 상수 버퍼 업데이트.
-        m_cubeModel.UpdateModelTransformConstantBuffer(m_pGraphics);
+        // 모델 업데이트.
+        m_cubeModel.Update(dt, m_pGraphics);
 
         // 글로벌 상수 버퍼 데이터 업데이트.(CPU)
         UpdateGlobalConstantData(
@@ -73,9 +51,6 @@ namespace NS
 
         // 글로벌 상수 버퍼 업데이트.(GPU)
         m_pGraphics->GetD3D11()->UpdateGlobalConstantBuffer(m_globalConstantBufferData);
-
-        // 모델 material 상수 버퍼 업데이트.
-        m_cubeModel.UpdateModelMaterialConstantBuffer(m_pGraphics);
     }
 
     void SCPhongShading::Render()
@@ -86,7 +61,7 @@ namespace NS
         m_pGraphics->GetD3D11()->GetContext()->PSSetSamplers(0, UINT(Graphics::samplerStates.size()),
             Graphics::samplerStates.data());
 
-        if (m_bUseWireFrame)
+        if (m_pCamera->m_bUseWireFrameMode)
         {
             m_pGraphics->SetPipelineState(Graphics::defaultWirePSO);
         }

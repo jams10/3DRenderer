@@ -28,6 +28,8 @@ namespace NS
 
 		void ToggleFlyingCam();
 
+		bool m_bUseWireFrameMode;
+
 	private:
 		// 카메라 트랜스폼.
 		Vector3 m_position = Vector3(0.0f, 0.0f, -1.0f);

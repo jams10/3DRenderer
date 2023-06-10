@@ -32,6 +32,7 @@ namespace NS
 
 		// Pipeline States
 		GraphicsPSO vertexColorPSO;
+		GraphicsPSO vertexColorWirePSO;
 		GraphicsPSO textureMappingPSO;
 		GraphicsPSO phongShadingPSO;
 		GraphicsPSO defaultWirePSO;
@@ -135,6 +136,9 @@ namespace NS
 			vertexColorPSO.m_depthStencilState = depthStencilState_Default;
 			vertexColorPSO.m_rasterizerState = rasterizerState_SolidCW;
 			vertexColorPSO.m_primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+			vertexColorWirePSO = vertexColorPSO;
+			vertexColorWirePSO.m_rasterizerState = rasterizerState_WireCW;
 
 			textureMappingPSO = vertexColorPSO;
 			textureMappingPSO.m_vertexShader = vertexShader_TextureMapping;

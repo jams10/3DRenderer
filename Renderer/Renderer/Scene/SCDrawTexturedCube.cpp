@@ -25,35 +25,23 @@ namespace NS
 
     SCDrawTexturedCube::~SCDrawTexturedCube()
     {
-        m_cubeModel.m_meshes[0]->Shutdown();
+        m_cubeModel.Shutdown();
     }
 
 	void SCDrawTexturedCube::UpdateGUI()
 	{
         SceneBase::UpdateGUI();
 
-		ImGui::Begin("Transform");
+        m_cubeModel.UpdateGUI();
 
-		ImGui::SliderFloat3("Position", &m_cubeModel.m_position.x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("Rotation(Rad)", &m_cubeModel.m_rotation.x, -3.14f, 3.14f);
-		ImGui::SliderFloat3("Scaling", &m_cubeModel.m_scale.x, 0.1f, 2.0f);
-        ImGui::Checkbox("Use Wireframe", &m_bUseWireFrame);
-
-		ImGui::End();
 	}
 
 	void SCDrawTexturedCube::Update(float dt)
 	{
         SceneBase::Update(dt);
 
-        // 월드 변환 행렬. SRT 순서.
-        m_cubeModel.m_meshWorldTransformData.world = Matrix::CreateScale(m_cubeModel.m_scale) *
-            Matrix::CreateRotationY(m_cubeModel.m_rotation.y) *
-            Matrix::CreateRotationX(m_cubeModel.m_rotation.x) *
-            Matrix::CreateRotationZ(m_cubeModel.m_rotation.z) *
-            Matrix::CreateTranslation(m_cubeModel.m_position);
-        // 모델 트랜스폼 상수 버퍼 업데이트.
-        m_cubeModel.UpdateModelTransformConstantBuffer(m_pGraphics);
+        // 모델 업데이트.
+        m_cubeModel.Update(dt, m_pGraphics);
 
         // 글로벌 상수 버퍼 데이터 업데이트.(CPU)
         UpdateGlobalConstantData(
@@ -74,7 +62,7 @@ namespace NS
         m_pGraphics->GetD3D11()->GetContext()->PSSetSamplers(0, UINT(Graphics::samplerStates.size()),
             Graphics::samplerStates.data());
 
-        if (m_bUseWireFrame)
+        if (m_pCamera->m_bUseWireFrameMode)
         {
             m_pGraphics->SetPipelineState(Graphics::defaultWirePSO);
         }

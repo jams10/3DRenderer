@@ -23,41 +23,27 @@ namespace NS
 
 	SCDrawTriangle::~SCDrawTriangle()
 	{
-		m_triangleModel.m_meshes[0]->Shutdown();
+		m_triangleModel.Shutdown();
 	}
 
 	void SCDrawTriangle::UpdateGUI()
 	{
 		SceneBase::UpdateGUI();
 
-		ImGui::Begin("Transform");
-
-		ImGui::SliderFloat3("Position", &m_triangleModel.m_position.x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("Rotation(Rad)", &m_triangleModel.m_rotation.x, -3.14f, 3.14f);
-		ImGui::SliderFloat3("Scaling", &m_triangleModel.m_scale.x, 0.1f, 2.0f);
-
-		ImGui::End();
+		m_triangleModel.UpdateGUI();
 	}
 
 	void SCDrawTriangle::Update(float dt)
 	{
 		SceneBase::Update(dt);
 
-		/* 글로벌 상수 버퍼랑 모델 별 상수 버퍼 나눠서 쉐이더에 정의하고 cpu쪽에서 생성, 바인딩 해주어야 함.*/
-
-		// 월드 변환 행렬. SRT 순서.
-		m_triangleModel.m_meshWorldTransformData.world = Matrix::CreateScale(m_triangleModel.m_scale) *
-			Matrix::CreateRotationY(m_triangleModel.m_rotation.y) *
-			Matrix::CreateRotationX(m_triangleModel.m_rotation.x) *
-			Matrix::CreateRotationZ(m_triangleModel.m_rotation.z) *
-			Matrix::CreateTranslation(m_triangleModel.m_position);
-		// 모델 트랜스폼 상수 버퍼 업데이트.
-		m_triangleModel.UpdateModelTransformConstantBuffer(m_pGraphics);
+		// 모델 업데이트.
+		m_triangleModel.Update(dt, m_pGraphics);
 
 		// 글로벌 상수 버퍼 데이터 업데이트.(CPU)
 		UpdateGlobalConstantData(
-			m_pCamera->GetCameraPosition(), 
-			m_pCamera->GetViewMatrixRow(), 
+			m_pCamera->GetCameraPosition(),
+			m_pCamera->GetViewMatrixRow(),
 			m_pCamera->GetProjectionMatrixRow()
 		);
 
@@ -73,7 +59,15 @@ namespace NS
 		m_pGraphics->GetD3D11()->GetContext()->PSSetSamplers(0, UINT(Graphics::samplerStates.size()),
 																Graphics::samplerStates.data());
 
-		m_pGraphics->SetPipelineState(Graphics::vertexColorPSO);
+		if (m_pCamera->m_bUseWireFrameMode)
+		{
+			m_pGraphics->SetPipelineState(Graphics::vertexColorWirePSO);
+		}
+		else
+		{
+			m_pGraphics->SetPipelineState(Graphics::vertexColorPSO);
+		}
+
 		// 전역 상수 버퍼 파이프라인에 세팅.
 		m_pGraphics->GetD3D11()->SetGlobalConstantBufferData();
 
