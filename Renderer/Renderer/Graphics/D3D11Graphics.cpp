@@ -181,31 +181,53 @@ namespace NS
 		m_swapChain->Present(1, 0);
 	}
 
-	void D3D11Graphics::CreateGlobalConstantBuffer(const GlobalConstants& gloablConstantBufferData)
+	void D3D11Graphics::CreateGlobalCameraTransformConstantBuffer(const GlobalCameraTransformConstant& globalCameraTransformConstant)
 	{
-		if (m_globalConstantBuffer == nullptr)
+		if (m_globalCameraTransformConstantBuffer == nullptr)
 		{
-			CreateConstantBuffer(gloablConstantBufferData, m_globalConstantBuffer);
+			CreateConstantBuffer(globalCameraTransformConstant, m_globalCameraTransformConstantBuffer);
 		}
 		else
 		{
-			m_globalConstantBuffer.Get()->Release();
-			CreateConstantBuffer(gloablConstantBufferData, m_globalConstantBuffer);
+			m_globalCameraTransformConstantBuffer.Get()->Release();
+			CreateConstantBuffer(globalCameraTransformConstant, m_globalCameraTransformConstantBuffer);
 		}
 	}
 
-	void D3D11Graphics::SetGlobalConstantBufferData()
+	void D3D11Graphics::CreateGlobalSceneDataConstantBuffer(const GlobalSceneDataConstant& globalSceneDataConstant)
 	{
-		// 전역 상수 버퍼 파이프라인에 바인딩.
-		// Common.hlsli에 정의해 준 것처럼 항상 register(b1)에 들어가도록 함.
-		m_context->VSSetConstantBuffers(1, 1, m_globalConstantBuffer.GetAddressOf());
-		m_context->PSSetConstantBuffers(1, 1, m_globalConstantBuffer.GetAddressOf());
-		m_context->GSSetConstantBuffers(1, 1, m_globalConstantBuffer.GetAddressOf());
+		if (m_globalSceneDataConstantBuffer == nullptr)
+		{
+			CreateConstantBuffer(globalSceneDataConstant, m_globalSceneDataConstantBuffer);
+		}
+		else
+		{
+			m_globalSceneDataConstantBuffer.Get()->Release();
+			CreateConstantBuffer(globalSceneDataConstant, m_globalSceneDataConstantBuffer);
+		}
 	}
 
-	void D3D11Graphics::UpdateGlobalConstantBuffer(const GlobalConstants& gloablConstantBufferData)
+	void D3D11Graphics::SetGlobalConstantBuffers()
 	{
-		UpdateBuffer(gloablConstantBufferData, m_globalConstantBuffer);
+		// 전역 상수 버퍼 파이프라인에 바인딩.
+		// Common.hlsli에 정의해 준 것처럼 항상 register(b1), register(b2)에 들어가도록 함.
+		m_context->VSSetConstantBuffers(1, 1, m_globalCameraTransformConstantBuffer.GetAddressOf());
+		m_context->PSSetConstantBuffers(1, 1, m_globalCameraTransformConstantBuffer.GetAddressOf());
+		m_context->GSSetConstantBuffers(1, 1, m_globalCameraTransformConstantBuffer.GetAddressOf());
+
+		m_context->VSSetConstantBuffers(2, 1, m_globalSceneDataConstantBuffer.GetAddressOf());
+		m_context->PSSetConstantBuffers(2, 1, m_globalSceneDataConstantBuffer.GetAddressOf());
+		m_context->GSSetConstantBuffers(2, 1, m_globalSceneDataConstantBuffer.GetAddressOf());
+	}
+
+	void D3D11Graphics::UpdateGlobalCameraTransformConstantBuffer(const GlobalCameraTransformConstant& globalCameraTransformConstant)
+	{
+		UpdateBuffer(globalCameraTransformConstant, m_globalCameraTransformConstantBuffer);
+	}
+
+	void D3D11Graphics::UpdateGlobalSceneDataConstantBufferS(const GlobalSceneDataConstant& globalSceneDataConstant)
+	{
+		UpdateBuffer(globalSceneDataConstant, m_globalSceneDataConstantBuffer);
 	}
 
 	float D3D11Graphics::GetAspectRatio()

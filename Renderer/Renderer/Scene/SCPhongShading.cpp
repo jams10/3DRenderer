@@ -18,9 +18,6 @@ namespace NS
         MeshForCPU cube = MakeCube(1.0f);
         cube.albedoTextureFilename = "..\\Resources\\Textures\\PaperBox.jpg";
         m_cubeModel.Initialize(pGraphics, std::vector<MeshForCPU>{cube});
-
-        // 전역 상수 버퍼 생성.
-        pGraphics->GetD3D11()->CreateGlobalConstantBuffer(m_globalConstantBufferData);
     }
 
     SCPhongShading::~SCPhongShading()
@@ -41,20 +38,12 @@ namespace NS
 
         // 모델 업데이트.
         m_cubeModel.Update(dt, m_pGraphics);
-
-        // 글로벌 상수 버퍼 데이터 업데이트.(CPU)
-        UpdateGlobalConstantData(
-            m_pCamera->GetCameraPosition(),
-            m_pCamera->GetViewMatrixRow(),
-            m_pCamera->GetProjectionMatrixRow()
-        );
-
-        // 글로벌 상수 버퍼 업데이트.(GPU)
-        m_pGraphics->GetD3D11()->UpdateGlobalConstantBuffer(m_globalConstantBufferData);
     }
 
     void SCPhongShading::Render()
     {
+        SceneBase::Render();
+
         // 샘플러 바인딩.
         m_pGraphics->GetD3D11()->GetContext()->VSSetSamplers(0, UINT(Graphics::samplerStates.size()),
             Graphics::samplerStates.data());
@@ -69,9 +58,6 @@ namespace NS
         {
             m_pGraphics->SetPipelineState(Graphics::phongShadingPSO);
         }
-
-        // 전역 상수 버퍼 파이프라인에 세팅.
-        m_pGraphics->GetD3D11()->SetGlobalConstantBufferData();
 
         m_cubeModel.Render(m_pGraphics); // 모델 정점, 인덱스 버퍼, 상수 버퍼 바인딩.
     }

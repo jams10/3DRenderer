@@ -49,9 +49,11 @@ namespace NS
 		void Render(const MeshForGPU& meshForGPU);
 		void EndFrame();
 
-		void CreateGlobalConstantBuffer(const GlobalConstants& gloablConstantBufferData);
-		void SetGlobalConstantBufferData();
-		void UpdateGlobalConstantBuffer(const GlobalConstants& gloablConstantBufferData);
+		void CreateGlobalCameraTransformConstantBuffer(const GlobalCameraTransformConstant& globalCameraTransformConstant);
+		void CreateGlobalSceneDataConstantBuffer(const GlobalSceneDataConstant& globalSceneDataConstant);
+		void SetGlobalConstantBuffers();
+		void UpdateGlobalCameraTransformConstantBuffer(const GlobalCameraTransformConstant& globalCameraTransformConstant);
+		void UpdateGlobalSceneDataConstantBufferS(const GlobalSceneDataConstant& globalSceneDataConstant);
 
 		float GetAspectRatio();
 		void ResizeScreen(int screenWidth, int screenHeight);
@@ -72,7 +74,8 @@ namespace NS
 		ComPtr<ID3D11DepthStencilView> m_depthStencilView;
 
 		// 전역 상수 버퍼.
-		ComPtr<ID3D11Buffer> m_globalConstantBuffer = nullptr;
+		ComPtr<ID3D11Buffer> m_globalCameraTransformConstantBuffer = nullptr;
+		ComPtr<ID3D11Buffer> m_globalSceneDataConstantBuffer = nullptr;
 
 		D3D11_VIEWPORT m_screenViewport;
 		UINT m_numQualityLevels;

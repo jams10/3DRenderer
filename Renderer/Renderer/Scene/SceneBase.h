@@ -25,15 +25,17 @@ namespace NS
 		virtual void Initialize(GraphicsProcessor* pGraphics, Camera* pCamera);
 		virtual void UpdateGUI();
 		virtual void Update(float dt);
-		virtual void Render() = 0;
+		virtual void Render();
 		virtual ~SceneBase();
 
-		void UpdateGlobalConstantData(const Vector3& eyeWorld, const Matrix& viewRow, const Matrix& projRow);
+		void UpdateGlobalConstantDataForVS(const Vector3& eyeWorld, const Matrix& viewRow, const Matrix& projRow);
+		void UpdateGlobalConstantDataForPS();
 
 	protected:
 		GraphicsProcessor* m_pGraphics;
 		Camera* m_pCamera;
-		GlobalConstants m_globalConstantBufferData;
+		GlobalCameraTransformConstant m_globalCameraTransfomConstant;
+		GlobalSceneDataConstant m_globalSceneDataConstant;
 	};
 }
 
