@@ -5,14 +5,10 @@
 #include <string>
 #include <sstream>
 
-#include <iostream>
-
 namespace NS
 {
     void Light::Update()
     {
-		std::cout << m_id << ": " << m_lightConstant.turnOn << '\n';
-
 		if (bTurnOn == true) m_lightConstant.turnOn = true;
 		else
 		{
@@ -41,6 +37,7 @@ namespace NS
 		ss << s << type << "(" << m_id << ")";
 
 		ImGui::Checkbox(ss.str().c_str(), &bTurnOn);
+		ImGui::Spacing();
 
 		if(bTurnOn)
 		{
@@ -68,6 +65,8 @@ namespace NS
 			ImGui::ColorEdit3("Color", &m_lightConstant.color.x);
 		}
 
+		ImGui::Separator();
+		ImGui::Spacing();
 		ImGui::PopID();
 
 		ImGui::End();
