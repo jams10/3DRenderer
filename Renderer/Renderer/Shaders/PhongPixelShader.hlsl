@@ -21,11 +21,12 @@ float4 main(PixelShaderInput input) : SV_TARGET
     int i = 0;
     [unroll]
     for (i = 0; i < MAX_LIGHTS; ++i)
-    {
-        if (lights[i].turnOn == 0)
-            continue;
-        if(lights[i].type == 0)
+    {      
+        if (lights[i].turnOn == 1 && lights[i].type == 0)
             color += ComputeDirectionalLight(lights[i], material, input.normalWorld, vertexToEye) * lights[i].color;
+        if (lights[i].turnOn == 1 && lights[i].type == 1)
+            color += ComputePointLight(lights[i], material, input.posWorld, input.normalWorld, vertexToEye) * lights[i].color;
+
     }
      
     return material.bUseTexture ? float4(color, 1.0) * g_texture0.Sample(linearClampSampler, input.texcoord) :

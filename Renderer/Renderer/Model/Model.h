@@ -39,7 +39,7 @@ namespace NS
 		void Shutdown();
 
 	public:
-		Vector3 m_position = Vector3(0.f, 0.f, 2.f);
+		Vector3 m_position = Vector3(0.f, 0.f, 0.f);
 		Vector3 m_rotation = Vector3(0.f);
 		Vector3 m_scale = Vector3(1.f);
 

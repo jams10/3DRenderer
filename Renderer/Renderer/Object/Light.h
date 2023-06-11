@@ -18,12 +18,12 @@ namespace NS
 		void SetID(int id);
 
 		LightConstant m_lightConstant;
-		float m_intensity;
-		float m_yaw;
-		float m_pitch;
+		float m_intensity = 1.0f;
+		float m_yaw = 0.0f;
+		float m_pitch = 0.0f;
 		int m_type = 0;
-		bool bTurnOn = false;
 		int m_id = 0;
+		bool bTurnOn = false;
 	};
 }
 

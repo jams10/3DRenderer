@@ -11,16 +11,19 @@ namespace NS
 {
     void Light::Update()
     {
-		if (bTurnOn == true) m_lightConstant.turnOn = 1;
+		std::cout << m_id << ": " << m_lightConstant.turnOn << '\n';
+
+		if (bTurnOn == true) m_lightConstant.turnOn = true;
 		else
 		{
-			m_lightConstant.turnOn = 0;
+			m_lightConstant.turnOn = false;
 			return;
 		}
 
 		m_lightConstant.intensity = m_intensity * Vector3(1.f);
 		m_lightConstant.direction = Vector3::Transform(Vector3(0.0f, 0.0f, 1.0f), Matrix::CreateRotationX(-this->m_pitch));
 		m_lightConstant.direction = Vector3::Transform(m_lightConstant.direction, Matrix::CreateRotationY(this->m_yaw));
+		m_lightConstant.type = m_type;
     }
 
     void Light::UpdateGUI()
@@ -55,7 +58,7 @@ namespace NS
 			if (m_type == 1 || m_type == 2)
 			{
 				ImGui::SliderFloat("FallOffStart", &m_lightConstant.fallOffStart, 0.f, 5.0f);
-				ImGui::SliderFloat("FallOffEnd", &m_lightConstant.fallOffStart, 0.f, 10.0f);
+				ImGui::SliderFloat("FallOffEnd", &m_lightConstant.fallOffEnd, 0.f, 10.0f);
 			}
 			if (m_type == 2)
 			{

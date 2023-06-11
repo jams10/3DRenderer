@@ -92,6 +92,7 @@ namespace NS
 			{
 				ImGui::SliderFloat("Diffuse", &m_materialDiffuse, 0.5f, 1.0f);
 				ImGui::SliderFloat("Specular", &m_materialSpecular, 0.5f, 1.0f);
+				ImGui::SliderFloat("Shineness", &m_materialData.shininess, 1.0f, 64.0f);
 			}
 			ImGui::Checkbox("Use Texture", &m_bUseTexture);
 			if (!m_bUseTexture)

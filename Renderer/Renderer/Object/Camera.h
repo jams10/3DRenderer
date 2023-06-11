@@ -32,7 +32,7 @@ namespace NS
 
 	private:
 		// 카메라 트랜스폼.
-		Vector3 m_position = Vector3(0.0f, 0.0f, -1.0f);
+		Vector3 m_position = Vector3(0.0f, 0.0f, -2.0f);
 		Vector3 m_viewDir = Vector3(0.0f, 0.0f, 1.0f);  // z축 양의 방향 바라봄.
 		Vector3 m_upDir = Vector3(0.0f, 1.0f, 0.0f);    // up vector 고정.
 		Vector3 m_rightDir = Vector3(1.0f, 0.0f, 0.0f); // 왼손 좌표계에서는 x축 양의 방향이 오른쪽.

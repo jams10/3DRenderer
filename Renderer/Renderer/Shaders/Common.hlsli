@@ -15,7 +15,7 @@ struct Material
     float3 ambient;
     float shininess;
     float3 diffuse;
-    uint bUseTexture;
+    int bUseTexture;
     float3 specular;
     float dummy1;
     float3 color;
@@ -31,8 +31,9 @@ struct Light
     float3 position;
     float spotPower;
     float3 color;
-    uint type;
-    uint turnOn;
+    int type;
+    float3 dummy;
+    int turnOn;
 };
 
 struct VertexShaderInput
@@ -82,6 +83,14 @@ float3 BlinnPhong(float3 lightStrength, float3 vertexToLight, float3 vertexNorma
     return mat.ambient + (mat.diffuse + specular) * lightStrength;
 }
 
+float CalcAttenuation(float d, float falloffStart, float falloffEnd)
+{
+    // 입력으로 주어진 거리가 falloffStart, falloffEnd 사이의 어느 지점에 있는지 [0,1] 범위로 나타냄.
+    // falloffStart에 가까울 수록 1에 가까워짐.
+    // Linear falloff
+    return saturate((falloffEnd - d) / (falloffEnd - falloffStart));
+}
+
 float3 ComputeDirectionalLight(Light light, Material mat, float3 vertexNormal, float3 vertexToEye)
 {
     float3 vertexToLight = -light.direction; // 정점에서 광원을 향하는 벡터.
@@ -90,6 +99,32 @@ float3 ComputeDirectionalLight(Light light, Material mat, float3 vertexNormal, f
     float3 lightStrength = light.intensity * ndotl;
     
     return BlinnPhong(lightStrength, vertexToLight, vertexNormal, vertexToEye, mat);
+}
+
+float3 ComputePointLight(Light light, Material mat, float3 vertexPos, float3 vertexNormal, float3 vertexToEye)
+{
+    float3 vertexToLight = light.position - vertexPos;
+
+    // 쉐이딩할 지점부터 조명까지의 거리 계산
+    float d = length(vertexToLight);
+
+    // 너무 멀면 조명이 적용되지 않음
+    if (d > light.fallOffEnd)
+    {
+        return float3(0.0, 0.0, 0.0);
+    }
+    else
+    {
+        vertexToLight /= d;
+
+        float ndotl = max(dot(vertexToLight, vertexNormal), 0.0f);
+        float3 lightStrength = light.intensity * ndotl;
+
+        float att = CalcAttenuation(d, light.fallOffStart, light.fallOffEnd); // 거리에 따른 빛의 감쇠를 계산함.
+        lightStrength *= att;
+
+        return BlinnPhong(lightStrength, vertexToLight, vertexNormal, vertexToEye, mat);
+    }
 }
 
 /* Functions */

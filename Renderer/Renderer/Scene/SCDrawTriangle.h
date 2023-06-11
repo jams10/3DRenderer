@@ -2,8 +2,6 @@
 
 #include "SceneBase.h"
 
-#include "Model/Model.h"
-
 /*
 *	<SCDrawTriangle>
 *	기본적인 삼각형을 그리는 씬.

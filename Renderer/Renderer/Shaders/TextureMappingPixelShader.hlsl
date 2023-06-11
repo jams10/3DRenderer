@@ -6,7 +6,7 @@
 */
 
 Texture2D g_texture0 : register(t0);
-
+    
 cbuffer PixelConstantBuffer : register(b0)
 {
     Material material;

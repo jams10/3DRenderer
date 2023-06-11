@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "Model/ConstantData.h"
+#include "Model/Model.h"
 #include "Object/Light.h"
 
 /*
