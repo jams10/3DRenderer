@@ -7,7 +7,12 @@
 
 Texture2D g_texture0 : register(t0);
 
+cbuffer PixelConstantBuffer : register(b0)
+{
+    Material material;
+};
+
 float4 main(PixelShaderInput input) : SV_TARGET
 {
-    return g_texture0.Sample(linearClampSampler, input.texcoord);
+    return material.bUseTexture ? g_texture0.Sample(linearClampSampler, input.texcoord) : float4(material.color, 1.0f);
 }

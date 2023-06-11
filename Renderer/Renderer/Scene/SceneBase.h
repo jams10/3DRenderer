@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "Model/ConstantData.h"
+#include "Object/Light.h"
 
 /*
 *	<SceneBase>
@@ -28,14 +29,17 @@ namespace NS
 		virtual void Render();
 		virtual ~SceneBase();
 
-		void UpdateGlobalConstantDataForVS(const Vector3& eyeWorld, const Matrix& viewRow, const Matrix& projRow);
-		void UpdateGlobalConstantDataForPS();
+		void UpdateGlobalCameraTransformConstant(const Vector3& eyeWorld, const Matrix& viewRow, const Matrix& projRow);
+		void UpdateGlobalSceneDataConstant();
 
 	protected:
 		GraphicsProcessor* m_pGraphics;
 		Camera* m_pCamera;
+		Light m_lights[MAX_LIGHTS];
 		GlobalCameraTransformConstant m_globalCameraTransfomConstant;
 		GlobalSceneDataConstant m_globalSceneDataConstant;
+
+		bool m_bUseLighting = false;
 	};
 }
 

@@ -225,7 +225,7 @@ namespace NS
 		UpdateBuffer(globalCameraTransformConstant, m_globalCameraTransformConstantBuffer);
 	}
 
-	void D3D11Graphics::UpdateGlobalSceneDataConstantBufferS(const GlobalSceneDataConstant& globalSceneDataConstant)
+	void D3D11Graphics::UpdateGlobalSceneDataConstantBuffer(const GlobalSceneDataConstant& globalSceneDataConstant)
 	{
 		UpdateBuffer(globalSceneDataConstant, m_globalSceneDataConstantBuffer);
 	}

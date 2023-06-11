@@ -16,6 +16,8 @@ namespace NS
 		SceneBase::Initialize(pGraphics, pCamera);
 
 		m_triangleModel.Initialize(pGraphics, std::vector<MeshForCPU>{MakeTriangle()});
+		m_triangleModel.m_bUseMaterial = false;
+		m_triangleModel.m_bUseLightingFactor = false;
 	}
 
 	SCDrawTriangle::~SCDrawTriangle()

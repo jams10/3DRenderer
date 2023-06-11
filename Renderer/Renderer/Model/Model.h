@@ -45,11 +45,16 @@ namespace NS
 
 		MeshConstants m_meshWorldTransformData; // 모델 월드 변환 행렬이 담긴 상수 버퍼 데이터 구조체.
 		MaterialConstants m_materialData;       // 라이팅에 사용할 재질 데이터.
+		bool m_bUseMaterial = true;
+		bool m_bUseLightingFactor = true;
 		bool m_bUseTexture = false;
 		
 	private:
 		void UpdateModelTransformConstantBuffer(GraphicsProcessor* const pGraphics);
 		void UpdateModelMaterialConstantBuffer(GraphicsProcessor* const pGraphics);
+
+		float m_materialDiffuse = 1.0f;
+		float m_materialSpecular = 1.0f;
 
 		std::vector<std::shared_ptr<MeshForGPU>> m_meshes; // 3D 모델 파일을 불러왔을 때 한 파일 안에 여러 개의 3D 메쉬가 존재할 수 있음.
 

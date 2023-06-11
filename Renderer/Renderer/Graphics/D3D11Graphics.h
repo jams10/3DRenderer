@@ -53,7 +53,7 @@ namespace NS
 		void CreateGlobalSceneDataConstantBuffer(const GlobalSceneDataConstant& globalSceneDataConstant);
 		void SetGlobalConstantBuffers();
 		void UpdateGlobalCameraTransformConstantBuffer(const GlobalCameraTransformConstant& globalCameraTransformConstant);
-		void UpdateGlobalSceneDataConstantBufferS(const GlobalSceneDataConstant& globalSceneDataConstant);
+		void UpdateGlobalSceneDataConstantBuffer(const GlobalSceneDataConstant& globalSceneDataConstant);
 
 		float GetAspectRatio();
 		void ResizeScreen(int screenWidth, int screenHeight);

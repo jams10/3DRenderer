@@ -21,6 +21,8 @@ namespace NS
         Vector3 diffuse = Vector3(0.5f);
         int bUseTexture = 0u;
         Vector3 specular = Vector3(0.5f);
+        float dummy1;
+        Vector3 color = Vector3(0.5f, 0.65f, 0.98f);
         float dummy2;
     };
 
@@ -32,8 +34,9 @@ namespace NS
         float fallOffEnd = 10.0f;
         Vector3 position = Vector3(0.0f, 2.0f, 0.0f);
         float spotPower = 1.0f;
-        Vector3 color = Vector3(0.0f, 0.0f, 0.0f);
+        Vector3 color = Vector3(1.0f, 1.0f, 1.0f);
         int type = 0;
+        int turnOn = 0;
     };
 
     // __declspec(align(256)) : 컴파일러에게 메모리 정렬을 256 바이트로 할 것임을 알려줌.

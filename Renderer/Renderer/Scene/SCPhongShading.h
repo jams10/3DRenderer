@@ -20,7 +20,6 @@ namespace NS
 		MeshForCPU MakeCube(float scale);
 
 		Model m_cubeModel;
-		Light m_directionalLight;
 	};
 }
 

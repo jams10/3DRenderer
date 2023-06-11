@@ -20,6 +20,11 @@ namespace NS
 		m_pGraphics = pGraphics;
 		m_pCamera = pCamera;
 
+		for (int i = 0; i < MAX_LIGHTS; ++i)
+		{
+			m_lights[i].SetID(i);
+		}
+
 		// 전역 상수 버퍼 생성.
 		pGraphics->GetD3D11()->CreateGlobalCameraTransformConstantBuffer(m_globalCameraTransfomConstant);
 		pGraphics->GetD3D11()->CreateGlobalSceneDataConstantBuffer(m_globalSceneDataConstant);
@@ -29,7 +34,7 @@ namespace NS
 	{
 	}
 
-	void SceneBase::UpdateGlobalConstantDataForVS(const Vector3& eyeWorld, const Matrix& viewRow, const Matrix& projRow)
+	void SceneBase::UpdateGlobalCameraTransformConstant(const Vector3& eyeWorld, const Matrix& viewRow, const Matrix& projRow)
 	{
 		m_globalCameraTransfomConstant.eyeWorld = eyeWorld;
 		m_globalCameraTransfomConstant.view = viewRow.Transpose();
@@ -38,23 +43,52 @@ namespace NS
 		m_globalCameraTransfomConstant.viewProj = (viewRow * projRow).Transpose();
 	}
 
+	void SceneBase::UpdateGlobalSceneDataConstant()
+	{
+		if (m_bUseLighting)
+		{
+			for (int i = 0; i < MAX_LIGHTS; ++i)
+			{
+				m_globalSceneDataConstant.lights[i] = m_lights[i].m_lightConstant;
+			}
+		}
+	}
+
 	void SceneBase::UpdateGUI()
 	{
 		m_pCamera->UpdateGUI();
+
+		if (m_bUseLighting)
+		{
+			for (int i = 0; i < MAX_LIGHTS; ++i)
+			{
+				m_lights[i].UpdateGUI();
+			}
+		}
 	}
 
 	void SceneBase::Update(float dt)
 	{
+		if (m_bUseLighting)
+		{
+			for (int i = 0; i < MAX_LIGHTS; ++i)
+			{
+				m_lights[i].Update();
+			}
+		}
+
 		// 글로벌 상수 버퍼 데이터 업데이트.(CPU)
-		UpdateGlobalConstantDataForVS(
+		UpdateGlobalCameraTransformConstant(
 			m_pCamera->GetCameraPosition(),
 			m_pCamera->GetViewMatrixRow(),
 			m_pCamera->GetProjectionMatrixRow()
 		);
 
+		UpdateGlobalSceneDataConstant();
+
 		// 글로벌 상수 버퍼 업데이트.(GPU)
 		m_pGraphics->GetD3D11()->UpdateGlobalCameraTransformConstantBuffer(m_globalCameraTransfomConstant);
-		m_pGraphics->GetD3D11()->UpdateGlobalSceneDataConstantBufferS(m_globalSceneDataConstant);
+		m_pGraphics->GetD3D11()->UpdateGlobalSceneDataConstantBuffer(m_globalSceneDataConstant);
 	}
 
 	void SceneBase::Render()

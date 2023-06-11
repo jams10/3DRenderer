@@ -10,23 +10,20 @@ namespace NS
 {
 	using DirectX::SimpleMath::Vector3;
 
-	enum ELightType
-	{
-		Directional,
-		Point,
-		Spot,
-	};
-
 	class Light
 	{
-	public:
+	public:	
 		void Update();
 		void UpdateGUI();
+		void SetID(int id);
 
 		LightConstant m_lightConstant;
 		float m_intensity;
-		Vector3 m_rotation;
-		ELightType m_type;
+		float m_yaw;
+		float m_pitch;
+		int m_type = 0;
+		bool bTurnOn = false;
+		int m_id = 0;
 	};
 }
 

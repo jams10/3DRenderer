@@ -68,6 +68,10 @@ namespace NS
 			Matrix::CreateTranslation(m_position);
 		// 모델 트랜스폼 상수 버퍼 업데이트.
 		UpdateModelTransformConstantBuffer(pGraphics);
+
+		m_materialData.diffuse = Vector3(m_materialDiffuse);
+		m_materialData.specular = Vector3(m_materialSpecular);
+
 		// 모델 머티리얼 상수 버퍼 업데이트
 		UpdateModelMaterialConstantBuffer(pGraphics);
 	}
@@ -81,12 +85,20 @@ namespace NS
 		ImGui::SliderFloat3("Rotation(Rad)", &m_rotation.x, -3.14f, 3.14f);
 		ImGui::SliderFloat3("Scaling", &m_scale.x, 0.1f, 2.0f);
 
-		ImGui::Text("Material");
-		ImGui::ColorEdit3("Ambient color", &m_materialData.ambient.x);
-		ImGui::ColorEdit3("Diffuse color", &m_materialData.diffuse.x);
-		ImGui::ColorEdit3("Specular color", &m_materialData.specular.x);
-		ImGui::Checkbox("Use Texture", &m_bUseTexture);
-
+		if (m_bUseMaterial)
+		{
+			ImGui::Text("Material");
+			if (m_bUseLightingFactor)
+			{
+				ImGui::SliderFloat("Diffuse", &m_materialDiffuse, 0.5f, 1.0f);
+				ImGui::SliderFloat("Specular", &m_materialSpecular, 0.5f, 1.0f);
+			}
+			ImGui::Checkbox("Use Texture", &m_bUseTexture);
+			if (!m_bUseTexture)
+			{
+				ImGui::ColorEdit3("Color", &m_materialData.color.x);
+			}
+		}
 		ImGui::End();
 	}
 

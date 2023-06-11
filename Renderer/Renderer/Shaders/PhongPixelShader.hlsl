@@ -14,5 +14,20 @@ cbuffer PixelConstantBuffer : register(b0)
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {
-    return material.bUseTexture ? g_texture0.Sample(linearClampSampler, input.texcoord) : float4(material.diffuse, 1.0f);
+    float3 vertexToEye = normalize(eyeWorld - input.posWorld);
+    float3 color = float3(0.0, 0.0, 0.0);
+    
+    // 라이팅 계산.
+    int i = 0;
+    [unroll]
+    for (i = 0; i < MAX_LIGHTS; ++i)
+    {
+        if (lights[i].turnOn == 0)
+            continue;
+        if(lights[i].type == 0)
+            color += ComputeDirectionalLight(lights[i], material, input.normalWorld, vertexToEye) * lights[i].color;
+    }
+     
+    return material.bUseTexture ? float4(color, 1.0) * g_texture0.Sample(linearClampSampler, input.texcoord) :
+                                  float4(color, 1.0) * float4(material.color, 1.0f);
 }

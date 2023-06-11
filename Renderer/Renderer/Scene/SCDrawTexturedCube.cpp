@@ -18,6 +18,7 @@ namespace NS
         MeshForCPU cube = MakeCube(1.0f);
         cube.albedoTextureFilename = "..\\Resources\\Textures\\PaperBox.jpg";
         m_cubeModel.Initialize(pGraphics, std::vector<MeshForCPU>{cube});
+        m_cubeModel.m_bUseLightingFactor = false;
 	}
 
     SCDrawTexturedCube::~SCDrawTexturedCube()
