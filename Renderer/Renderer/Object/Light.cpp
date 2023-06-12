@@ -65,7 +65,7 @@ namespace NS
 			}
 			if (m_type == 2)
 			{
-				ImGui::SliderFloat("SpotPower", &m_lightConstant.spotPower, 0.f, 5.0f);
+				ImGui::SliderFloat("SpotPower", &m_lightConstant.spotPower, 1.f, 512.0f);
 			}
 
 			ImGui::ColorEdit3("Color", &m_lightConstant.color.x);

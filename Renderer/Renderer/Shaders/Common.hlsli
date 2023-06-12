@@ -127,6 +127,36 @@ float3 ComputePointLight(Light light, Material mat, float3 vertexPos, float3 ver
     }
 }
 
+float3 ComputeSpotLight(Light light, Material mat, float3 vertexPos, float3 vertexNormal, float3 vertexToEye)
+{
+    float3 vertexToLight = light.position - vertexPos;
+
+    // 쉐이딩할 지점부터 조명까지의 거리 계산
+    float d = length(vertexToLight);
+
+    // 너무 멀면 조명이 적용되지 않음
+    if (d > light.fallOffEnd)
+    {
+        return float3(0.0f, 0.0f, 0.0f);
+    }
+    else
+    {
+        vertexToLight /= d;
+
+        float ndotl = max(dot(vertexToLight, vertexNormal), 0.0f);
+        float3 lightStrength = light.intensity * ndotl;
+
+        float att = CalcAttenuation(d, light.fallOffStart, light.fallOffEnd); // 거리에 따른 빛 감쇠 값 계산.
+        lightStrength *= att;
+
+        // 빛의 방향 벡터와 빛에서 물체를 향하는 벡터 간 각도를 이용, spot light의 중앙에서 퍼져나가면서 감쇠되는 빛의 세기를 계산함.
+        float spotFactor = pow(max(dot(-vertexToLight, light.direction), 0.0f), light.spotPower);
+        lightStrength *= spotFactor;
+
+        return BlinnPhong(lightStrength, vertexToLight, vertexNormal, vertexToEye, mat);
+    }
+}
+
 /* Functions */
 
 
