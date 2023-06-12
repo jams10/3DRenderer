@@ -5,9 +5,11 @@
 #include <string>
 #include <sstream>
 
+#include "LightModel.h"
+
 namespace NS
 {
-    void Light::Update()
+	void Light::Update(float dt, LightModel* pModel)
     {
 		if (bTurnOn == true) m_lightConstant.turnOn = true;
 		else
@@ -20,6 +22,10 @@ namespace NS
 		m_lightConstant.direction = Vector3::Transform(Vector3(0.0f, 0.0f, 1.0f), Matrix::CreateRotationX(-this->m_pitch));
 		m_lightConstant.direction = Vector3::Transform(m_lightConstant.direction, Matrix::CreateRotationY(this->m_yaw));
 		m_lightConstant.type = m_type;
+
+		// 광원을 시각적으로 나타낼 3D 메쉬의 위치와 색상을 광원과 똑같이 만들어줌.
+		pModel->m_position = m_lightConstant.position;
+		pModel->m_materialData.color = m_lightConstant.color;
     }
 
     void Light::UpdateGUI()

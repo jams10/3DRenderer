@@ -17,8 +17,6 @@ namespace NS
 		virtual ~SCPhongShading();
 
 	private:
-		MeshForCPU MakeCube(float scale);
-
 		Model m_cubeModel;
 	};
 }

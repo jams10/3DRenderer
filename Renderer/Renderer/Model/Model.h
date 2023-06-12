@@ -32,8 +32,8 @@ namespace NS
 		void Initialize(GraphicsProcessor* const pGraphics, const std::string& basePath, const std::string& filename);
 		void Initialize(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes);
 
-		void Update(float dt, GraphicsProcessor* const pGraphics);
-		void UpdateGUI();
+		virtual void Update(float dt, GraphicsProcessor* const pGraphics);
+		virtual void UpdateGUI();
 
 		void Render(GraphicsProcessor* const pGraphics);
 		void Shutdown();
@@ -49,7 +49,7 @@ namespace NS
 		bool m_bUseLightingFactor = true;
 		bool m_bUseTexture = false;
 		
-	private:
+	protected:
 		void UpdateModelTransformConstantBuffer(GraphicsProcessor* const pGraphics);
 		void UpdateModelMaterialConstantBuffer(GraphicsProcessor* const pGraphics);
 

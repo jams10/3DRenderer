@@ -44,12 +44,6 @@ namespace NS
 	{
 		SceneBase::Render();
 
-		// 샘플러 바인딩.
-		m_pGraphics->GetD3D11()->GetContext()->VSSetSamplers(0, UINT(Graphics::samplerStates.size()),
-																Graphics::samplerStates.data());
-		m_pGraphics->GetD3D11()->GetContext()->PSSetSamplers(0, UINT(Graphics::samplerStates.size()),
-																Graphics::samplerStates.data());
-
 		if (m_pCamera->m_bUseWireFrameMode)
 		{
 			m_pGraphics->SetPipelineState(Graphics::vertexColorWirePSO);

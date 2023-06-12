@@ -21,8 +21,6 @@ namespace NS
 		virtual ~SCDrawTexturedCube();
 
 	private:
-		MeshForCPU MakeCube(float scale);
-
 		Model m_cubeModel;
 	};
 

@@ -105,11 +105,11 @@ namespace NS
 
 	void Model::UpdateModelTransformConstantBuffer(GraphicsProcessor* const pGraphics)
 	{
-		m_meshWorldTransformData.world = m_meshWorldTransformData.world.Transpose(); // 쉐이더에 넘겨주기 전, colum major로 만들어줌.
 		m_meshWorldTransformData.worldInvTranspose = m_meshWorldTransformData.world;
 		m_meshWorldTransformData.worldInvTranspose.Translation(Vector3(0.0f));
 		m_meshWorldTransformData.worldInvTranspose = m_meshWorldTransformData.worldInvTranspose.Invert().Transpose();
 		m_meshWorldTransformData.worldInvTranspose = m_meshWorldTransformData.worldInvTranspose.Transpose();
+		m_meshWorldTransformData.world = m_meshWorldTransformData.world.Transpose(); // 쉐이더에 넘겨주기 전, colum major로 만들어줌.
 
 		// 정점 상수 버퍼 업데이트.
 		pGraphics->GetD3D11()->UpdateBuffer(m_meshWorldTransformData, m_meshVertexConstantBuffer);

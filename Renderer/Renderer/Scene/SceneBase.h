@@ -9,6 +9,7 @@
 #include "Model/ConstantData.h"
 #include "Model/Model.h"
 #include "Object/Light.h"
+#include "Object/LightModel.h"
 
 /*
 *	<SceneBase>
@@ -37,10 +38,13 @@ namespace NS
 		GraphicsProcessor* m_pGraphics;
 		Camera* m_pCamera;
 		Light m_lights[MAX_LIGHTS];
+		LightModel m_lightModels[MAX_LIGHTS];
 		GlobalCameraTransformConstant m_globalCameraTransfomConstant;
 		GlobalSceneDataConstant m_globalSceneDataConstant;
 
 		bool m_bUseLighting = false;
+
+		MeshForCPU MakeCube(float scale);
 	};
 }
 

@@ -8,12 +8,13 @@
 
 namespace NS
 {
+	class LightModel;
 	using DirectX::SimpleMath::Vector3;
 
 	class Light
 	{
-	public:	
-		void Update();
+	public:
+		void Update(float dt, LightModel* pModel);
 		void UpdateGUI();
 		void SetID(int id);
 
