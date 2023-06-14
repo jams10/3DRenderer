@@ -47,6 +47,8 @@ namespace NS
 
 		void BeginFrame(float red, float green, float blue, float alpha);
 		void Render(const MeshForGPU& meshForGPU);
+		void Render(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, vector<ID3D11Buffer*> constBufferVS, vector<ID3D11Buffer*> constBufferPS,
+			vector<ID3D11ShaderResourceView*> shaderResources, const UINT& indexCount, const UINT& stride, const UINT& offset);
 		void EndFrame();
 
 		void CreateGlobalCameraTransformConstantBuffer(const GlobalCameraTransformConstant& globalCameraTransformConstant);

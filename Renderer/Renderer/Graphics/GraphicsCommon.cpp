@@ -23,12 +23,14 @@ namespace NS
 		ComPtr<ID3D11VertexShader> vertexShader_Color;
 		ComPtr<ID3D11VertexShader> vertexShader_TextureMapping;
 		ComPtr<ID3D11VertexShader> vertexShader_PhongShading;
+		ComPtr<ID3D11VertexShader> vertexShader_DrawingNormals;
 		ComPtr<ID3D11PixelShader> pixelShader_Color;
 		ComPtr<ID3D11PixelShader> pixelShader_TextureMapping;
 		ComPtr<ID3D11PixelShader> pixelShader_PhongShading;
 
 		// Input Layouts
 		ComPtr<ID3D11InputLayout> inputLayout_Default;
+		ComPtr<ID3D11InputLayout> inputLayout_DrawingNormals;
 
 		// Pipeline States
 		GraphicsPSO vertexColorPSO;
@@ -36,6 +38,7 @@ namespace NS
 		GraphicsPSO textureMappingPSO;
 		GraphicsPSO phongShadingPSO;
 		GraphicsPSO defaultWirePSO;
+		GraphicsPSO drawingNormalPSO;
 
 		void Graphics::InitCommonStates(GraphicsProcessor* pGraphics)
 		{
@@ -116,12 +119,23 @@ namespace NS
 				 D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
 
+			vector<D3D11_INPUT_ELEMENT_DESC> drawingNormalsIEs = {
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+				 D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 4 * 3,
+				 D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12 + 4 * 3,
+				 D3D11_INPUT_PER_VERTEX_DATA, 0},
+			};
+
 			pGraphics->GetD3D11()->CreateVertexShaderAndInputLayout(L"Shaders\\ColorVertexShader.hlsl", 
 				basicIEs, vertexShader_Color, inputLayout_Default);
 			pGraphics->GetD3D11()->CreateVertexShaderAndInputLayout(L"Shaders\\TextureMappingVertexShader.hlsl", 
 				basicIEs, vertexShader_TextureMapping, inputLayout_Default);
 			pGraphics->GetD3D11()->CreateVertexShaderAndInputLayout(L"Shaders\\PhongVertexShader.hlsl",
 				basicIEs, vertexShader_PhongShading, inputLayout_Default);
+			pGraphics->GetD3D11()->CreateVertexShaderAndInputLayout(L"Shaders\\DrawingNormalsVertexShader.hlsl",
+				drawingNormalsIEs, vertexShader_DrawingNormals, inputLayout_DrawingNormals);
 
 			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\ColorPixelShader.hlsl", pixelShader_Color);
 			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\TextureMappingPixelShader.hlsl", pixelShader_TextureMapping);
@@ -150,6 +164,13 @@ namespace NS
 
 			defaultWirePSO = textureMappingPSO;
 			defaultWirePSO.m_rasterizerState = rasterizerState_WireCW;
+
+			drawingNormalPSO.m_vertexShader = vertexShader_DrawingNormals;
+			drawingNormalPSO.m_pixelShader = pixelShader_Color;
+			drawingNormalPSO.m_inputLayout = inputLayout_DrawingNormals;
+			drawingNormalPSO.m_depthStencilState = depthStencilState_Default;
+			drawingNormalPSO.m_rasterizerState = rasterizerState_SolidCW;
+			drawingNormalPSO.m_primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 		}
 	}
 }

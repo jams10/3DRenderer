@@ -175,6 +175,28 @@ namespace NS
 		m_context->DrawIndexed(meshForGPU.indexCount, 0, 0);
 	}
 
+	void D3D11Graphics::Render(ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer, vector<ID3D11Buffer*> constBufferVS, vector<ID3D11Buffer*> constBufferPS, 
+		vector<ID3D11ShaderResourceView*> shaderResources, const UINT& indexCount, const UINT& stride, const UINT& offset)
+	{
+		// 정점 쉐이더 상수 버퍼(모델별로 가지고 있을) 파이프라인에 바인딩.
+		if(!constBufferVS.empty())
+			m_context->VSSetConstantBuffers(0, (UINT)constBufferVS.size(), constBufferVS.data());
+
+		// 픽셀 쉐이더 상수 버퍼 파이프라인에 바인딩.
+		if (!constBufferPS.empty())
+			m_context->PSSetConstantBuffers(0, (UINT)constBufferPS.size(), constBufferPS.data());
+
+		// 사용할 쉐이더 리소스(텍스쳐) 바인딩.
+		// TODO : 여러 텍스쳐 맵 SRV 추가.
+		if (!shaderResources.empty())
+			m_context->PSSetShaderResources(0, (UINT)shaderResources.size(), shaderResources.data());
+
+		// 정점, 인덱스 버퍼 설정하고 그리기 명령 호출.s
+		m_context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+		m_context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+		m_context->DrawIndexed(indexCount, 0, 0);
+	}
+
 	void D3D11Graphics::EndFrame()
 	{
 		// Backbuffer에 그려진 화면을 모니터에 출력.
@@ -210,14 +232,14 @@ namespace NS
 	void D3D11Graphics::SetGlobalConstantBuffers()
 	{
 		// 전역 상수 버퍼 파이프라인에 바인딩.
-		// Common.hlsli에 정의해 준 것처럼 항상 register(b1), register(b2)에 들어가도록 함.
-		m_context->VSSetConstantBuffers(1, 1, m_globalCameraTransformConstantBuffer.GetAddressOf());
-		m_context->PSSetConstantBuffers(1, 1, m_globalCameraTransformConstantBuffer.GetAddressOf());
-		m_context->GSSetConstantBuffers(1, 1, m_globalCameraTransformConstantBuffer.GetAddressOf());
+		// Common.hlsli에 정의해 준 것처럼 항상 register(b2), register(b3)에 들어가도록 함.
+		m_context->VSSetConstantBuffers(2, 1, m_globalCameraTransformConstantBuffer.GetAddressOf());
+		m_context->PSSetConstantBuffers(2, 1, m_globalCameraTransformConstantBuffer.GetAddressOf());
+		m_context->GSSetConstantBuffers(2, 1, m_globalCameraTransformConstantBuffer.GetAddressOf());
 
-		m_context->VSSetConstantBuffers(2, 1, m_globalSceneDataConstantBuffer.GetAddressOf());
-		m_context->PSSetConstantBuffers(2, 1, m_globalSceneDataConstantBuffer.GetAddressOf());
-		m_context->GSSetConstantBuffers(2, 1, m_globalSceneDataConstantBuffer.GetAddressOf());
+		m_context->VSSetConstantBuffers(3, 1, m_globalSceneDataConstantBuffer.GetAddressOf());
+		m_context->PSSetConstantBuffers(3, 1, m_globalSceneDataConstantBuffer.GetAddressOf());
+		m_context->GSSetConstantBuffers(3, 1, m_globalSceneDataConstantBuffer.GetAddressOf());
 	}
 
 	void D3D11Graphics::UpdateGlobalCameraTransformConstantBuffer(const GlobalCameraTransformConstant& globalCameraTransformConstant)

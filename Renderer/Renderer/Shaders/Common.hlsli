@@ -45,6 +45,13 @@ struct VertexShaderInput
     float3 color : COLOR0;
 };
 
+struct NormalVertexShaderInput
+{
+    float3 posModel : POSITION; //모델 좌표계의 위치 position
+    float3 normalModel : NORMAL0; // 모델 좌표계의 normal    
+    float2 texcoord : TEXCOORD0;
+};
+
 struct PixelShaderInput
 {
     float4 posProj : SV_POSITION; // Screen position
@@ -57,7 +64,7 @@ struct PixelShaderInput
 /* Structs */
 
 /* Constant Buffers */
-cbuffer GlobalCameraTransformConstant : register(b1)
+cbuffer GlobalCameraTransformConstant : register(b2)
 {
     matrix view;
     matrix proj;
@@ -67,7 +74,7 @@ cbuffer GlobalCameraTransformConstant : register(b1)
     float3 eyeWorld;     // 시점(카메라) 월드 위치.
 }
 
-cbuffer GlobalSceneDataCostant : register(b2) // 픽셀 쉐이더에서 사용.
+cbuffer GlobalSceneDataCostant : register(b3) // 픽셀 쉐이더에서 사용.
 {
     Light lights[MAX_LIGHTS];
 }

@@ -53,6 +53,12 @@ namespace NS
         Matrix worldInvTranspose;
     };
 
+    __declspec(align(16)) struct DrawingNormalConstants
+    {
+        float scale = 1.0f;
+        Vector3 dummy;
+    };
+
     __declspec(align(256)) struct GlobalCameraTransformConstant // 모델들이 공통으로 사용하는 정점 쉐이더 상수 버퍼.
     {
         Matrix view;

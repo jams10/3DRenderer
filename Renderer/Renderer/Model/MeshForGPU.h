@@ -41,4 +41,23 @@ namespace NS
             albedoTexture.Reset();
         }
 	};
+
+    struct MeshNormalForGPU
+    {
+        ComPtr<ID3D11Buffer> vertexBuffer;
+        ComPtr<ID3D11Buffer> indexBuffer;
+        ComPtr<ID3D11Buffer> vertexConstantBuffer;
+
+        UINT indexCount = 0; // Number of indiecs = 3 * number of triangles
+        UINT vertexCount = 0;
+        UINT stride = 0;
+        UINT offset = 0;
+
+        void Shutdown()
+        {
+            vertexBuffer.Reset();
+            indexBuffer.Reset();
+            vertexConstantBuffer.Reset();
+        }
+    };
 }

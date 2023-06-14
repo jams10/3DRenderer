@@ -15,7 +15,7 @@ namespace NS
 	{
 		SceneBase::Initialize(pGraphics, pCamera);
 
-		m_triangleModel.Initialize(pGraphics, std::vector<MeshForCPU>{MakeTriangle()});
+		m_triangleModel.InitializeWithDrawingNormal(pGraphics, std::vector<MeshForCPU>{MakeTriangle()});
 		m_triangleModel.m_bUseMaterial = false;
 		m_triangleModel.m_bUseLightingFactor = false;
 	}
@@ -54,6 +54,12 @@ namespace NS
 		}
 
 		m_triangleModel.Render(m_pGraphics); // 모델 정점, 인덱스 버퍼, 상수 버퍼 바인딩.
+
+		if (m_triangleModel.m_bDrawNormals)
+		{
+			m_pGraphics->SetPipelineState(Graphics::drawingNormalPSO);
+			m_triangleModel.RenderNormal(m_pGraphics);
+		}
 	}
 
 	MeshForCPU SCDrawTriangle::MakeTriangle()

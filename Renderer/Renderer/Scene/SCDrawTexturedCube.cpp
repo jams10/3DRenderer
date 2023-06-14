@@ -17,7 +17,7 @@ namespace NS
 
         MeshForCPU cube = MakeCube(1.0f);
         cube.albedoTextureFilename = "..\\Resources\\Textures\\PaperBox.jpg";
-        m_cubeModel.Initialize(pGraphics, std::vector<MeshForCPU>{cube});
+        m_cubeModel.InitializeWithDrawingNormal(pGraphics, std::vector<MeshForCPU>{cube});
         m_cubeModel.m_bUseLightingFactor = false;
 	}
 
@@ -56,5 +56,11 @@ namespace NS
         }
 
         m_cubeModel.Render(m_pGraphics); // 모델 정점, 인덱스 버퍼, 상수 버퍼 바인딩.
+
+        if (m_cubeModel.m_bDrawNormals)
+        {
+            m_pGraphics->SetPipelineState(Graphics::drawingNormalPSO);
+            m_cubeModel.RenderNormal(m_pGraphics);
+        }
 	}
 }

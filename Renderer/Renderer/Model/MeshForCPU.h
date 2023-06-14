@@ -18,4 +18,10 @@ namespace NS
 		std::vector<uint16_t> indices;
 		std::string albedoTextureFilename;
 	};
+
+	struct MeshNormalForCPU
+	{
+		std::vector<VertexForDrawingNormal> vertices;
+		std::vector<uint16_t> indices;
+	};
 }

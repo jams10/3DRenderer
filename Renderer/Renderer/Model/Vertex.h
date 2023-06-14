@@ -21,4 +21,11 @@ namespace NS
 		Vector3 tangentModel;
 		Vector3 color;
 	};
+
+	struct VertexForDrawingNormal
+	{
+		Vector3 position;
+		Vector3 normalModel;
+		Vector2 texcoord;
+	};
 }

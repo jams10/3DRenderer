@@ -208,12 +208,11 @@ namespace NS
 		switch (msg)
 		{
 		case WM_SIZE:
-			// TODO : 그래픽스 관련 화면 크기도 바꿔 주어야 함.
 			m_screenWidth = int(LOWORD(lParam));
 			m_screenHeight = int(HIWORD(lParam));
 			bShouldResizeScreen = true;
 
-			return 0;
+			break;
 		case WM_MOUSEMOVE:
 			// 마우스 이동.
 			m_pMouse->Move(wParam, LOWORD(lParam), HIWORD(lParam), m_screenWidth, m_screenHeight);

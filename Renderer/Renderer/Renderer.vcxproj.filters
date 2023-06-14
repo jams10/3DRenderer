@@ -166,6 +166,7 @@
     <FxCompile Include="Shaders\TextureMappingPixelShader.hlsl" />
     <FxCompile Include="Shaders\PhongVertexShader.hlsl" />
     <FxCompile Include="Shaders\PhongPixelShader.hlsl" />
+    <FxCompile Include="Shaders\DrawingNormalsVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Common.hlsli" />
