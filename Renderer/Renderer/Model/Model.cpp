@@ -81,8 +81,8 @@ namespace NS
 				vn.texcoord.x = 1; // normal¿« ≥°¡°.
 				newMeshNormal.vertices.push_back(vn);
 
-				newMeshNormal.indices.push_back(uint16_t(2 * j));
-				newMeshNormal.indices.push_back(uint16_t(2 * j + 1));
+				newMeshNormal.indices.push_back(uint32_t(2 * j));
+				newMeshNormal.indices.push_back(uint32_t(2 * j + 1));
 			}
 
 			auto newMeshNormalForGPU = std::make_shared<MeshNormalForGPU>();

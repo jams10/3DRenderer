@@ -193,7 +193,7 @@ namespace NS
 
 		// 정점, 인덱스 버퍼 설정하고 그리기 명령 호출.s
 		m_context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-		m_context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+		m_context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 		m_context->DrawIndexed(indexCount, 0, 0);
 	}
 
@@ -346,14 +346,14 @@ namespace NS
 		m_device->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &pixelShader);
 	}
 
-	void D3D11Graphics::CreateIndexBuffer(const vector<uint16_t>& indices, ComPtr<ID3D11Buffer>& m_indexBuffer)
+	void D3D11Graphics::CreateIndexBuffer(const vector<uint32_t>& indices, ComPtr<ID3D11Buffer>& m_indexBuffer)
 	{
 		D3D11_BUFFER_DESC bufferDesc = {};
 		bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 인덱스 버퍼 또한 정점 버퍼와 같이 한 번 GPU로 보내면 바꿀 필요가 없음.
-		bufferDesc.ByteWidth = UINT(sizeof(uint16_t) * indices.size());
+		bufferDesc.ByteWidth = UINT(sizeof(uint32_t) * indices.size());
 		bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		bufferDesc.CPUAccessFlags = 0; 
-		bufferDesc.StructureByteStride = sizeof(uint16_t);
+		bufferDesc.StructureByteStride = sizeof(uint32_t);
 
 		D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
 		indexBufferData.pSysMem = indices.data();

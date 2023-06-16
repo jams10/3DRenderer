@@ -9,7 +9,7 @@ namespace NS
 
     MeshForCPU MeshGenerator::MakeTriangle(const float scale)
     {
-        MeshForCPU meshForCPU;
+        MeshForCPU newMesh;
         vector<Vector3> positions;
         vector<Vector3> normalModel;
         vector<Vector2> texcoord;
@@ -40,11 +40,11 @@ namespace NS
             v.texcoord = texcoord[i];
             v.tangentModel = tangentModel[i];
             v.color = colors[i];
-            meshForCPU.vertices.push_back(v);
+            newMesh.vertices.push_back(v);
         }
 
-        meshForCPU.indices = { 0, 1, 2, };
-        return meshForCPU;
+        newMesh.indices = { 0, 1, 2, };
+        return newMesh;
     }
 
 	MeshForCPU MeshGenerator::MakeSquare(const float scale, const Vector2 texScale)
@@ -307,7 +307,7 @@ namespace NS
             vertices.push_back(v);
         }
 
-        vector<uint16_t>& indices = newMesh.indices;
+        vector<uint32_t>& indices = newMesh.indices;
 
         for (int i = 0; i < numSlices; i++) 
         {
@@ -364,7 +364,7 @@ namespace NS
             }
         }
 
-        vector<uint16_t>& indices = newMesh.indices;
+        vector<uint32_t>& indices = newMesh.indices;
 
         for (int j = 0; j < numStacks; j++) 
         {
