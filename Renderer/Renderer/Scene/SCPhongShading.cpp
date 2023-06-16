@@ -15,7 +15,7 @@ namespace NS
     {
         SceneBase::Initialize(pGraphics, pCamera);
 
-        MeshForCPU cube = MakeCube(1.0f);
+        MeshForCPU cube = MeshGenerator::MakeBox();
         cube.albedoTextureFilename = "..\\Resources\\Textures\\PaperBox.jpg";
         m_cubeModel.InitializeWithDrawingNormal(pGraphics, std::vector<MeshForCPU>{cube});
 

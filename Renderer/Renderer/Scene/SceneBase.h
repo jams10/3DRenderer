@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "Model/ConstantData.h"
+#include "Model/MeshGenerator.h"
 #include "Model/Model.h"
 #include "Object/Light.h"
 #include "Object/LightModel.h"
@@ -43,8 +44,6 @@ namespace NS
 		GlobalSceneDataConstant m_globalSceneDataConstant;
 
 		bool m_bUseLighting = false;
-
-		MeshForCPU MakeCube(float scale);
 	};
 }
 

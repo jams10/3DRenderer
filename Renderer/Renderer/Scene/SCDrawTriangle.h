@@ -19,8 +19,6 @@ namespace NS
 		virtual ~SCDrawTriangle();
 
 	private:
-		MeshForCPU MakeTriangle();
-
 		Model m_triangleModel;
 	};
 

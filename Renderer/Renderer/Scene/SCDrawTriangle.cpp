@@ -15,7 +15,7 @@ namespace NS
 	{
 		SceneBase::Initialize(pGraphics, pCamera);
 
-		m_triangleModel.InitializeWithDrawingNormal(pGraphics, std::vector<MeshForCPU>{MakeTriangle()});
+		m_triangleModel.InitializeWithDrawingNormal(pGraphics, std::vector<MeshForCPU>{MeshGenerator::MakeTriangle()});
 		m_triangleModel.m_bUseMaterial = false;
 		m_triangleModel.m_bUseLightingFactor = false;
 	}
@@ -60,45 +60,5 @@ namespace NS
 			m_pGraphics->SetPipelineState(Graphics::drawingNormalPSO);
 			m_triangleModel.RenderNormal(m_pGraphics);
 		}
-	}
-
-	MeshForCPU SCDrawTriangle::MakeTriangle()
-	{
-		MeshForCPU meshForCPU;
-		vector<Vector3> positions;
-		vector<Vector3> normalModel;
-		vector<Vector2> texcoord;
-		vector<Vector3> tangentModel;
-		vector<Vector3> colors;
-
-		positions.push_back(Vector3(-1.f, -1.f, 0.f));
-		positions.push_back(Vector3(0.f, 1.f, 0.f));
-		positions.push_back(Vector3(1.f, -1.f, 0.f));
-		normalModel.push_back(Vector3(0.0f, 0.0f, -1.0f));
-		normalModel.push_back(Vector3(0.0f, 0.0f, -1.0f));
-		normalModel.push_back(Vector3(0.0f, 0.0f, -1.0f));
-		texcoord.push_back(Vector2(0.0f, 1.0f));
-		texcoord.push_back(Vector2(0.5f, 0.0f));
-		texcoord.push_back(Vector2(0.1f, 1.0f));
-		tangentModel.push_back(Vector3(0.0f, 0.0f, -1.0f));
-		tangentModel.push_back(Vector3(0.0f, 0.0f, -1.0f));
-		tangentModel.push_back(Vector3(0.0f, 0.0f, -1.0f));
-		colors.push_back(Vector3(1.0f, 0.0f, 0.0f));
-		colors.push_back(Vector3(0.0f, 1.0f, 0.0f));
-		colors.push_back(Vector3(0.0f, 0.0f, 1.0f));
-
-		for (int i = 0; i < 3; ++i)
-		{
-			Vertex v;
-			v.position = positions[i];
-			v.normalModel = normalModel[i];
-			v.texcoord = texcoord[i];
-			v.tangentModel = tangentModel[i];
-			v.color = colors[i];
-			meshForCPU.vertices.push_back(v);
-		}
-
-		meshForCPU.indices = { 0, 1, 2, };
-		return meshForCPU;
 	}
 }
