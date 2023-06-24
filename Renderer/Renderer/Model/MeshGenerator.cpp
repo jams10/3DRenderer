@@ -384,7 +384,40 @@ namespace NS
         return newMesh;
 	}
 
-    // 입력 모델 모양이 구체라고 가정함.
+    MeshForCPU MeshGenerator::MakeIcosahedron()
+    {
+        // 정이십면체
+        // https://mathworld.wolfram.com/Isohedron.html
+
+        const float X = 0.525731f;
+        const float Z = 0.850651f;
+
+        MeshForCPU newMesh;
+
+        vector<Vector3> pos = {
+            Vector3(-X, 0.0f, Z), Vector3(X, 0.0f, Z),   Vector3(-X, 0.0f, -Z),
+            Vector3(X, 0.0f, -Z), Vector3(0.0f, Z, X),   Vector3(0.0f, Z, -X),
+            Vector3(0.0f, -Z, X), Vector3(0.0f, -Z, -X), Vector3(Z, X, 0.0f),
+            Vector3(-Z, X, 0.0f), Vector3(Z, -X, 0.0f),  Vector3(-Z, -X, 0.0f) };
+
+        for (size_t i = 0; i < pos.size(); i++) 
+        {
+            Vertex v;
+            v.position = pos[i];
+            v.normalModel = v.position;
+            v.normalModel.Normalize();
+
+            newMesh.vertices.push_back(v);
+        }
+
+        newMesh.indices = { 1,  4,  0, 4,  9, 0, 4, 5,  9, 8, 5, 4,  1,  8, 4,
+                           1,  10, 8, 10, 3, 8, 8, 3,  5, 3, 2, 5,  3,  7, 2,
+                           3,  10, 7, 10, 6, 7, 6, 11, 7, 6, 0, 11, 6,  1, 0,
+                           10, 1,  6, 11, 0, 9, 2, 11, 9, 5, 2, 9,  11, 2, 7 };
+
+        return newMesh;
+    }
+
     MeshForCPU MeshGenerator::SubdivideToSphere(const float radius, MeshForCPU meshForCPU)
     {
         // 구 모양으로 Subdivision을 진행하기 때문에 정점의 위치를 구의 표면으로 옮겨주는 람다 함수.
@@ -393,6 +426,14 @@ namespace NS
             v.normalModel = v.position;
             v.normalModel.Normalize();
             v.position = v.normalModel * radius;
+
+            // 텍스쳐가 이음매 부분에서 깨짐.
+            // atan vs atan2
+            // https://stackoverflow.com/questions/283406/what-is-the-difference-between-atan-and-atan2-in-c
+            const float theta = atan2f(v.position.z, v.position.x);
+            const float phi = acosf(v.position.y / radius);
+            v.texcoord.x = theta / DirectX::XM_2PI;
+            v.texcoord.y = phi / DirectX::XM_PI;
         };
 
         // 원점이 중심이라고 가정하고 기존 정점들을 구체의 반지름 위치로 옮겨줌.

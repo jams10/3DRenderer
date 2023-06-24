@@ -14,6 +14,7 @@ cbuffer MeshConstants : register(b0)
 PixelShaderInput main(VertexShaderInput input)
 {
     PixelShaderInput output;
+    output.posModel = input.posModel;
     float4 pos = float4(input.posModel, 1.0f); // ¾ÆÇÉ °ø°£.
     pos = mul(pos, world);
     output.posWorld = pos.xyz;

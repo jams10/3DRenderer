@@ -15,9 +15,12 @@ namespace NS
     {
         SceneBase::Initialize(pGraphics, pCamera);
 
-        MeshForCPU sphere = MeshGenerator::SubdivideToSphere(1.f, MeshGenerator::MakeBox(1.f));
-        sphere = MeshGenerator::SubdivideToSphere(1.f, sphere);
-        sphere.albedoTextureFilename = "..\\Resources\\Textures\\PaperBox.jpg";
+        //MeshForCPU sphere = MeshGenerator::SubdivideToSphere(1.f, MeshGenerator::MakeBox(1.f));
+        //sphere = MeshGenerator::SubdivideToSphere(1.f, sphere);
+        MeshForCPU sphere = MeshGenerator::MakeIcosahedron();
+        sphere = MeshGenerator::SubdivideToSphere(1.5f, sphere);
+        sphere = MeshGenerator::SubdivideToSphere(1.5f, sphere);
+        sphere.albedoTextureFilename = "..\\Resources\\Textures\\earth.jpg";
         m_sphereModel.InitializeWithDrawingNormal(pGraphics, std::vector<MeshForCPU>{sphere});
 
         m_bUseLighting = true;

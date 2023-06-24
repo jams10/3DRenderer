@@ -55,7 +55,8 @@ struct NormalVertexShaderInput
 struct PixelShaderInput
 {
     float4 posProj : SV_POSITION; // Screen position
-    float3 posWorld : POSITION; // World position (조명 계산에 사용)
+    float3 posModel : POSITION0;  // 구 매핑에 사용.
+    float3 posWorld : POSITION1;  // World position (조명 계산에 사용)
     float3 normalWorld : NORMAL0;
     float2 texcoord : TEXCOORD0;
     float3 tangentWorld : TANGENT0;
