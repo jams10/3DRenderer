@@ -22,6 +22,8 @@ namespace NS
 
         static MeshForCPU MakeSphere(const float radius, const int numSlices, const int numStacks,
             const Vector2 texScale = Vector2(1.0f));
+
+        static MeshForCPU SubdivideToSphere(const float radius, MeshForCPU meshForCPU);
 	};
 
 }

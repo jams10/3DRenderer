@@ -15,23 +15,24 @@ namespace NS
     {
         SceneBase::Initialize(pGraphics, pCamera);
 
-        MeshForCPU cube = MeshGenerator::MakeBox();
-        cube.albedoTextureFilename = "..\\Resources\\Textures\\PaperBox.jpg";
-        m_cubeModel.InitializeWithDrawingNormal(pGraphics, std::vector<MeshForCPU>{cube});
+        MeshForCPU sphere = MeshGenerator::SubdivideToSphere(1.f, MeshGenerator::MakeBox(1.f));
+        sphere = MeshGenerator::SubdivideToSphere(1.f, sphere);
+        sphere.albedoTextureFilename = "..\\Resources\\Textures\\PaperBox.jpg";
+        m_sphereModel.InitializeWithDrawingNormal(pGraphics, std::vector<MeshForCPU>{sphere});
 
         m_bUseLighting = true;
     }
 
     SCPhongShading::~SCPhongShading()
     {
-        m_cubeModel.Shutdown();
+        m_sphereModel.Shutdown();
     }
 
     void SCPhongShading::UpdateGUI()
     {
         SceneBase::UpdateGUI();
 
-        m_cubeModel.UpdateGUI();
+        m_sphereModel.UpdateGUI();
     }
 
     void SCPhongShading::Update(float dt)
@@ -39,7 +40,7 @@ namespace NS
         SceneBase::Update(dt);
 
         // 모델 업데이트.
-        m_cubeModel.Update(dt, m_pGraphics);
+        m_sphereModel.Update(dt, m_pGraphics);
     }
 
     void SCPhongShading::Render()
@@ -55,12 +56,12 @@ namespace NS
             m_pGraphics->SetPipelineState(Graphics::phongShadingPSO);
         }
 
-        m_cubeModel.Render(m_pGraphics); // 모델 정점, 인덱스 버퍼, 상수 버퍼 바인딩.
+        m_sphereModel.Render(m_pGraphics); // 모델 정점, 인덱스 버퍼, 상수 버퍼 바인딩.
 
-        if (m_cubeModel.m_bDrawNormals)
+        if (m_sphereModel.m_bDrawNormals)
         {
             m_pGraphics->SetPipelineState(Graphics::drawingNormalPSO);
-            m_cubeModel.RenderNormal(m_pGraphics);
+            m_sphereModel.RenderNormal(m_pGraphics);
         }
     }
 }

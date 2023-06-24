@@ -383,4 +383,91 @@ namespace NS
 
         return newMesh;
 	}
+
+    // 입력 모델 모양이 구체라고 가정함.
+    MeshForCPU MeshGenerator::SubdivideToSphere(const float radius, MeshForCPU meshForCPU)
+    {
+        // 구 모양으로 Subdivision을 진행하기 때문에 정점의 위치를 구의 표면으로 옮겨주는 람다 함수.
+        auto ProjectVertex = [&](Vertex& v) 
+        {
+            v.normalModel = v.position;
+            v.normalModel.Normalize();
+            v.position = v.normalModel * radius;
+        };
+
+        // 원점이 중심이라고 가정하고 기존 정점들을 구체의 반지름 위치로 옮겨줌.
+        for (auto& v : meshForCPU.vertices)
+        {
+            ProjectVertex(v);
+        }
+
+        // 기존 정점과 새로 추가된 정점들로 구성된 면(face) 단위로 노말 벡터를 업데이트 해주는 람다 함수.
+        auto UpdateFaceNormal = [](Vertex& v0, Vertex& v1, Vertex& v2) 
+        {
+            auto faceNormal = (v1.position - v0.position).Cross(v2.position - v0.position);
+            faceNormal.Normalize();
+            v0.normalModel = faceNormal;
+            v1.normalModel = faceNormal;
+            v2.normalModel = faceNormal;
+        };
+
+        // 버텍스가 중복되는 구조로 구현
+        MeshForCPU newMesh;
+        uint32_t count = 0;
+        for (size_t i = 0; i < meshForCPU.indices.size(); i += 3)
+        {
+            size_t i0 = meshForCPU.indices[i];
+            size_t i1 = meshForCPU.indices[i + 1];
+            size_t i2 = meshForCPU.indices[i + 2];
+
+            Vertex v0 = meshForCPU.vertices[i0];
+            Vertex v1 = meshForCPU.vertices[i1];
+            Vertex v2 = meshForCPU.vertices[i2];
+
+            Vertex v3; // v0, v2 정점 중간에 새 정점을 추가.
+            v3.position = (v0.position + v2.position) * 0.5f;
+            v3.texcoord = (v0.texcoord + v2.texcoord) * 0.5f;
+            ProjectVertex(v3);
+
+            Vertex v4; // v0, v1 정점 중간에 새 정점을 추가.
+            v4.position = (v0.position + v1.position) * 0.5f;
+            v4.texcoord = (v0.texcoord + v1.texcoord) * 0.5f;
+            ProjectVertex(v4);
+
+            Vertex v5; // v1, v2 정점 중간에 새 정점을 추가.
+            v5.position = (v1.position + v2.position) * 0.5f;
+            v5.texcoord = (v1.texcoord + v2.texcoord) * 0.5f;
+            ProjectVertex(v5);
+
+            //UpdateFaceNormal(v4, v1, v5);
+            //UpdateFaceNormal(v0, v4, v3);
+            //UpdateFaceNormal(v3, v4, v5);
+            //UpdateFaceNormal(v3, v5, v2);
+
+            newMesh.vertices.push_back(v4);
+            newMesh.vertices.push_back(v1);
+            newMesh.vertices.push_back(v5);
+
+            newMesh.vertices.push_back(v0);
+            newMesh.vertices.push_back(v4);
+            newMesh.vertices.push_back(v3);
+
+            newMesh.vertices.push_back(v3);
+            newMesh.vertices.push_back(v4);
+            newMesh.vertices.push_back(v5);
+
+            newMesh.vertices.push_back(v3);
+            newMesh.vertices.push_back(v5);
+            newMesh.vertices.push_back(v2);
+
+            // 인덱스 채우기.
+            for (uint32_t j = 0; j < 12; j++) 
+            {
+                newMesh.indices.push_back(j + count);
+            }
+            count += 12;
+        }
+
+        return newMesh;
+    }
 }
