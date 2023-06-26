@@ -15,27 +15,23 @@ namespace NS
     {
         SceneBase::Initialize(pGraphics, pCamera);
 
-        //MeshForCPU sphere = MeshGenerator::SubdivideToSphere(1.f, MeshGenerator::MakeBox(1.f));
-        //sphere = MeshGenerator::SubdivideToSphere(1.f, sphere);
-        MeshForCPU sphere = MeshGenerator::MakeIcosahedron();
-        sphere = MeshGenerator::SubdivideToSphere(1.5f, sphere);
-        sphere = MeshGenerator::SubdivideToSphere(1.5f, sphere);
-        sphere.albedoTextureFilename = "..\\Resources\\Textures\\earth.jpg";
-        m_sphereModel.InitializeWithDrawingNormal(pGraphics, std::vector<MeshForCPU>{sphere});
+        std::vector<MeshForCPU> mesh = MeshGenerator::ReadFromFile("..\\Resources\\Models\\", "Cola_Cup_Low.obj");
+        mesh[0].textures.albedoTextureFilename = "..\\Resources\\Textures\\Cola_Cup_Low\\Base_Color_Map.png";
+        m_model.InitializeWithDrawingNormal(pGraphics, mesh);
 
         m_bUseLighting = true;
     }
 
     SCPhongShading::~SCPhongShading()
     {
-        m_sphereModel.Shutdown();
+        m_model.Shutdown();
     }
 
     void SCPhongShading::UpdateGUI()
     {
         SceneBase::UpdateGUI();
 
-        m_sphereModel.UpdateGUI();
+        m_model.UpdateGUI();
     }
 
     void SCPhongShading::Update(float dt)
@@ -43,7 +39,7 @@ namespace NS
         SceneBase::Update(dt);
 
         // 모델 업데이트.
-        m_sphereModel.Update(dt, m_pGraphics);
+        m_model.Update(dt, m_pGraphics);
     }
 
     void SCPhongShading::Render()
@@ -59,12 +55,12 @@ namespace NS
             m_pGraphics->SetPipelineState(Graphics::phongShadingPSO);
         }
 
-        m_sphereModel.Render(m_pGraphics); // 모델 정점, 인덱스 버퍼, 상수 버퍼 바인딩.
+        m_model.Render(m_pGraphics); // 모델 정점, 인덱스 버퍼, 상수 버퍼 바인딩.
 
-        if (m_sphereModel.m_bDrawNormals)
+        if (m_model.m_bDrawNormals)
         {
             m_pGraphics->SetPipelineState(Graphics::drawingNormalPSO);
-            m_sphereModel.RenderNormal(m_pGraphics);
+            m_model.RenderNormal(m_pGraphics);
         }
     }
 }

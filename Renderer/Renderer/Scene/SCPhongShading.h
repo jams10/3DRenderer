@@ -17,7 +17,7 @@ namespace NS
 		virtual ~SCPhongShading();
 
 	private:
-		Model m_sphereModel;
+		Model m_model;
 	};
 }
 

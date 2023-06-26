@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "Utility/ModelLoader.h"
+
 namespace NS
 {
     using std::vector;
@@ -510,5 +512,46 @@ namespace NS
         }
 
         return newMesh;
+    }
+
+    std::vector<MeshForCPU> MeshGenerator::ReadFromFile(std::string basePath, std::string filename)
+    {
+        ModelLoader modelLoader;              // assimp 라이브러리를 사용해 모델의 정점 데이터를 가져오는 클래스.
+        modelLoader.Load(basePath, filename); // 모델이 있는 곳의 경로와 파일 이름을 건네줌.
+        vector<MeshForCPU>& meshes = modelLoader.meshes; // 정점 데이터를 가져옴. MeshForCPU는 정점, 인덱스 vector와 텍스쳐 파일 이름을 가지고 있음.
+
+        // 정점들을 정규화.
+        Vector3 vmin(1000, 1000, 1000);
+        Vector3 vmax(-1000, -1000, -1000);
+        for (auto& mesh : meshes) 
+        { 
+            for (auto& v : mesh.vertices) 
+            {
+                // 씬에 있는 메쉬들의 정점 위치 값을 최대 1000, 최소 -1000으로 제한 시켜줌.
+                vmin.x = DirectX::XMMin(vmin.x, v.position.x);
+                vmin.y = DirectX::XMMin(vmin.y, v.position.y);
+                vmin.z = DirectX::XMMin(vmin.z, v.position.z);
+                vmax.x = DirectX::XMMax(vmax.x, v.position.x);
+                vmax.y = DirectX::XMMax(vmax.y, v.position.y);
+                vmax.z = DirectX::XMMax(vmax.z, v.position.z);
+            }
+        }
+
+        float dx = vmax.x - vmin.x, dy = vmax.y - vmin.y, dz = vmax.z - vmin.z; // 각각 x,y,z 값의 길이.
+        float dl = DirectX::XMMax(DirectX::XMMax(dx, dy), dz);                  // 최대 길이를 찾아줌.
+        float cx = (vmax.x + vmin.x) * 0.5f, cy = (vmax.y + vmin.y) * 0.5f,     // 각 x,y,z의 중간 값.
+              cz = (vmax.z + vmin.z) * 0.5f;
+
+        for (auto& mesh : meshes) 
+        {
+            for (auto& v : mesh.vertices) 
+            {
+                v.position.x = (v.position.x - cx) / dl; // 최대 길이로 나눠줌으로써 [-1,1] 범위로 정점의 위치를 맞춰줌.
+                v.position.y = (v.position.y - cy) / dl;
+                v.position.z = (v.position.z - cz) / dl;
+            }
+        }
+
+        return meshes;
     }
 }

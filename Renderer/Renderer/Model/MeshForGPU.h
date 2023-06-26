@@ -6,6 +6,7 @@
 #include <wrl.h>
 
 #include "Utility/CustomMacros.h"
+#include "TextureResources.h"
 
 /*
 *	GPU 쪽으로 넘겨줄 Mesh 데이터를 구조체로 정의함.
@@ -22,8 +23,7 @@ namespace NS
         ComPtr<ID3D11Buffer> vertexConstantBuffer;
         ComPtr<ID3D11Buffer> pixelConstantBuffer;
 
-        ComPtr<ID3D11Texture2D> albedoTexture;
-        ComPtr<ID3D11ShaderResourceView> albedoSRV;
+        TextureResourcesForGPU textures;
 
         UINT indexCount = 0; // Number of indiecs = 3 * number of triangles
         UINT vertexCount = 0;
@@ -37,8 +37,7 @@ namespace NS
             vertexConstantBuffer.Reset();
             pixelConstantBuffer.Reset();
 
-            albedoSRV.Reset();
-            albedoTexture.Reset();
+            textures.Shutdown();
         }
 	};
 

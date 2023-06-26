@@ -26,6 +26,8 @@ namespace NS
         static MeshForCPU MakeIcosahedron();
 
         static MeshForCPU SubdivideToSphere(const float radius, MeshForCPU meshForCPU);
+
+        static std::vector<MeshForCPU> ReadFromFile(std::string basePath, std::string filename);
 	};
 
 }

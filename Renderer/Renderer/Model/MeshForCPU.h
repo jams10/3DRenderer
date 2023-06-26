@@ -5,6 +5,7 @@
 
 #include "Utility/CustomMacros.h"
 #include "Vertex.h"
+#include "TextureResources.h"
 
 /*
 *	CPU 쪽에서 만들어줄 Mesh를 나타내는 구조체들을 정의함.
@@ -16,7 +17,7 @@ namespace NS
 	{
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
-		std::string albedoTextureFilename;
+		TextureResourcesForCPU textures;
 	};
 
 	struct MeshNormalForCPU

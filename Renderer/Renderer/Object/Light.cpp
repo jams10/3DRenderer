@@ -25,7 +25,7 @@ namespace NS
 
 		// 광원을 시각적으로 나타낼 3D 메쉬의 위치와 색상을 광원과 똑같이 만들어줌.
 		pModel->m_position = m_lightConstant.position;
-		pModel->m_materialData.color = m_lightConstant.color;
+		pModel->m_materialConstantData.color = m_lightConstant.color;
     }
 
     void Light::UpdateGUI()

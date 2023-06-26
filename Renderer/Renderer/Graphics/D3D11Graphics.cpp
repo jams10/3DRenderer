@@ -166,7 +166,7 @@ namespace NS
 
 		// 사용할 쉐이더 리소스(텍스쳐) 바인딩.
 		// TODO : 여러 텍스쳐 맵 SRV 추가.
-		ID3D11ShaderResourceView* pixelResources[1] = { meshForGPU.albedoSRV.Get() };
+		ID3D11ShaderResourceView* pixelResources[1] = { meshForGPU.textures.albedoSRV.Get() };
 		m_context->PSSetShaderResources(0, 1, pixelResources);
 
 		// 정점, 인덱스 버퍼 설정하고 그리기 명령 호출.s
@@ -441,7 +441,11 @@ namespace NS
 		int width, height, channels;
 
 		unsigned char* img = stbi_load(filename.c_str(), &width, &height, &channels, 0);
-
+		if (img == nullptr)
+		{
+			std::cout << "\n\nCan't load the texture file! : " << filename << '\n\n';
+			return;
+		}
 		//assert(channels == 4);
 
 		// 4채널로 만들어서 복사

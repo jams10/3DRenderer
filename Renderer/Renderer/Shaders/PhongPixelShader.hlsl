@@ -32,11 +32,11 @@ float4 main(PixelShaderInput input) : SV_TARGET
             color += ComputeSpotLight(lights[i], material, input.posWorld, input.normalWorld, vertexToEye) * lights[i].color;
     }
     
-    // 정점의 위치를 픽셀 단위로 interpolation 해서 위치로부터 다시 텍스쳐 좌표를 계산함.
-    float2 uv;
-    uv.x = atan2(input.posModel.z, input.posModel.x) / (3.141592 * 2.0) + 0.5;
-    uv.y = acos(input.posModel.y / 1.5) / 3.141592;
+    // 구 매핑 : 정점의 위치를 픽셀 단위로 interpolation 해서 위치로부터 다시 텍스쳐 좌표를 계산함.
+    //float2 uv;
+    //uv.x = atan2(input.posModel.z, input.posModel.x) / (3.141592 * 2.0) + 0.5;
+    //uv.y = acos(input.posModel.y / 1.5) / 3.141592;
     
-    return material.bUseTexture ? float4(color, 1.0) * g_texture0.Sample(linearClampSampler, uv) :
+    return material.bUseTexture ? float4(color, 1.0) * g_texture0.Sample(linearClampSampler, input.texcoord) :
                                   float4(color, 1.0) * float4(material.color, 1.0f);
 }

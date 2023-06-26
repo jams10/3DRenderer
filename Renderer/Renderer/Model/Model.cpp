@@ -7,20 +7,9 @@
 
 namespace NS
 {
-	Model::Model(GraphicsProcessor* const pGraphics, const std::string& basePath, const std::string& filename)
-	{
-		this->Initialize(pGraphics, basePath, filename);
-	}
-
 	Model::Model(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes)
 	{
 		this->Initialize(pGraphics, meshes);
-	}
-
-	void Model::Initialize(GraphicsProcessor* const pGraphics, const std::string& basePath, const std::string& filename)
-	{
-		// 파일로부터 로드.
-
 	}
 
 	void Model::Initialize(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes)
@@ -30,7 +19,7 @@ namespace NS
 
 		// 상수 버퍼 리소스 생성.
 		pGraphics->GetD3D11()->CreateConstantBuffer(m_meshWorldTransformData, m_meshVertexConstantBuffer);
-		pGraphics->GetD3D11()->CreateConstantBuffer(m_materialData, m_meshPixelConstantBuffer);
+		pGraphics->GetD3D11()->CreateConstantBuffer(m_materialConstantData, m_meshPixelConstantBuffer);
 
 		for (const MeshForCPU& meshForCPU : meshes)
 		{
@@ -44,10 +33,10 @@ namespace NS
 			pGraphics->GetD3D11()->CreateIndexBuffer(meshForCPU.indices, newMeshForGPU->indexBuffer);
 
 			// 텍스쳐 자원 생성.
-			if (!meshForCPU.albedoTextureFilename.empty())
+			if (!meshForCPU.textures.albedoTextureFilename.empty())
 			{
 				// TODO : 텍스쳐 자원 불러오는것 따로 빼기.
-				pGraphics->GetD3D11()->CreateTexture(meshForCPU.albedoTextureFilename, newMeshForGPU->albedoTexture, newMeshForGPU->albedoSRV);
+				pGraphics->GetD3D11()->CreateTexture(meshForCPU.textures.albedoTextureFilename, newMeshForGPU->textures.albedoTexture, newMeshForGPU->textures.albedoSRV);
 			}
 
 			// 앞서 만들어준 상수 버퍼를 넣어줌.
@@ -114,8 +103,8 @@ namespace NS
 		// 모델 노말 그리기 상수 버퍼 업데이트.
 		UpdateModelNormalConstantBuffer(pGraphics);
 
-		m_materialData.diffuse = Vector3(m_materialDiffuse);
-		m_materialData.specular = Vector3(m_materialSpecular);
+		m_materialConstantData.diffuse = Vector3(m_materialDiffuse);
+		m_materialConstantData.specular = Vector3(m_materialSpecular);
 
 		// 모델 머티리얼 상수 버퍼 업데이트
 		UpdateModelMaterialConstantBuffer(pGraphics);
@@ -142,12 +131,12 @@ namespace NS
 			{
 				ImGui::SliderFloat("Diffuse", &m_materialDiffuse, 0.5f, 1.0f);
 				ImGui::SliderFloat("Specular", &m_materialSpecular, 0.5f, 1.0f);
-				ImGui::SliderFloat("Shineness", &m_materialData.shininess, 1.0f, 256.0f);
+				ImGui::SliderFloat("Shineness", &m_materialConstantData.shininess, 1.0f, 256.0f);
 			}
 			ImGui::Checkbox("Use Texture", &m_bUseTexture);
 			if (!m_bUseTexture)
 			{
-				ImGui::ColorEdit3("Color", &m_materialData.color.x);
+				ImGui::ColorEdit3("Color", &m_materialConstantData.color.x);
 			}
 		}
 
@@ -174,12 +163,12 @@ namespace NS
 	void Model::UpdateModelMaterialConstantBuffer(GraphicsProcessor* const pGraphics)
 	{
 		if (m_bUseTexture == true)
-			m_materialData.bUseTexture = 1u;
+			m_materialConstantData.bUseTexture = 1u;
 		else
-			m_materialData.bUseTexture = 0u;
+			m_materialConstantData.bUseTexture = 0u;
 
 		// 픽셀 상수 버퍼 업데이트
-		pGraphics->GetD3D11()->UpdateBuffer(m_materialData, m_meshPixelConstantBuffer);
+		pGraphics->GetD3D11()->UpdateBuffer(m_materialConstantData, m_meshPixelConstantBuffer);
 	}
 
 	void Model::Render(GraphicsProcessor* const pGraphics)
@@ -193,7 +182,7 @@ namespace NS
 		{
 			constBuffersVS.push_back(m_meshes[0]->vertexConstantBuffer.Get());
 			constBuffersPS.push_back(m_meshes[0]->pixelConstantBuffer.Get());
-			shaderResources.push_back(m_meshes[0]->albedoSRV.Get());
+			shaderResources.push_back(m_meshes[0]->textures.albedoSRV.Get());
 		}
 
 		for (int i = 0; i < size; ++i)
