@@ -37,6 +37,14 @@ float4 main(PixelShaderInput input) : SV_TARGET
     //uv.x = atan2(input.posModel.z, input.posModel.x) / (3.141592 * 2.0) + 0.5;
     //uv.y = acos(input.posModel.y / 1.5) / 3.141592;
     
+    if(useRimLighthing == 1)
+    {
+        float rim = 1.0 - dot(input.normalWorld, vertexToEye);
+        rim = smoothstep(0.0, 1.0, rim);
+        rim = pow(abs(rim), rimPower); // rim 값이 음수가 될 수 있다는 warning 없애기 위해 abs 사용.
+        color += rim * rimColor * rimStrength;
+    }
+    
     return material.bUseTexture ? float4(color, 1.0) * g_texture0.Sample(linearClampSampler, input.texcoord) :
                                   float4(color, 1.0) * float4(material.color, 1.0f);
 }

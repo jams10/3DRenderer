@@ -78,6 +78,12 @@ cbuffer GlobalCameraTransformConstant : register(b2)
 cbuffer GlobalSceneDataCostant : register(b3) // ÇÈ¼¿ ½¦ÀÌ´õ¿¡¼­ »ç¿ë.
 {
     Light lights[MAX_LIGHTS];
+    float3 rimColor;
+    float rimPower;
+    float rimStrength;
+    float3 dummy1;
+    int useRimLighthing;
+    float3 dummy2;
 }
 /* Constant Buffers */
 

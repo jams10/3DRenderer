@@ -30,7 +30,8 @@ namespace NS
 
     void Light::UpdateGUI()
     {
-		ImGui::Begin("Light");
+		// Light 마다 ImGui ID를 다르게 해야 각 Light마다 UI를 가질 수 있음.
+		//ImGui::Begin("Light");
 
 		ImGui::PushID(m_id);
 
@@ -75,7 +76,7 @@ namespace NS
 		ImGui::Spacing();
 		ImGui::PopID();
 
-		ImGui::End();
+		//ImGui::End();
     }
 
 	void Light::SetID(int id)

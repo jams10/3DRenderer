@@ -73,5 +73,14 @@ namespace NS
     struct GlobalSceneDataConstant // 모델들이 공통으로 사용하는 픽셀 쉐이더 상수 버퍼.
     {
         LightConstant lights[MAX_LIGHTS];
+        Vector3 rimColor;
+        float rimPower;
+        float rimStrength;
+        Vector3 dummy1;
+        BOOL useRimLighthing;
+        Vector3 dummy2;
     };
+
+    static_assert((sizeof(GlobalSceneDataConstant) % 16) == 0,
+        "Constant Buffer size must be 16-byte aligned");
 }

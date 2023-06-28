@@ -62,13 +62,27 @@ namespace NS
 	{
 		m_pCamera->UpdateGUI();
 
+		ImGui::Begin("Scene");
+
 		if (m_bUseLighting)
 		{
+			ImGui::Checkbox("Use Rim Light", &m_bUseRimLighting);
+			m_globalSceneDataConstant.useRimLighthing = m_bUseRimLighting;
+			// Rim Lighting 상수 버퍼 CPU 값 업데이트.
+			if (m_bUseRimLighting)
+			{
+				ImGui::ColorEdit3("Rim Light Color", &m_globalSceneDataConstant.rimColor.x);
+				ImGui::SliderFloat("rimPower", &m_globalSceneDataConstant.rimPower, 1.f, 5.0f);
+				ImGui::SliderFloat("rimStrength", &m_globalSceneDataConstant.rimStrength, 0.f, 5.0f);
+			}
+
 			for (int i = 0; i < MAX_LIGHTS; ++i)
 			{
 				m_lights[i].UpdateGUI();
 			}
 		}
+
+		ImGui::End();
 	}
 
 	void SceneBase::Update(float dt)

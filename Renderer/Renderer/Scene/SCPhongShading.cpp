@@ -15,8 +15,8 @@ namespace NS
     {
         SceneBase::Initialize(pGraphics, pCamera);
 
-        std::vector<MeshForCPU> mesh = MeshGenerator::ReadFromFile("..\\Resources\\Models\\", "Cola_Cup_Low.obj");
-        mesh[0].textures.albedoTextureFilename = "..\\Resources\\Textures\\Cola_Cup_Low\\Base_Color_Map.png";
+        std::vector<MeshForCPU> mesh = MeshGenerator::ReadFromFile("..\\Resources\\Models\\", "skull.obj");
+        mesh[0].textures.albedoTextureFilename = "..\\Resources\\Textures\\Skull\\difuso_flip_oscuro.jpg";
         m_model.InitializeWithDrawingNormal(pGraphics, mesh);
 
         m_bUseLighting = true;

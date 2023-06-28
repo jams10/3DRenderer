@@ -44,6 +44,7 @@ namespace NS
 		GlobalSceneDataConstant m_globalSceneDataConstant;
 
 		bool m_bUseLighting = false;
+		bool m_bUseRimLighting = false;
 	};
 }
 
