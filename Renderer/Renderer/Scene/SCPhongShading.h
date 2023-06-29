@@ -4,6 +4,7 @@
 
 #include "Model/Model.h"
 #include "Object/Light.h"
+#include "Object/SkyBox.h"
 
 namespace NS
 {
@@ -18,6 +19,7 @@ namespace NS
 
 	private:
 		Model m_model;
+		SkyBox m_skyBox;
 	};
 }
 

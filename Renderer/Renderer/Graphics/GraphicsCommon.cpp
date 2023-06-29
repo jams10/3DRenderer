@@ -14,6 +14,7 @@ namespace NS
 
 		// Rasterizer States
 		ComPtr<ID3D11RasterizerState> rasterizerState_SolidCW;
+		ComPtr<ID3D11RasterizerState> rasterizerState_CullNone;
 		ComPtr<ID3D11RasterizerState> rasterizerState_WireCW;
 
 		// Depth Stencil States
@@ -27,6 +28,7 @@ namespace NS
 		ComPtr<ID3D11PixelShader> pixelShader_Color;
 		ComPtr<ID3D11PixelShader> pixelShader_TextureMapping;
 		ComPtr<ID3D11PixelShader> pixelShader_PhongShading;
+		ComPtr<ID3D11PixelShader> pixelShader_DrawCubeMap;
 
 		// Input Layouts
 		ComPtr<ID3D11InputLayout> inputLayout_Default;
@@ -39,6 +41,7 @@ namespace NS
 		GraphicsPSO phongShadingPSO;
 		GraphicsPSO defaultWirePSO;
 		GraphicsPSO drawingNormalPSO;
+		GraphicsPSO drawingCubeMapPSO;
 
 		void Graphics::InitCommonStates(GraphicsProcessor* pGraphics)
 		{
@@ -85,8 +88,11 @@ namespace NS
 			rastDesc.FrontCounterClockwise = false;
 			rastDesc.DepthClipEnable = true;
 			rastDesc.MultisampleEnable = true;
-			
 			THROWFAILED(device->CreateRasterizerState(&rastDesc, rasterizerState_SolidCW.GetAddressOf()));
+			
+			rastDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
+			THROWFAILED(device->CreateRasterizerState(&rastDesc, rasterizerState_CullNone.GetAddressOf()));
+
 			rastDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
 			THROWFAILED(device->CreateRasterizerState(&rastDesc, rasterizerState_WireCW.GetAddressOf()));
 		}
@@ -140,6 +146,7 @@ namespace NS
 			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\ColorPixelShader.hlsl", pixelShader_Color);
 			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\TextureMappingPixelShader.hlsl", pixelShader_TextureMapping);
 			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\PhongPixelShader.hlsl", pixelShader_PhongShading);
+			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\DrawingCubeMapPixelShader.hlsl", pixelShader_DrawCubeMap);
 		}
 
 		void InitPipelineStates()
@@ -171,6 +178,10 @@ namespace NS
 			drawingNormalPSO.m_depthStencilState = depthStencilState_Default;
 			drawingNormalPSO.m_rasterizerState = rasterizerState_SolidCW;
 			drawingNormalPSO.m_primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+
+			drawingCubeMapPSO = textureMappingPSO;
+			drawingCubeMapPSO.m_rasterizerState = rasterizerState_CullNone;
+			drawingCubeMapPSO.m_pixelShader = pixelShader_DrawCubeMap;
 		}
 	}
 }

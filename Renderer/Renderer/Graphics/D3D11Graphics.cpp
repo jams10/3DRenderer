@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <imgui_impl_dx11.h>
+#include <directxtk/DDSTextureLoader.h> // 큐브맵 읽을 때 필요
+#include <directxtk/WICTextureLoader.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -479,6 +481,29 @@ namespace NS
 		m_device->CreateTexture2D(&txtDesc, &initData, texture.GetAddressOf());
 		m_device->CreateShaderResourceView(texture.Get(), nullptr,
 			textureResourceView.GetAddressOf());
+	}
+
+	void D3D11Graphics::CreateCubeMapTextureFromDDSFile(const std::wstring filename, ComPtr<ID3D11Texture2D>& texture, ComPtr<ID3D11ShaderResourceView>& textureResourceView)
+	{
+		HRESULT hr = 
+		DirectX::CreateDDSTextureFromFileEx(
+			m_device.Get(),
+			filename.c_str(),
+			0,
+			D3D11_USAGE_DEFAULT,
+			D3D11_BIND_SHADER_RESOURCE,
+			0,
+			D3D11_RESOURCE_MISC_TEXTURECUBE,
+			DirectX::DDS_LOADER_FLAGS(false),
+			(ID3D11Resource**)texture.GetAddressOf(),
+			textureResourceView.GetAddressOf(),
+			nullptr
+		);
+
+		if (FAILED(hr))
+		{
+			cout << "Error! : CreateCubeMapTextureFromDDSFile\n";
+		}
 	}
 
 #pragma endregion Pipeline Functions

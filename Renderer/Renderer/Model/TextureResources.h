@@ -18,6 +18,7 @@ namespace NS
     struct TextureResourcesForCPU
     {
         std::string albedoTextureFilename;
+        bool bIsUsingCubeMap = false;
     };
 
     struct TextureResourcesForGPU

@@ -105,6 +105,9 @@
     <ClInclude Include="Model\TextureResources.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Object\SkyBox.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\AppBase.cpp">
@@ -173,6 +176,9 @@
     <ClCompile Include="Utility\ModelLoader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Object\SkyBox.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\ColorVertexShader.hlsl" />
@@ -182,6 +188,7 @@
     <FxCompile Include="Shaders\PhongVertexShader.hlsl" />
     <FxCompile Include="Shaders\PhongPixelShader.hlsl" />
     <FxCompile Include="Shaders\DrawingNormalsVertexShader.hlsl" />
+    <FxCompile Include="Shaders\DrawingCubeMapPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Common.hlsli" />

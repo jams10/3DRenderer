@@ -22,7 +22,7 @@ int main()
 {
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	{
-		NS::RenderApp app(1280, 720);
+		NS::RenderApp app(1600, 900);
 
 		if (app.Initialize() == false)
 			return -1;

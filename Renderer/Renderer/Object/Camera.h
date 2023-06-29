@@ -42,7 +42,7 @@ namespace NS
 		// Projection 변환 행렬 관련 변수.
 		float m_projFovAngleY = 90.0f;
 		float m_nearZ = 0.01f;
-		float m_farZ = 100.0f;
+		float m_farZ = 200.0f;
 		float m_aspectRatio = 16.f / 9.f;
 		bool m_usePerspectiveProjection = true;
 		bool m_useFlyingCam = false;

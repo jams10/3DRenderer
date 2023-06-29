@@ -147,6 +147,7 @@ namespace NS
 		void SetViewport(int screenWidth, int screenHeight);
 		bool CreateDepthBuffer(int screenWidth, int screenHeight);
 		void CreateTexture(const std::string filename, ComPtr<ID3D11Texture2D>& texture, ComPtr<ID3D11ShaderResourceView>& textureResourceView);
+		void CreateCubeMapTextureFromDDSFile(const std::wstring filename, ComPtr<ID3D11Texture2D>& texture, ComPtr<ID3D11ShaderResourceView>& textureResourceView);
 #pragma endregion Pipeline Functions
 	};
 }

@@ -19,6 +19,8 @@ namespace NS
         mesh[0].textures.albedoTextureFilename = "..\\Resources\\Textures\\Skull\\difuso_flip_oscuro.jpg";
         m_model.InitializeWithDrawingNormal(pGraphics, mesh);
 
+        m_skyBox.Initialize(pGraphics, "..\\Resources\\Textures\\Cubemaps\\NissiBeach2.dds");
+
         m_bUseLighting = true;
     }
 
@@ -49,13 +51,16 @@ namespace NS
         if (m_pCamera->m_bUseWireFrameMode)
         {
             m_pGraphics->SetPipelineState(Graphics::defaultWirePSO);
+            m_model.Render(m_pGraphics); // 모델 정점, 인덱스 버퍼, 상수 버퍼 바인딩.
+            m_skyBox.Render(m_pGraphics); // 스카이박스 그리기.
         }
         else
         {
             m_pGraphics->SetPipelineState(Graphics::phongShadingPSO);
+            m_model.Render(m_pGraphics); // 모델 정점, 인덱스 버퍼, 상수 버퍼 바인딩.
+            m_pGraphics->SetPipelineState(Graphics::drawingCubeMapPSO);
+            m_skyBox.Render(m_pGraphics); // 스카이박스 그리기.
         }
-
-        m_model.Render(m_pGraphics); // 모델 정점, 인덱스 버퍼, 상수 버퍼 바인딩.
 
         if (m_model.m_bDrawNormals)
         {

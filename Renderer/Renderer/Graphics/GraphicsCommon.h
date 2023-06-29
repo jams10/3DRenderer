@@ -22,8 +22,9 @@ namespace NS
 		extern std::vector<ID3D11SamplerState*> samplerStates;
 
 		// Rasterizer States
-		extern ComPtr<ID3D11RasterizerState> rasterizerState_SolidCW; // CW = 시계 방향 winding.
-		extern ComPtr<ID3D11RasterizerState> rasterizerState_WireCW;  // 와이어 프레임 모드 래스터라이저.
+		extern ComPtr<ID3D11RasterizerState> rasterizerState_SolidCW;  // CW = 시계 방향 winding.
+		extern ComPtr<ID3D11RasterizerState> rasterizerState_CullNone; // D3D11_CULL_NONE 모드를 사용하는 래스터라이저.
+		extern ComPtr<ID3D11RasterizerState> rasterizerState_WireCW;   // 와이어 프레임 모드 래스터라이저.
 
 		// Depth Stencil States
 		extern ComPtr<ID3D11DepthStencilState> depthStencilState_Default;
@@ -36,6 +37,7 @@ namespace NS
 		extern ComPtr<ID3D11PixelShader> pixelShader_Color;
 		extern ComPtr<ID3D11PixelShader> pixelShader_TextureMapping;
 		extern ComPtr<ID3D11PixelShader> pixelShader_PhongShading;
+		extern ComPtr<ID3D11PixelShader> pixelShader_DrawCubeMap;
 
 		// Input Layouts
 		extern ComPtr<ID3D11InputLayout> inputLayout_Default;
@@ -48,6 +50,7 @@ namespace NS
 		extern GraphicsPSO phongShadingPSO;
 		extern GraphicsPSO defaultWirePSO;
 		extern GraphicsPSO drawingNormalPSO;
+		extern GraphicsPSO drawingCubeMapPSO;
 
 		void InitCommonStates(GraphicsProcessor* pGraphics);
 
