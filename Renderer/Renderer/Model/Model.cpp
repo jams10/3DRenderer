@@ -11,10 +11,15 @@ namespace NS
 {
 	Model::Model(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes)
 	{
-		this->Initialize(pGraphics, meshes);
+		this->Initialize(pGraphics, meshes, nullptr);
 	}
 
 	void Model::Initialize(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes)
+	{
+		Initialize(pGraphics, meshes, nullptr);
+	}
+
+	void Model::Initialize(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes, const TextureResourcesForGPU* pSkyBoxTextureResource)
 	{
 		m_meshWorldTransformData.world = Matrix();
 		m_meshWorldTransformData.worldInvTranspose = Matrix();
@@ -35,7 +40,7 @@ namespace NS
 			pGraphics->GetD3D11()->CreateIndexBuffer(meshForCPU.indices, newMeshForGPU->indexBuffer);
 
 			// 텍스쳐 자원 생성.
-			CreateTextureResources(pGraphics, meshForCPU, *newMeshForGPU);
+			CreateTextureResources(pGraphics, meshForCPU, *newMeshForGPU, pSkyBoxTextureResource);
 
 			// 앞서 만들어준 상수 버퍼를 넣어줌.
 			newMeshForGPU->vertexConstantBuffer = m_meshVertexConstantBuffer;
@@ -47,45 +52,17 @@ namespace NS
 
 	void Model::InitializeWithDrawingNormal(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes)
 	{
-		Initialize(pGraphics, meshes);
+		Initialize(pGraphics, meshes, nullptr);
 
-		// 상수 버퍼 리소스 생성.
-		pGraphics->GetD3D11()->CreateConstantBuffer(m_meshNormalDrawingData, m_meshNormalConstantBuffer);
+		CreateNormalMeshes(pGraphics, meshes);
+	}
 
-		int nMeshes = meshes.size();
+	void Model::InitializeWithDrawingNormal(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes, const TextureResourcesForGPU* pSkyBoxTextureResource)
+	{
+		// 환경 맵 텍스쳐를 사용하는 경우, 모델에서도 참조하고 스카이박스 모델에서도 참조해야 하기 때문에 텍스쳐 리소스를 하나만 생성해 여러 모델이 참조하도록 함.
+		Initialize(pGraphics, meshes, pSkyBoxTextureResource);
 
-		for (int i = 0; i < nMeshes; ++i)
-		{
-			MeshNormalForCPU newMeshNormal;
-			int nVerts = meshes[i].vertices.size();
-			for (int j = 0; j < nVerts; ++j)
-			{
-				VertexForDrawingNormal vn;
-				vn.position = meshes[i].vertices[j].position;
-				vn.normalModel = meshes[i].vertices[j].normalModel;
-				vn.texcoord.x = 0; // normal의 시작점.
-				newMeshNormal.vertices.push_back(vn);
-				vn.texcoord.x = 1; // normal의 끝점.
-				newMeshNormal.vertices.push_back(vn);
-
-				newMeshNormal.indices.push_back(uint32_t(2 * j));
-				newMeshNormal.indices.push_back(uint32_t(2 * j + 1));
-			}
-
-			auto newMeshNormalForGPU = std::make_shared<MeshNormalForGPU>();
-			newMeshNormalForGPU->indexCount = UINT(newMeshNormal.indices.size());
-			newMeshNormalForGPU->vertexCount = UINT(newMeshNormal.vertices.size());
-			newMeshNormalForGPU->stride = UINT(sizeof(VertexForDrawingNormal));
-
-			// 정점, 인덱스 버퍼 생성.
-			pGraphics->GetD3D11()->CreateVertexBuffer(newMeshNormal.vertices, newMeshNormalForGPU->vertexBuffer);
-			pGraphics->GetD3D11()->CreateIndexBuffer(newMeshNormal.indices, newMeshNormalForGPU->indexBuffer);
-
-			// 앞서 만들어준 상수 버퍼를 넣어줌.
-			newMeshNormalForGPU->vertexConstantBuffer = m_meshNormalConstantBuffer;
-
-			m_normalMeshes.push_back(newMeshNormalForGPU);
-		}
+		CreateNormalMeshes(pGraphics, meshes);
 	}
 
 	void Model::Update(float dt, GraphicsProcessor* const pGraphics)
@@ -169,12 +146,54 @@ namespace NS
 		pGraphics->GetD3D11()->UpdateBuffer(m_materialConstantData, m_meshPixelConstantBuffer);
 	}
 
-	void Model::CreateTextureResources(GraphicsProcessor* const pGraphics, const MeshForCPU& meshForCPU, MeshForGPU& newMeshForGPU)
+	void Model::CreateNormalMeshes(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes)
+	{
+		// 상수 버퍼 리소스 생성.
+		pGraphics->GetD3D11()->CreateConstantBuffer(m_meshNormalDrawingData, m_meshNormalConstantBuffer);
+
+		int nMeshes = meshes.size();
+
+		for (int i = 0; i < nMeshes; ++i)
+		{
+			MeshNormalForCPU newMeshNormal;
+			int nVerts = meshes[i].vertices.size();
+			for (int j = 0; j < nVerts; ++j)
+			{
+				VertexForDrawingNormal vn;
+				vn.position = meshes[i].vertices[j].position;
+				vn.normalModel = meshes[i].vertices[j].normalModel;
+				vn.texcoord.x = 0; // normal의 시작점.
+				newMeshNormal.vertices.push_back(vn);
+				vn.texcoord.x = 1; // normal의 끝점.
+				newMeshNormal.vertices.push_back(vn);
+
+				newMeshNormal.indices.push_back(uint32_t(2 * j));
+				newMeshNormal.indices.push_back(uint32_t(2 * j + 1));
+			}
+
+			auto newMeshNormalForGPU = std::make_shared<MeshNormalForGPU>();
+			newMeshNormalForGPU->indexCount = UINT(newMeshNormal.indices.size());
+			newMeshNormalForGPU->vertexCount = UINT(newMeshNormal.vertices.size());
+			newMeshNormalForGPU->stride = UINT(sizeof(VertexForDrawingNormal));
+
+			// 정점, 인덱스 버퍼 생성.
+			pGraphics->GetD3D11()->CreateVertexBuffer(newMeshNormal.vertices, newMeshNormalForGPU->vertexBuffer);
+			pGraphics->GetD3D11()->CreateIndexBuffer(newMeshNormal.indices, newMeshNormalForGPU->indexBuffer);
+
+			// 앞서 만들어준 상수 버퍼를 넣어줌.
+			newMeshNormalForGPU->vertexConstantBuffer = m_meshNormalConstantBuffer;
+
+			m_normalMeshes.push_back(newMeshNormalForGPU);
+		}
+	}
+
+	void Model::CreateTextureResources(GraphicsProcessor* const pGraphics, const MeshForCPU& meshForCPU, MeshForGPU& newMeshForGPU, const TextureResourcesForGPU* pSkyBoxTextureResource)
 	{
 		// 텍스쳐 자원 생성.
 		if (!meshForCPU.textures.albedoTextureFilename.empty())
 		{
 			// 모델이 스카이 박스인 경우, 텍스쳐는 큐브맵 텍스쳐를 생성해 픽셀 쉐이더로 넘겨줘야 함.
+			// albedo texture를 큐브맵 텍스쳐로 만들어줌.
 			if (meshForCPU.bIsSkybox == true)
 			{
 				std::wstring cubeMapfilename = MultiU8ToWide(meshForCPU.textures.albedoTextureFilename);
@@ -187,10 +206,10 @@ namespace NS
 			}
 		}
 		// 스카이 박스가 아닌 모델에서 환경 매핑을 위해 사용할 환경 맵 텍스쳐. 마찬가지로 큐브맵 텍스쳐로 만들어 주어야 함.
-		if (!meshForCPU.textures.enviromentMapTexture.empty())
+		// 스카이 박스의 경우 albedo texture를 큐브맵 텍스쳐로 만들었기 때문에 albedo 텍스쳐의 SRV를 가져옴.
+		if (pSkyBoxTextureResource != nullptr && pSkyBoxTextureResource->albedoSRV != nullptr)
 		{
-			std::wstring cubeMapfilename = MultiU8ToWide(meshForCPU.textures.enviromentMapTexture);
-			pGraphics->GetD3D11()->CreateCubeMapTextureFromDDSFile(cubeMapfilename, newMeshForGPU.textures.enviromentMapTexture, newMeshForGPU.textures.enviromentMapSRV);
+			newMeshForGPU.textures.enviromentMapSRV = pSkyBoxTextureResource->albedoSRV;
 		}
 	}
 
@@ -241,6 +260,16 @@ namespace NS
 				constBuffersVS, constBuffersPS, shaderResources,
 				m_normalMeshes[i]->indexCount, m_normalMeshes[i]->stride, m_normalMeshes[i]->offset);
 		}
+	}
+
+	const TextureResourcesForGPU* Model::GetTextureResourcesForGPU() const
+	{
+		if (m_meshes.empty() == false && m_meshes[0] != nullptr)
+		{
+			return &m_meshes[0]->textures;
+		}
+
+		return nullptr;
 	}
 
 	Model::~Model()

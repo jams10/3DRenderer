@@ -15,11 +15,11 @@ namespace NS
 	{
 		SceneBase::Initialize(pGraphics, pCamera);
 
-		std::vector<MeshForCPU> mesh = MeshGenerator::ReadFromFile("..\\Resources\\Models\\", "skull.obj");
-		mesh[0].textures.enviromentMapTexture = "..\\Resources\\Textures\\Cubemaps\\NissiBeach2.dds";
-		m_model.InitializeWithDrawingNormal(pGraphics, mesh);
-
 		m_skyBox.Initialize(pGraphics, "..\\Resources\\Textures\\Cubemaps\\NissiBeach2.dds");
+
+		std::vector<MeshForCPU> mesh = MeshGenerator::ReadFromFile("..\\Resources\\Models\\", "skull.obj");
+		m_model.InitializeWithDrawingNormal(pGraphics, mesh, m_skyBox.GetTextureResource());
+
 	}
 
 	SCEnviromentMapping::~SCEnviromentMapping()

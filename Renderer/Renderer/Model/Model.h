@@ -31,13 +31,17 @@ namespace NS
 		Model(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes);
 
 		void Initialize(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes);
+		void Initialize(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes, const TextureResourcesForGPU* pSkyBoxTextureResource);
 		void InitializeWithDrawingNormal(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes);
+		void InitializeWithDrawingNormal(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes, 
+			const TextureResourcesForGPU* pSkyBoxTextureResource);
 
 		virtual void Update(float dt, GraphicsProcessor* const pGraphics);
 		virtual void UpdateGUI();
 
 		void Render(GraphicsProcessor* const pGraphics);
 		void RenderNormal(GraphicsProcessor* const pGraphics);
+		const TextureResourcesForGPU* GetTextureResourcesForGPU() const;
 
 	public:
 		Vector3 m_position = Vector3(0.f, 0.f, 0.f);
@@ -57,7 +61,9 @@ namespace NS
 		void UpdateModelNormalConstantBuffer(GraphicsProcessor* const pGraphics);
 		void UpdateModelMaterialConstantBuffer(GraphicsProcessor* const pGraphics);
 
-		void CreateTextureResources(GraphicsProcessor* const pGraphics, const MeshForCPU& meshForCPU, MeshForGPU& newMeshForGPU);
+		void CreateNormalMeshes(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes);
+		void CreateTextureResources(GraphicsProcessor* const pGraphics, const MeshForCPU& meshForCPU, MeshForGPU& newMeshForGPU,
+			const TextureResourcesForGPU* pSkyBoxTextureResource);
 
 		float m_materialDiffuse = 1.0f;
 		float m_materialSpecular = 1.0f;

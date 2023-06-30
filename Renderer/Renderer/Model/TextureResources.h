@@ -18,7 +18,7 @@ namespace NS
     struct TextureResourcesForCPU
     {
         std::string albedoTextureFilename;
-        std::string enviromentMapTexture;
+        //std::string enviromentMapTexture;
     };
 
     struct TextureResourcesForGPU
