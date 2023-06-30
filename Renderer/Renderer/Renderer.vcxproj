@@ -152,6 +152,7 @@
     <ClInclude Include="Scene\SCDrawTriangle.h" />
     <ClInclude Include="Scene\SceneBase.h" />
     <ClInclude Include="Scene\Scenes.h" />
+    <ClInclude Include="Scene\SCEnviromentMapping.h" />
     <ClInclude Include="Scene\SCPhongShading.h" />
     <ClInclude Include="UI\ImGuiManager.h" />
     <ClInclude Include="Utility\CustomMacros.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Scene\SCDrawTexturedCube.cpp" />
     <ClCompile Include="Scene\SCDrawTriangle.cpp" />
     <ClCompile Include="Scene\SceneBase.cpp" />
+    <ClCompile Include="Scene\SCEnviromentMapping.cpp" />
     <ClCompile Include="Scene\SCPhongShading.cpp" />
     <ClCompile Include="UI\ImGuiManager.cpp" />
     <ClCompile Include="Utility\GameTimer.cpp" />
@@ -236,6 +238,12 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Renderer\Shaders\Outputs\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Renderer\Shaders\Outputs\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Renderer\Shaders\Outputs\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="Shaders\EnviromentMappingPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Shaders\PhongPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

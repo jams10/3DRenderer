@@ -3,6 +3,7 @@
 #include "SCDrawTriangle.h"
 #include "SCDrawTexturedCube.h"
 #include "SCPhongShading.h"
+#include "SCEnviromentMapping.h"
 #include "Utility/CustomMacros.h"
 
 /*
@@ -16,5 +17,6 @@ namespace NS
 		DRAW_TRIANGLE,
 		DRAW_TEXTUREDCUBE,
 		PHONG_SHADING,
+		ENVIROMENT_MAPPING,
 	};
 }

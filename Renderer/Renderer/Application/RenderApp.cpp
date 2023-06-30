@@ -151,6 +151,11 @@ namespace NS
 					m_selectedSceneIndex = 2;
 					selected = true;
 				}
+				if (ImGui::Button(WideToMultiU8(L"환경 매핑").c_str()))
+				{
+					m_selectedSceneIndex = 3;
+					selected = true;
+				}
 			}
 			ImGui::End();
 		}
@@ -179,6 +184,10 @@ namespace NS
 				break;
 			case SceneType::PHONG_SHADING:
 				m_pScene = new SCPhongShading;
+				m_pScene->Initialize(m_pGraphics, &m_camera);
+				break;
+			case SceneType::ENVIROMENT_MAPPING:
+				m_pScene = new SCEnviromentMapping;
 				m_pScene->Initialize(m_pGraphics, &m_camera);
 				break;
 			}

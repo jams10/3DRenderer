@@ -23,7 +23,6 @@ namespace NS
 
     SCDrawTexturedCube::~SCDrawTexturedCube()
     {
-        m_cubeModel.Shutdown();
     }
 
 	void SCDrawTexturedCube::UpdateGUI()

@@ -27,6 +27,7 @@ namespace NS
 	{
 	public:
 		Model() {}
+		~Model();
 		Model(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes);
 
 		void Initialize(GraphicsProcessor* const pGraphics, const std::vector<MeshForCPU>& meshes);
@@ -37,7 +38,6 @@ namespace NS
 
 		void Render(GraphicsProcessor* const pGraphics);
 		void RenderNormal(GraphicsProcessor* const pGraphics);
-		void Shutdown();
 
 	public:
 		Vector3 m_position = Vector3(0.f, 0.f, 0.f);
@@ -56,6 +56,8 @@ namespace NS
 		void UpdateModelTransformConstantBuffer(GraphicsProcessor* const pGraphics);
 		void UpdateModelNormalConstantBuffer(GraphicsProcessor* const pGraphics);
 		void UpdateModelMaterialConstantBuffer(GraphicsProcessor* const pGraphics);
+
+		void CreateTextureResources(GraphicsProcessor* const pGraphics, const MeshForCPU& meshForCPU, MeshForGPU& newMeshForGPU);
 
 		float m_materialDiffuse = 1.0f;
 		float m_materialSpecular = 1.0f;

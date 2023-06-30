@@ -19,7 +19,6 @@ namespace NS
 	{
 		if (m_cube)
 		{
-			m_cube->Shutdown();
 			delete m_cube;
 			m_cube = nullptr;
 		}
@@ -30,7 +29,7 @@ namespace NS
 		std::vector<MeshForCPU> newMesh = { MeshGenerator::MakeBox(100.f) };
 		//std::vector<MeshForCPU> newMesh = { MeshGenerator::MakeSphere(100.f, 20, 20) };
 		newMesh[0].textures.albedoTextureFilename = textureFilePath;
-		newMesh[0].textures.bIsUsingCubeMap = true;
+		newMesh[0].bIsSkybox = true;
 		m_cube = new Model();
 		m_cube->InitializeWithDrawingNormal(pGraphics, newMesh);
 		m_cube->Update(0.f, pGraphics);

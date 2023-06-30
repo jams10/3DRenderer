@@ -18,18 +18,22 @@ namespace NS
     struct TextureResourcesForCPU
     {
         std::string albedoTextureFilename;
-        bool bIsUsingCubeMap = false;
+        std::string enviromentMapTexture;
     };
 
     struct TextureResourcesForGPU
     {
         ComPtr<ID3D11Texture2D> albedoTexture;
         ComPtr<ID3D11ShaderResourceView> albedoSRV;
+        ComPtr<ID3D11Texture2D> enviromentMapTexture;
+        ComPtr<ID3D11ShaderResourceView> enviromentMapSRV;
 
         void Shutdown()
         {
             albedoSRV.Reset();
             albedoTexture.Reset();
+            enviromentMapTexture.Reset();
+            enviromentMapSRV.Reset();
         }
     };
 }

@@ -38,6 +38,7 @@ namespace NS
 		extern ComPtr<ID3D11PixelShader> pixelShader_TextureMapping;
 		extern ComPtr<ID3D11PixelShader> pixelShader_PhongShading;
 		extern ComPtr<ID3D11PixelShader> pixelShader_DrawCubeMap;
+		extern ComPtr<ID3D11PixelShader> pixelShader_EnviromentMapping;
 
 		// Input Layouts
 		extern ComPtr<ID3D11InputLayout> inputLayout_Default;
@@ -51,6 +52,7 @@ namespace NS
 		extern GraphicsPSO defaultWirePSO;
 		extern GraphicsPSO drawingNormalPSO;
 		extern GraphicsPSO drawingCubeMapPSO;
+		extern GraphicsPSO enviromentMappingPSO;
 
 		void InitCommonStates(GraphicsProcessor* pGraphics);
 

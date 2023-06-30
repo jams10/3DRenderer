@@ -18,6 +18,7 @@ namespace NS
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
 		TextureResourcesForCPU textures;
+		bool bIsSkybox = false;
 	};
 
 	struct MeshNormalForCPU

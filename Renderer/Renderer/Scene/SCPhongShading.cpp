@@ -26,7 +26,6 @@ namespace NS
 
     SCPhongShading::~SCPhongShading()
     {
-        m_model.Shutdown();
     }
 
     void SCPhongShading::UpdateGUI()

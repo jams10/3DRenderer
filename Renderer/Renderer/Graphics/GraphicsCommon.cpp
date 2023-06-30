@@ -29,6 +29,7 @@ namespace NS
 		ComPtr<ID3D11PixelShader> pixelShader_TextureMapping;
 		ComPtr<ID3D11PixelShader> pixelShader_PhongShading;
 		ComPtr<ID3D11PixelShader> pixelShader_DrawCubeMap;
+		ComPtr<ID3D11PixelShader> pixelShader_EnviromentMapping;
 
 		// Input Layouts
 		ComPtr<ID3D11InputLayout> inputLayout_Default;
@@ -42,6 +43,7 @@ namespace NS
 		GraphicsPSO defaultWirePSO;
 		GraphicsPSO drawingNormalPSO;
 		GraphicsPSO drawingCubeMapPSO;
+		GraphicsPSO enviromentMappingPSO;
 
 		void Graphics::InitCommonStates(GraphicsProcessor* pGraphics)
 		{
@@ -147,6 +149,7 @@ namespace NS
 			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\TextureMappingPixelShader.hlsl", pixelShader_TextureMapping);
 			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\PhongPixelShader.hlsl", pixelShader_PhongShading);
 			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\DrawingCubeMapPixelShader.hlsl", pixelShader_DrawCubeMap);
+			pGraphics->GetD3D11()->CreatePixelShader(L"Shaders\\EnviromentMappingPixelShader.hlsl", pixelShader_EnviromentMapping);
 		}
 
 		void InitPipelineStates()
@@ -182,6 +185,9 @@ namespace NS
 			drawingCubeMapPSO = textureMappingPSO;
 			drawingCubeMapPSO.m_rasterizerState = rasterizerState_CullNone;
 			drawingCubeMapPSO.m_pixelShader = pixelShader_DrawCubeMap;
+
+			enviromentMappingPSO = textureMappingPSO;
+			enviromentMappingPSO.m_pixelShader = pixelShader_EnviromentMapping;
 		}
 	}
 }

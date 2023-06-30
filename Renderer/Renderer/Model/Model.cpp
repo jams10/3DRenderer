@@ -35,20 +35,7 @@ namespace NS
 			pGraphics->GetD3D11()->CreateIndexBuffer(meshForCPU.indices, newMeshForGPU->indexBuffer);
 
 			// 텍스쳐 자원 생성.
-			if (!meshForCPU.textures.albedoTextureFilename.empty())
-			{ 
-				// 큐브맵 텍스쳐를 사용하는 경우에는 dds 파일을 통해 텍스쳐 자원을 생성해야 하므로 다른 함수를 호출.
-				if (meshForCPU.textures.bIsUsingCubeMap)
-				{
-					std::wstring cubeMapfilename = MultiU8ToWide(meshForCPU.textures.albedoTextureFilename);
-					pGraphics->GetD3D11()->CreateCubeMapTextureFromDDSFile(cubeMapfilename, newMeshForGPU->textures.albedoTexture, newMeshForGPU->textures.albedoSRV);
-				}
-				else
-				{
-					// TODO : 텍스쳐 자원 불러오는것 따로 빼기.
-					pGraphics->GetD3D11()->CreateTexture(meshForCPU.textures.albedoTextureFilename, newMeshForGPU->textures.albedoTexture, newMeshForGPU->textures.albedoSRV);
-				}			
-			}
+			CreateTextureResources(pGraphics, meshForCPU, *newMeshForGPU);
 
 			// 앞서 만들어준 상수 버퍼를 넣어줌.
 			newMeshForGPU->vertexConstantBuffer = m_meshVertexConstantBuffer;
@@ -182,6 +169,31 @@ namespace NS
 		pGraphics->GetD3D11()->UpdateBuffer(m_materialConstantData, m_meshPixelConstantBuffer);
 	}
 
+	void Model::CreateTextureResources(GraphicsProcessor* const pGraphics, const MeshForCPU& meshForCPU, MeshForGPU& newMeshForGPU)
+	{
+		// 텍스쳐 자원 생성.
+		if (!meshForCPU.textures.albedoTextureFilename.empty())
+		{
+			// 모델이 스카이 박스인 경우, 텍스쳐는 큐브맵 텍스쳐를 생성해 픽셀 쉐이더로 넘겨줘야 함.
+			if (meshForCPU.bIsSkybox == true)
+			{
+				std::wstring cubeMapfilename = MultiU8ToWide(meshForCPU.textures.albedoTextureFilename);
+				pGraphics->GetD3D11()->CreateCubeMapTextureFromDDSFile(cubeMapfilename, newMeshForGPU.textures.albedoTexture, newMeshForGPU.textures.albedoSRV);
+			}
+			else
+			{
+				// TODO : 텍스쳐 자원 불러오는것 따로 빼기.
+				pGraphics->GetD3D11()->CreateTexture(meshForCPU.textures.albedoTextureFilename, newMeshForGPU.textures.albedoTexture, newMeshForGPU.textures.albedoSRV);
+			}
+		}
+		// 스카이 박스가 아닌 모델에서 환경 매핑을 위해 사용할 환경 맵 텍스쳐. 마찬가지로 큐브맵 텍스쳐로 만들어 주어야 함.
+		if (!meshForCPU.textures.enviromentMapTexture.empty())
+		{
+			std::wstring cubeMapfilename = MultiU8ToWide(meshForCPU.textures.enviromentMapTexture);
+			pGraphics->GetD3D11()->CreateCubeMapTextureFromDDSFile(cubeMapfilename, newMeshForGPU.textures.enviromentMapTexture, newMeshForGPU.textures.enviromentMapSRV);
+		}
+	}
+
 	void Model::Render(GraphicsProcessor* const pGraphics)
 	{
 		int size = m_meshes.size();
@@ -193,7 +205,8 @@ namespace NS
 		{
 			constBuffersVS.push_back(m_meshes[0]->vertexConstantBuffer.Get());
 			constBuffersPS.push_back(m_meshes[0]->pixelConstantBuffer.Get());
-			shaderResources.push_back(m_meshes[0]->textures.albedoSRV.Get());
+			if(m_meshes[0]->textures.albedoSRV != nullptr) shaderResources.push_back(m_meshes[0]->textures.albedoSRV.Get());
+			if (m_meshes[0]->textures.enviromentMapSRV != nullptr) shaderResources.push_back(m_meshes[0]->textures.enviromentMapSRV.Get());
 		}
 
 		for (int i = 0; i < size; ++i)
@@ -230,7 +243,7 @@ namespace NS
 		}
 	}
 
-	void Model::Shutdown()
+	Model::~Model()
 	{
 		size_t size = m_meshes.size();
 		for (size_t i = 0; i < size; ++i)

@@ -34,8 +34,6 @@ namespace NS
 
 	SceneBase::~SceneBase()
 	{
-        for (int i = 0; i < MAX_LIGHTS; ++i)
-            m_lightModels[i].Shutdown();
 	}
 
 	void SceneBase::UpdateGlobalCameraTransformConstant(const Vector3& eyeWorld, const Matrix& viewRow, const Matrix& projRow)

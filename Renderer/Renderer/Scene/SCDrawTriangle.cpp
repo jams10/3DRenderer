@@ -22,7 +22,6 @@ namespace NS
 
 	SCDrawTriangle::~SCDrawTriangle()
 	{
-		m_triangleModel.Shutdown();
 	}
 
 	void SCDrawTriangle::UpdateGUI()
